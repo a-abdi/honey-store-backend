@@ -6,13 +6,13 @@ export class Product {
   _id: MongooseSchema.Types.ObjectId;
 
   @Prop({required: true})
-  name: String;
+  name: string;
 
   @Prop()
-  price: Number;
+  price: number;
 
   @Prop()
-  quantity: Number;
+  quantity: number;
 
 //   @Prop()
 //   specifications: {
@@ -21,10 +21,10 @@ export class Product {
 //   }
 
   @Prop()
-  description: String;
+  description: string;
 
   @Prop()
-  code: String;
+  code: string;
 
   // @Prop({type: [MongooseSchema.Types.ObjectId], ref: Admin._Id})
   // admin: MongooseSchema.Types.ObjectId | Admin;
@@ -33,10 +33,10 @@ export class Product {
   // admin: MongooseSchema.Types.ObjectId | Category;
 
   @Prop()
-  discount: Number;
+  discount: number;
 
   @Prop()
-  imageSrc: String;
+  imageSrc: string;
 }
 
 export type ProductDocument = Product & Document;

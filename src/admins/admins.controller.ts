@@ -2,13 +2,17 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
+import { Admin } from './entities/admin.entity';
+import * as bcrypt from 'bcrypt';
 
 @Controller('admins')
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
   @Post()
-  create(@Body() createAdminDto: CreateAdminDto) {
+  async create(@Body() createAdminDto: CreateAdminDto): Promise<Admin> {
+    const salt = 10;
+    createAdminDto.password = await bcrypt.hash(createAdminDto.password, salt);
     return this.adminsService.create(createAdminDto);
   }
 
