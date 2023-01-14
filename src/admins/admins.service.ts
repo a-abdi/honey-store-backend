@@ -16,11 +16,11 @@ export class AdminsService {
   }
 
   findAll() {
-    return `This action returns all admins`;
+    return this.adminModel.find().exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} admin`;
+  findOne(username: string) {
+    return this.adminModel.findOne()
   }
 
   update(id: number, updateAdminDto: UpdateAdminDto) {

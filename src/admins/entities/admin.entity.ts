@@ -6,8 +6,8 @@ export class Admin {
     @Prop()
     username: string
 
-    // @Prop()
-    // password: string
+    @Prop()
+    password: string
 }
 
 export type AdminDocument = Admin & Document;

@@ -7,7 +7,8 @@ import { Admin, AdminSchema } from './entities/admin.entity';
 @Module({
   controllers: [AdminsController],
   providers: [AdminsService],
-  imports: [MongooseModule.forFeature([{name: Admin.name, schema: AdminSchema}])]
+  imports: [MongooseModule.forFeature([{name: Admin.name, schema: AdminSchema}])],
+  exports: [AdminsService]
 })
 
 export class AdminsModule {}
