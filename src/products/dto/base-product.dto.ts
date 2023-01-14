@@ -10,6 +10,4 @@ export class BaseProductInput {
   code: string;
 
   discount?: number;
-
-//   image: Promise<FileUpload>;
 }

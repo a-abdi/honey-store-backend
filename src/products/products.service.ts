@@ -13,10 +13,11 @@ export class ProductsService {
   {}
 
   
-  async create(createProductDto: CreateProductDto): Promise<Product> {
+  async create(createProductDto: CreateProductDto, file: any): Promise<Product> {
     try {
       return await new this.model({
-        ...createProductDto
+        ...createProductDto,
+        imageSrc: file.path
       }).save();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
