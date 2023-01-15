@@ -5,11 +5,19 @@ import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
 import { AdminsModule } from './admins/admins.module';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import config from './config/configuration';
 
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://localhost:27017/asal'), 
-    ProductsModule, AdminsModule, AuthModule
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [config]
+    }),
+    ProductsModule, 
+    AdminsModule, 
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
