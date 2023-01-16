@@ -12,15 +12,15 @@ export class AdminsService {
   ){}
 
   async create(createAdminDto: CreateAdminDto): Promise<Admin> {
-    return this.adminModel.create(createAdminDto);
+    return await this.adminModel.create(createAdminDto);
   }
 
-  findAll() {
-    return this.adminModel.find().exec();
+  async findAll() {
+    return await this.adminModel.find().exec();
   }
 
-  findOne(username: string) {
-    return this.adminModel.findOne()
+  async findOne(username: string) {
+    return await this.adminModel.findOne().exec();
   }
 
   update(id: number, updateAdminDto: UpdateAdminDto) {

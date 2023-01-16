@@ -4,9 +4,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
 import { AdminsModule } from './admins/admins.module';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule as AdminAuthModule } from './auth/admins/auth-admin.module';
 import { ConfigModule } from '@nestjs/config';
 import config from './config/configuration';
+import { RolesGuard } from './auth/roles.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -17,7 +19,7 @@ import config from './config/configuration';
     }),
     ProductsModule, 
     AdminsModule, 
-    AuthModule,
+    AdminAuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
