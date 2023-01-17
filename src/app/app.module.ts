@@ -1,14 +1,11 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
 import { AdminsModule } from './admins/admins.module';
 import { AuthModule as AdminAuthModule } from './auth/admins/auth-admin.module';
 import { ConfigModule } from '@nestjs/config';
-import config from './config/configuration';
-import { RolesGuard } from './auth/roles.guard';
-import { APP_GUARD } from '@nestjs/core';
+import config from '../config/configuration';
+import { CartsModule } from './carts/carts.module';
 
 @Module({
   imports: [
@@ -19,9 +16,9 @@ import { APP_GUARD } from '@nestjs/core';
     }),
     ProductsModule, 
     AdminsModule, 
-    AdminAuthModule,
+    AdminAuthModule, CartsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

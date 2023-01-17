@@ -5,9 +5,9 @@ import { UpdateAdminDto } from './dto/update-admin.dto';
 import { Admin } from './entities/admin.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Roles } from 'src/auth/roles.decorator';
-import { Role } from 'src/auth/Role';
-import { RolesGuard } from 'src/auth/roles.guard';
+import { Roles } from 'src/app/auth/roles.decorator';
+import { Role } from 'src/app/auth/Role';
+import { RolesGuard } from 'src/app/auth/roles.guard';
 
 @Controller('admins')
 export class AdminsController {
