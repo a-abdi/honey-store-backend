@@ -1,3 +1,7 @@
-import { BaseAdminDto } from "./base-admin.dto";
-
-export class CreateAdminDto extends BaseAdminDto {}
+export class CreateAdminDto {
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    email: string;
+    password: string;
+}
