@@ -3,7 +3,6 @@ import { Document, Schema as MongooseSchema } from "mongoose";
 
 @Schema()
 export class Admin {
-    @Prop()
     _id: MongooseSchema.Types.ObjectId;
 
     @Prop()
@@ -12,7 +11,7 @@ export class Admin {
     @Prop()
     lastName: string;
 
-    @Prop()
+    @Prop({required: true,unique: true})
     phoneNumber: string;
 
     @Prop()

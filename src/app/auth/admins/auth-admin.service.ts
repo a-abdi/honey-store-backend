@@ -10,8 +10,11 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const admin = (await this.adminsService.findOne(username)).toObject();
+  async validateUser(phoneNumber: string, pass: string): Promise<any> {
+    const admin = (await this.adminsService.findOne(phoneNumber))?.toObject();
+    if (!admin) {
+      return null;
+    }
     const isValidPassword = await bcrypt.compare(pass, admin.password)
     if (admin && isValidPassword) {
       const { password, ...result } = admin;
@@ -22,7 +25,7 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { 
-      username: user.username, 
+      phoneNumber: user.phoneNumber, 
       sub: user._id.toString(),
       roles: ['admin']
     };

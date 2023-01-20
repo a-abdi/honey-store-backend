@@ -19,8 +19,8 @@ export class AdminsService {
     return await this.adminModel.find().exec();
   }
 
-  async findOne(username: string) {
-    return await this.adminModel.findOne().exec();
+  async findOne(phoneNumber: string) {
+    return await this.adminModel.findOne({phoneNumber}).exec();
   }
 
   update(id: number, updateAdminDto: UpdateAdminDto) {

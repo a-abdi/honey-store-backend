@@ -13,8 +13,8 @@ import { RolesGuard } from 'src/app/auth/roles.guard';
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  // @Roles(Role.Admin)
+  // @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   async create(@Body() createAdminDto: CreateAdminDto): Promise<Admin> {
     const salt = 10;
@@ -22,9 +22,9 @@ export class AdminsController {
     return this.adminsService.create(createAdminDto);
   }
 
-  @Roles(Role.User)
-  @UseGuards(RolesGuard)
-  @UseGuards(JwtAuthGuard)
+  // @Roles(Role.User)
+  // @UseGuards(RolesGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get()
   async findAll() {
     const admin = await this.adminsService.findAll();
@@ -32,11 +32,9 @@ export class AdminsController {
     // return this.adminsService.findAll();
   }
 
-  @Get(':username')
-  async findOne(@Param('username') username: string) {
-    const admin = await this.adminsService.findOne(username);
-    return admin;
-    // return this.adminsService.findOne(username);
+  @Get(':phoneNumber')
+  async findOne(@Param('phoneNumber') phoneNumber: string) {
+    return await this.adminsService.findOne(phoneNumber);
   }
 
   @Patch(':id')
