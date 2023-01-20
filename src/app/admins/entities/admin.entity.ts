@@ -1,13 +1,25 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Document, Schema as MongooseSchema } from "mongoose";
 
 @Schema()
 export class Admin {
     @Prop()
-    username: string
+    _id: MongooseSchema.Types.ObjectId;
 
     @Prop()
-    password: string
+    firstName: string;
+
+    @Prop()
+    lastName: string;
+
+    @Prop()
+    phoneNumber: string;
+
+    @Prop()
+    email: string
+
+    @Prop()
+    password: string;
 }
 
 export type AdminDocument = Admin & Document;
