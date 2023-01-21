@@ -22,26 +22,29 @@ export class AdminsController {
     return this.adminsService.create(createAdminDto);
   }
 
-  // @Roles(Role.User)
-  // @UseGuards(RolesGuard)
-  // @UseGuards(JwtAuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   async findAll() {
-    const admin = await this.adminsService.findAll();
-    return admin;
-    // return this.adminsService.findAll();
+    return await this.adminsService.findAll();
   }
 
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':phoneNumber')
   async findOne(@Param('phoneNumber') phoneNumber: string) {
     return await this.adminsService.findByPhone(phoneNumber);
   }
 
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto) {
     return this.adminsService.update(+id, updateAdminDto);
   }
 
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.adminsService.remove(+id);
