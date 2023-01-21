@@ -3,8 +3,6 @@ import { AdminsService } from './admins.service';
 import { AdminsController } from './admins.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Admin, AdminSchema } from './entities/admin.entity';
-import { RolesGuard } from 'src/app/auth/roles.guard';
-import { APP_GUARD } from '@nestjs/core';
 
 @Global()
 @Module({
