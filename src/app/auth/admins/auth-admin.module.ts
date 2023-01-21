@@ -5,7 +5,7 @@ import { AdminsModule } from '../../admins/admins.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth-admin.controller';
-import { JwtStrategy } from '../jwt.strategy';
+import { JwtStrategy } from './jwt.strategy';
 import 'dotenv/config';
 
 @Module({

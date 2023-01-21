@@ -11,7 +11,7 @@ export class AuthService {
   ) {}
 
   async validateUser(phoneNumber: string, pass: string): Promise<any> {
-    const admin = (await this.adminsService.findOne(phoneNumber))?.toObject();
+    const admin = (await this.adminsService.findByPhone(phoneNumber))?.toObject();
     if (!admin) {
       return null;
     }

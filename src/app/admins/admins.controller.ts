@@ -13,8 +13,8 @@ import { RolesGuard } from 'src/app/auth/roles.guard';
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
-  // @Roles(Role.Admin)
-  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   async create(@Body() createAdminDto: CreateAdminDto): Promise<Admin> {
     const salt = 10;
@@ -34,7 +34,7 @@ export class AdminsController {
 
   @Get(':phoneNumber')
   async findOne(@Param('phoneNumber') phoneNumber: string) {
-    return await this.adminsService.findOne(phoneNumber);
+    return await this.adminsService.findByPhone(phoneNumber);
   }
 
   @Patch(':id')
