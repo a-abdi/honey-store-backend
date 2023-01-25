@@ -3,6 +3,7 @@ import { JwtAuthGuard } from 'src/app/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/app/auth/roles.guard';
 import { Role } from 'src/app/common/declare/enum';
 import { Roles } from 'src/app/common/decorators/roles.decorator';
+import { mongoIdParams } from '../common/class/mongo-id-params';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -27,29 +28,22 @@ export class CategoriesController {
   
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Get(':id')
-  async findOneByID(@Param('id') id: string) {
-    return await this.categoriesService.findByID(id);
+  @Get(':_id')
+  async findOne(@Param() params: mongoIdParams) {
+    return await this.categoriesService.findByID(params._id);
   }
   
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Get(':name')
-  async findOneByName(@Param('name') name: string) {
-    return await this.categoriesService.findByName(name);
+  @Patch(':_id')
+  async update(@Param() params: mongoIdParams, @Body() updateCategoryDto: UpdateCategoryDto) {
+    return await this.categoriesService.update(params._id, updateCategoryDto);
   }
 
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    return await this.categoriesService.update(id, updateCategoryDto);
-  }
-
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.categoriesService.remove(id);
+  @Delete(':_id')
+  async remove(@Param() params: mongoIdParams) {
+    return await this.categoriesService.remove(params._id);
   }
 }
