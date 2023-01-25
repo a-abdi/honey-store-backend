@@ -24,25 +24,32 @@ export class CategoriesController {
   async findAll() {
     return await this.categoriesService.findAll();
   }
-
+  
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.categoriesService.findByeID(+id);
+  async findOneByID(@Param('id') id: string) {
+    return await this.categoriesService.findByID(id);
+  }
+  
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get(':name')
+  async findOneByName(@Param('name') name: string) {
+    return await this.categoriesService.findByName(name);
   }
 
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    return await this.categoriesService.update(+id, updateCategoryDto);
+    return await this.categoriesService.update(id, updateCategoryDto);
   }
 
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return await this.categoriesService.remove(+id);
+    return await this.categoriesService.remove(id);
   }
 }

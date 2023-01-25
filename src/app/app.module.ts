@@ -6,6 +6,7 @@ import { AuthModule as AdminAuthModule } from './auth/admins/auth-admin.module';
 import { ConfigModule } from '@nestjs/config';
 import config from '../config/configuration';
 import { CartsModule } from './carts/carts.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -16,7 +17,9 @@ import { CartsModule } from './carts/carts.module';
     }),
     ProductsModule, 
     AdminsModule, 
-    AdminAuthModule, CartsModule,
+    AdminAuthModule, 
+    CartsModule,
+    CategoriesModule,
   ],
   controllers: [],
   providers: [],

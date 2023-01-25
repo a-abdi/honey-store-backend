@@ -14,4 +14,4 @@ export class Category {
 
 export type CategoryDocument = Category & Document;
 
-export const CategoryModel = SchemaFactory.createForClass(Category);
+export const CategorySchema = SchemaFactory.createForClass(Category);

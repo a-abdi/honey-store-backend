@@ -19,15 +19,19 @@ export class CategoriesService {
     return await this.categoryModel.find().exec();
   }
 
-  findByeID(id: number) {
-    return `This action returns a #${id} category`;
+  async findByID(id: string) {
+    return await this.categoryModel.findOne({_id: id}).exec();
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async findByName(name: string) {
+    return await this.categoryModel.findOne({name}).exec();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+    return await this.categoryModel.findOneAndUpdate({_id: id}, updateCategoryDto, {new: true});
+  }
+
+  async remove(id: string) {
+    return await this.categoryModel.deleteOne({_id: id}) 
   }
 }
