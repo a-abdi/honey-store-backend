@@ -11,7 +11,7 @@ export class AdminsService {
     @InjectModel(Admin.name) private readonly adminModel: Model<AdminDocument>
   ){}
 
-  async create(createAdminDto: CreateAdminDto): Promise<Admin> {
+  async create(createAdminDto: CreateAdminDto): Promise<AdminDocument> {
     return await this.adminModel.create(createAdminDto);
   }
 
@@ -27,11 +27,11 @@ export class AdminsService {
     return await this.adminModel.findOne({_id}).exec();
   }
 
-  update(id: number, updateAdminDto: UpdateAdminDto) {
-    return `This action updates a #${id} admin`;
+  async update(_id: string, updateAdminDto: UpdateAdminDto) {
+    return await this.adminModel.updateOne({_id}, updateAdminDto, {new: true});
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} admin`;
+  async remove(_id: string) {
+    return await this.adminModel.findOneAndRemove({_id});
   }
 }

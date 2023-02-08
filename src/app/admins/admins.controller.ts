@@ -8,6 +8,8 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from 'src/app/common/decorators/roles.decorator';
 import { Role } from '../common/declare/enum'
 import { RolesGuard } from 'src/app/auth/roles.guard';
+import { NongoIdParams } from '../common/class/mongo-id-params';
+import { PhoneNumberParams } from '../common/class/phone-number-params';
 
 @Controller('admins')
 export class AdminsController {
@@ -19,7 +21,10 @@ export class AdminsController {
   async create(@Body() createAdminDto: CreateAdminDto): Promise<Admin> {
     const salt = 10;
     createAdminDto.password = await bcrypt.hash(createAdminDto.password, salt);
-    return this.adminsService.create(createAdminDto);
+    createAdminDto.phoneNumber = createAdminDto.phoneNumber.slice(-10);
+    const newAdmin: Admin = (await this.adminsService.create(createAdminDto)).toObject();
+    delete newAdmin.password;
+    return newAdmin;
   }
 
   @Roles(Role.Admin)
@@ -32,21 +37,21 @@ export class AdminsController {
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':phoneNumber')
-  async findOne(@Param('phoneNumber') phoneNumber: string) {
-    return await this.adminsService.findByPhone(phoneNumber);
+  async findOne(@Param() params: PhoneNumberParams) {
+    return await this.adminsService.findByPhone(params.phoneNumber);
   }
 
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto) {
-    return this.adminsService.update(+id, updateAdminDto);
+  @Patch(':_id')
+  update(@Param() params: NongoIdParams, @Body() updateAdminDto: UpdateAdminDto) {
+    return this.adminsService.update(params._id, updateAdminDto);
   }
 
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.adminsService.remove(+id);
+  @Delete(':_id')
+  remove(@Param() params: NongoIdParams) {
+    return this.adminsService.remove(params._id);
   }
 }

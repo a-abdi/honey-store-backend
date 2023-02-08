@@ -3,11 +3,12 @@ import { AdminsService } from './admins.service';
 import { AdminsController } from './admins.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Admin, AdminSchema } from './entities/admin.entity';
+import { IsPhoneAlreadyExist } from './class/is-phone-already-exist';
 
 @Global()
 @Module({
   controllers: [AdminsController],
-  providers: [AdminsService],
+  providers: [AdminsService, IsPhoneAlreadyExist],
   imports: [MongooseModule.forFeature([{name: Admin.name, schema: AdminSchema}])],
   exports: [AdminsService]
 })
