@@ -1,0 +1,1 @@
+export const standardPhonNumber = (phoneNumber: string) => phoneNumber.replace(/^0/, '+98');

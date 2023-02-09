@@ -1,5 +1,7 @@
+import { Transform } from "class-transformer";
 import { IsEmail, IsMobilePhone, IsOptional, IsString, Matches, MinLength, Validate } from "class-validator";
 import { Match } from "src/app/common/decorators/match";
+import { standardPhonNumber } from "src/app/common/helper";
 import { IsPhoneAlreadyExist } from "../class/is-phone-already-exist";
 
 export class CreateAdminDto {
@@ -9,6 +11,7 @@ export class CreateAdminDto {
     @IsString({message: 'نام خانوادگی باید به صورت حروف وارد شود'})
     lastName: string;
 
+    @Transform(({ value }) => standardPhonNumber(value))
     @IsMobilePhone(['fa-IR'],{}, {message: 'فرمت شماره موبایل اشتباه است'})
     @Validate(IsPhoneAlreadyExist)
     phoneNumber: string;

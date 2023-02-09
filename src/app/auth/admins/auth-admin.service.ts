@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AdminsService } from '../../admins/admins.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { standardPhonNumber } from 'src/app/common/helper';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +12,7 @@ export class AuthService {
   ) {}
 
   async validateUser(phoneNumber: string, pass: string): Promise<any> {
-    const admin = (await this.adminsService.findByPhone(phoneNumber))?.toObject();
+    const admin = (await this.adminsService.findByPhone(standardPhonNumber(phoneNumber)))?.toObject();
     if (!admin) {
       return null;
     }

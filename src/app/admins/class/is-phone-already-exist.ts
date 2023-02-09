@@ -8,7 +8,7 @@ export class IsPhoneAlreadyExist implements ValidatorConstraintInterface {
     constructor(protected readonly adminsService: AdminsService) {}
 
     async validate(phone: string) {
-      const admin = await this.adminsService.findByPhone(phone.slice(-10));
+      const admin = await this.adminsService.findByPhone(phone);
       return !admin;
     }
 

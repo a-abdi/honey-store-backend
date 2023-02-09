@@ -3,7 +3,6 @@ import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { Admin } from './entities/admin.entity';
-import * as bcrypt from 'bcrypt';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from 'src/app/common/decorators/roles.decorator';
 import { Role } from '../common/declare/enum'
@@ -19,9 +18,6 @@ export class AdminsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   async create(@Body() createAdminDto: CreateAdminDto): Promise<Admin> {
-    const salt = 10;
-    createAdminDto.password = await bcrypt.hash(createAdminDto.password, salt);
-    createAdminDto.phoneNumber = createAdminDto.phoneNumber.slice(-10);
     const newAdmin: Admin = (await this.adminsService.create(createAdminDto)).toObject();
     delete newAdmin.password;
     return newAdmin;
