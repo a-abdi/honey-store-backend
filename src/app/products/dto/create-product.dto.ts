@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsAlphanumeric, IsOptional, IsString } from "class-validator";
+import { IsAlphanumeric, IsMongoId, IsOptional, IsString } from "class-validator";
 import { PersianLatinNumber } from "src/app/common/decorators/credit-number";
 import { convertToEn } from "src/app/common/helper";
 
@@ -25,4 +25,7 @@ export class CreateProductDto {
     @Transform(({value}) => parseInt(convertToEn(value)))
     @PersianLatinNumber({message: 'مقدار وارد شده برای تخفیف باید به صورت عدد وارد شود'})
     discount?: number;
+
+    @IsMongoId({message: `دسته به درستی وارد نشده است`})
+    category: string;
 }

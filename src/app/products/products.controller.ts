@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, ParseFilePipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, ParseFilePipe, UseGuards, Req } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -6,11 +6,19 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { fileStorage } from 'src/app/common/helper';
 import { FileMaxSizeValidator } from '../common/service/file-max-size-validation';
 import { FileTypeValidator } from '../common/service/file-type-validation';
+import { Roles } from '../common/decorators/roles.decorator';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { RolesGuard } from '../auth/roles.guard';
+import { Role } from '../common/declare/enum';
+import { Request } from 'express';
+import { MongoIdParams } from '../common/class/mongo-id-params';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   @UseInterceptors(FileInterceptor('file',{ storage: fileStorage('upload/product') }))
   create(
@@ -21,9 +29,10 @@ export class ProductsController {
       ],
     }))
     file: Express.Multer.File,
-    @Body() createProductDto: CreateProductDto
+    @Body() createProductDto: CreateProductDto,
+    @Req() request: Request
   ) {
-    return this.productsService.create(createProductDto, file);
+    return this.productsService.create(createProductDto, file, request.user);
   }
 
   @Get()
@@ -31,18 +40,20 @@ export class ProductsController {
     return this.productsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
+  @Get(':_id')
+  findOne(@Param() params: MongoIdParams) {
+    return this.productsService.findOne(params._id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(+id, updateProductDto);
+  update(@Param() params: MongoIdParams, @Body() updateProductDto: UpdateProductDto) {
+    return this.productsService.update(params._id, updateProductDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Delete(':_id')
+  remove(@Param() params: MongoIdParams) {
+    return this.productsService.remove(params._id);
   }
 }

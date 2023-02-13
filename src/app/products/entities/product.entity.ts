@@ -1,5 +1,7 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { Admin } from 'src/app/admins/entities/admin.entity';
+import { Category } from 'src/app/categories/entities/category.entity';
 
 @Schema({timestamps: true})
 export class Product {
@@ -26,11 +28,11 @@ export class Product {
   @Prop()
   code: string;
 
-  // @Prop({type: [MongooseSchema.Types.ObjectId], ref: Admin._Id})
-  // admin: MongooseSchema.Types.ObjectId | Admin;
+  @Prop({type: MongooseSchema.Types.ObjectId, ref: 'Admin'})
+  admin: MongooseSchema.Types.ObjectId | Admin;
 
-  // @Prop({type: [MongooseSchema.Types.ObjectId], ref: Category._Id})
-  // admin: MongooseSchema.Types.ObjectId | Category;
+  @Prop({type: MongooseSchema.Types.ObjectId, ref: 'Category'})
+  category: MongooseSchema.Types.ObjectId | Category;
 
   @Prop()
   discount: number;

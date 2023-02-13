@@ -8,35 +8,36 @@ import { Product, ProductDocument } from './entities/product.entity';
 @Injectable()
 export class ProductsService {
   constructor(
-    @InjectModel(Product.name) private readonly model: Model<ProductDocument>
+    @InjectModel(Product.name) private readonly productModel: Model<ProductDocument>
     ) 
   {}
-
   
-  async create(createProductDto: CreateProductDto, file: any): Promise<Product> {
-    try {
-      return await new this.model({
+  async create(createProductDto: CreateProductDto, file: any, user: any): Promise<Product> {
+    try {    
+      return await new this.productModel({
         ...createProductDto,
-        imageSrc: file.path
+        imageSrc: file.path,
+        admin: user.adminId
       }).save();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
-    }
+  }
 
   findAll() {
-    return this.model.find().exec();
+    return this.productModel.find().populate('category').exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(_id: string) {
+    return this.productModel.findOne({_id}).exec();
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(_id: string, updateProductDto: UpdateProductDto) {
+    return await this.productModel.updateOne({_id}, updateProductDto, {new: true});
+
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(_id: string) {
+    return await this.productModel.findOneAndRemove({_id});
   }
 }

@@ -7,7 +7,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from 'src/app/common/decorators/roles.decorator';
 import { Role } from '../common/declare/enum'
 import { RolesGuard } from 'src/app/auth/roles.guard';
-import { NongoIdParams } from '../common/class/mongo-id-params';
+import { MongoIdParams } from '../common/class/mongo-id-params';
 import { PhoneNumberParams } from '../common/class/phone-number-params';
 
 @Controller('admins')
@@ -40,14 +40,14 @@ export class AdminsController {
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(':_id')
-  update(@Param() params: NongoIdParams, @Body() updateAdminDto: UpdateAdminDto) {
+  update(@Param() params: MongoIdParams, @Body() updateAdminDto: UpdateAdminDto) {
     return this.adminsService.update(params._id, updateAdminDto);
   }
 
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':_id')
-  remove(@Param() params: NongoIdParams) {
+  remove(@Param() params: MongoIdParams) {
     return this.adminsService.remove(params._id);
   }
 }
