@@ -12,7 +12,7 @@ export class Admin {
     @Prop()
     lastName: string;
 
-    @Prop({required: true,unique: true})
+    @Prop({required: true, unique: true})
     phoneNumber: string;
 
     @Prop()

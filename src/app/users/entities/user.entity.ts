@@ -3,7 +3,6 @@ import { Document, Schema as MongooseSchema} from "mongoose";
 
 @Schema({ timestamps: true })
 export class User {
-    @Prop()
     _id: MongooseSchema.Types.ObjectId;
 
     @Prop()
@@ -12,7 +11,7 @@ export class User {
     @Prop()
     lastName: string;
 
-    @Prop()
+    @Prop({isRequired: true, unique: true})
     phoneNumber: string;
 
     @Prop()

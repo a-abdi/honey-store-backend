@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import config from '../config/configuration';
 import { CartsModule } from './carts/carts.module';
 import { CategoriesModule } from './categories/categories.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CategoriesModule } from './categories/categories.module';
     AdminAuthModule, 
     CartsModule,
     CategoriesModule,
+    UsersModule
   ],
   controllers: [],
   providers: [],
