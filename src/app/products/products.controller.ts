@@ -10,7 +10,7 @@ import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { Role } from '../../common/declare/enum';
 import { Request } from 'express';
-import { MongoIdParams } from '../../common/class/mongo-id-params';
+import { MongoIdParams } from '../../common/helper';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('products')

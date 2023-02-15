@@ -1,6 +1,18 @@
 import { diskStorage } from "multer";
 import { extname } from "path";
 import { v4 as uuid } from 'uuid';
+import { IsMobilePhone } from 'class-validator';
+import { IsMongoId } from 'class-validator';
+
+export class MongoIdParams {
+    @IsMongoId({message: 'شناسه به درستی وارد نشده است'})
+    _id: string;
+}
+
+export class PhoneNumberParams {
+    @IsMobilePhone(['fa-IR'],{}, {message: 'فرمت شماره موبایل اشتباه است'})
+    phoneNumber: string;
+}
 
 export const standardPhonNumber = (phoneNumber: string) => phoneNumber.replace(/^0/, '+98');
 

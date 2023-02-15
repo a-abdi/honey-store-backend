@@ -6,8 +6,8 @@ import { Admin } from './entities/admin.entity';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from '../../common/declare/enum'
 import { RolesGuard } from 'src/app/auth/roles.guard';
-import { MongoIdParams } from '../../common/class/mongo-id-params';
-import { PhoneNumberParams } from '../../common/class/phone-number-params';
+import { MongoIdParams } from 'src/common/helper';
+import { PhoneNumberParams } from '../../common/helper';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('admins')

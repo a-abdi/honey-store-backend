@@ -1,7 +1,7 @@
 import { Transform } from "class-transformer";
 import { IsMobilePhone, IsOptional, IsPostalCode, IsString, Matches, MaxLength, MinLength, Validate } from "class-validator";
 import { IsPhoneAlreadyExist } from "src/app/users/service/is-phone-already-exist";
-import { Match } from "src/common/decorators/match";
+import { Match } from "src/common/decorators/match.decolator";
 import { standardPhonNumber } from "src/common/helper";
 
 export class CreateUserDto {

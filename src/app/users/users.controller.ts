@@ -5,7 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { Role } from '../../common/declare/enum';
 import { RolesGuard } from '../auth/roles.guard';
-import { MongoIdParams } from '../../common/class/mongo-id-params';
+import { MongoIdParams } from '../../common/helper';
 import { SelfUser } from '../auth/self-user.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 

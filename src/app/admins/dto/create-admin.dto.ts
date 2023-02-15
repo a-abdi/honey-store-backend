@@ -1,6 +1,6 @@
 import { Transform } from "class-transformer";
 import { IsEmail, IsMobilePhone, IsOptional, IsString, Matches, MinLength, Validate } from "class-validator";
-import { Match } from "src/common/decorators/match";
+import { Match } from "src/common/decorators/match.decolator";
 import { standardPhonNumber } from "src/common/helper";
 import { IsPhoneAlreadyExist } from "../service/is-phone-already-exist";
 

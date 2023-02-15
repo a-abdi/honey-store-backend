@@ -1,6 +1,6 @@
 import { Transform } from "class-transformer";
 import { IsAlphanumeric, IsMongoId, IsOptional, IsString } from "class-validator";
-import { PersianLatinNumber } from "src/common/decorators/credit-number";
+import { PersianLatinNumber } from "src/common/decorators/credit-number.decorator";
 import { convertToEn } from "src/common/helper";
 
 export class CreateProductDto {
