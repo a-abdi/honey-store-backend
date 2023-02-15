@@ -1,7 +1,7 @@
 import { Transform } from "class-transformer";
 import { IsAlphanumeric, IsMongoId, IsOptional, IsString } from "class-validator";
-import { PersianLatinNumber } from "src/app/common/decorators/credit-number";
-import { convertToEn } from "src/app/common/helper";
+import { PersianLatinNumber } from "src/common/decorators/credit-number";
+import { convertToEn } from "src/common/helper";
 
 export class CreateProductDto {
     @IsString({message: `نام باید به صورت حروف وارد شود`})

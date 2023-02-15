@@ -1,5 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import { Role } from '../common/declare/enum';
+import { Role } from '../../common/declare/enum';
 
 @Injectable()
 export class SelfUser implements CanActivate {

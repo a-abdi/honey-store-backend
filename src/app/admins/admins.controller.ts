@@ -3,11 +3,11 @@ import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { Admin } from './entities/admin.entity';
-import { Roles } from 'src/app/common/decorators/roles.decorator';
-import { Role } from '../common/declare/enum'
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from '../../common/declare/enum'
 import { RolesGuard } from 'src/app/auth/roles.guard';
-import { MongoIdParams } from '../common/class/mongo-id-params';
-import { PhoneNumberParams } from '../common/class/phone-number-params';
+import { MongoIdParams } from '../../common/class/mongo-id-params';
+import { PhoneNumberParams } from '../../common/class/phone-number-params';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('admins')

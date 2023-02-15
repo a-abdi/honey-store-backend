@@ -1,7 +1,7 @@
 import { Transform } from "class-transformer";
 import { IsEmail, IsMobilePhone, IsOptional, IsString, Matches, MinLength, Validate } from "class-validator";
-import { Match } from "src/app/common/decorators/match";
-import { standardPhonNumber } from "src/app/common/helper";
+import { Match } from "src/common/decorators/match";
+import { standardPhonNumber } from "src/common/helper";
 import { IsPhoneAlreadyExist } from "../service/is-phone-already-exist";
 
 export class CreateAdminDto {

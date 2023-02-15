@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AdminsService } from '../../admins/admins.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { standardPhonNumber } from 'src/app/common/helper';
+import { standardPhonNumber } from 'src/common/helper';
 
 @Injectable()
 export class AdminAuthService {

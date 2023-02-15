@@ -3,14 +3,14 @@ import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { fileStorage } from 'src/app/common/helper';
-import { FileMaxSizeValidator } from '../service/file-max-size-validation';
-import { FileTypeValidator } from '../service/file-type-validation';
-import { Roles } from '../common/decorators/roles.decorator';
+import { fileStorage } from 'src/common/helper';
+import { FileMaxSizeValidator } from '../../service/file-max-size-validation';
+import { FileTypeValidator } from '../../service/file-type-validation';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
-import { Role } from '../common/declare/enum';
+import { Role } from '../../common/declare/enum';
 import { Request } from 'express';
-import { MongoIdParams } from '../common/class/mongo-id-params';
+import { MongoIdParams } from '../../common/class/mongo-id-params';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('products')

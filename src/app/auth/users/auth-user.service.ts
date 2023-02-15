@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from '../../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { standardPhonNumber } from 'src/app/common/helper';
+import { standardPhonNumber } from 'src/common/helper';
 
 @Injectable()
 export class UserAuthService {
