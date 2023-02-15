@@ -8,14 +8,14 @@ import { Role } from '../common/declare/enum'
 import { RolesGuard } from 'src/app/auth/roles.guard';
 import { MongoIdParams } from '../common/class/mongo-id-params';
 import { PhoneNumberParams } from '../common/class/phone-number-params';
-import { AdminJwtAuthGuard } from '../auth/admins/admin-jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('admins')
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
   @Roles(Role.Admin)
-  @UseGuards(AdminJwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   async create(@Body() createAdminDto: CreateAdminDto): Promise<Admin> {
     const newAdmin: Admin = (await this.adminsService.create(createAdminDto)).toObject();
@@ -24,28 +24,28 @@ export class AdminsController {
   }
 
   @Roles(Role.Admin)
-  @UseGuards(AdminJwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   async findAll() {
     return await this.adminsService.findAll();
   }
 
   @Roles(Role.Admin)
-  @UseGuards(AdminJwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':phoneNumber')
   async findOne(@Param() params: PhoneNumberParams) {
     return await this.adminsService.findByPhone(params.phoneNumber);
   }
 
   @Roles(Role.Admin)
-  @UseGuards(AdminJwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(':_id')
   update(@Param() params: MongoIdParams, @Body() updateAdminDto: UpdateAdminDto) {
     return this.adminsService.update(params._id, updateAdminDto);
   }
 
   @Roles(Role.Admin)
-  @UseGuards(AdminJwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':_id')
   remove(@Param() params: MongoIdParams) {
     return this.adminsService.remove(params._id);

@@ -11,14 +11,14 @@ import { RolesGuard } from '../auth/roles.guard';
 import { Role } from '../common/declare/enum';
 import { Request } from 'express';
 import { MongoIdParams } from '../common/class/mongo-id-params';
-import { AdminJwtAuthGuard } from '../auth/admins/admin-jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Roles(Role.Admin)
-  @UseGuards(AdminJwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   @UseInterceptors(FileInterceptor('file',{ storage: fileStorage('upload/product') }))
   create(
@@ -46,14 +46,14 @@ export class ProductsController {
   }
 
   @Roles(Role.Admin)
-  @UseGuards(AdminJwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(':id')
   update(@Param() params: MongoIdParams, @Body() updateProductDto: UpdateProductDto) {
     return this.productsService.update(params._id, updateProductDto);
   }
 
   @Roles(Role.Admin)
-  @UseGuards(AdminJwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':_id')
   remove(@Param() params: MongoIdParams) {
     return this.productsService.remove(params._id);

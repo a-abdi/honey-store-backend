@@ -5,20 +5,22 @@ import { UsersModule } from '../../users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { UserAuthController } from './auth-user.controller';
-import { UserJwtStrategy } from './user-jwt.strategy';
+import { JwtStrategy } from '../jwt.strategy';
 import 'dotenv/config';
+import { AdminsModule } from 'src/app/admins/admins.module';
 
 @Module({
   controllers: [UserAuthController],
   imports: [
     UsersModule,
+    AdminsModule,
     PassportModule,
     JwtModule.register({
-      secret: process.env.USER_JWT_SECRET,
+      secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: process.env.USER_TOKEN_EXPIRE_TIME },
     }),
   ],
-  providers: [UserAuthService, UserLocalStrategy, UserJwtStrategy],
+  providers: [UserAuthService, UserLocalStrategy, JwtStrategy],
   exports: [UserAuthService],
 })
 export class AuthModule {}

@@ -7,7 +7,7 @@ import { Role } from '../common/declare/enum';
 import { RolesGuard } from '../auth/roles.guard';
 import { MongoIdParams } from '../common/class/mongo-id-params';
 import { SelfUser } from '../auth/self-user.guard';
-import { AdminJwtAuthGuard } from '../auth/admins/admin-jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -19,28 +19,28 @@ export class UsersController {
   }
 
   @Roles(Role.Admin)
-  @UseGuards(AdminJwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
 
-  // @Roles(Role.Admin)
-  @UseGuards(AdminJwtAuthGuard)
+  // @Roles(Role.Admin, Role.User)
+  @UseGuards(JwtAuthGuard, SelfUser)
   @Get(':_id')
   findOne(@Param() params: MongoIdParams) {
     return this.usersService.findOne(params._id);
   }
 
-  @Roles(Role.Admin)
-  @UseGuards(AdminJwtAuthGuard, RolesGuard)
+  @Roles(Role.User)
+  @UseGuards(JwtAuthGuard, RolesGuard, SelfUser)
   @Patch(':_id')
   update(@Param() params: MongoIdParams, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(params._id, updateUserDto);
   }
 
   @Roles(Role.Admin)
-  @UseGuards(AdminJwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':_id')
   remove(@Param() params: MongoIdParams) {
     return this.usersService.remove(params._id);
