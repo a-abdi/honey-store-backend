@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { AdminAuthService } from './auth-admin.service';
 
+const INVALID_PHONE_OR_PASSWORD = 'شماره تماس یا پسورد اشتباه است';
 @Injectable()
 export class AdminLocalStrategy extends PassportStrategy(Strategy, 'admin-local') {
   constructor(private authService: AdminAuthService) {
@@ -15,7 +16,7 @@ export class AdminLocalStrategy extends PassportStrategy(Strategy, 'admin-local'
   async validate(phoneNumber: string, password: string): Promise<any> {
     const admin = await this.authService.validateUser(phoneNumber, password);
     if (!admin) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({error: INVALID_PHONE_OR_PASSWORD});
     }
     
     return admin;

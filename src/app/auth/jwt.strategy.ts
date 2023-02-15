@@ -5,6 +5,8 @@ import { UsersService } from 'src/app/users/users.service';
 import { AdminsService } from 'src/app/admins/admins.service';
 import 'dotenv/config';
 
+const INVALID_PHONE_OR_PASSWORD = 'شماره تماس یا پسورد اشتباه است';
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
@@ -29,11 +31,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({error: INVALID_PHONE_OR_PASSWORD});
     }
 
     if (payload?.phoneNumber !== user.phoneNumber) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({error: INVALID_PHONE_OR_PASSWORD});
     }
 
     return { 

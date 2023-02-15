@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserAuthService } from './auth-user.service';
 
+const INVALID_PHONE_OR_PASSWORD = 'شماره تماس یا پسورد اشتباه است';
 @Injectable()
 export class UserLocalStrategy extends PassportStrategy(Strategy, 'user-local') {
   constructor(private authService: UserAuthService) {
@@ -15,7 +16,7 @@ export class UserLocalStrategy extends PassportStrategy(Strategy, 'user-local') 
   async validate(phoneNumber: string, password: string): Promise<any> {
     const user = await this.authService.validateUser(phoneNumber, password);
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException({error: INVALID_PHONE_OR_PASSWORD});
     }
     
     return user;
