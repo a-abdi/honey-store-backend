@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { standardPhonNumber } from 'src/app/common/helper';
 
 @Injectable()
-export class AuthService {
+export class AdminAuthService {
   constructor(
     private adminsService: AdminsService,
     private jwtService: JwtService
@@ -16,6 +16,7 @@ export class AuthService {
     if (!admin) {
       return null;
     }
+    
     const isValidPassword = await bcrypt.compare(pass, admin.password)
     if (admin && isValidPassword) {
       const { password, ...result } = admin;

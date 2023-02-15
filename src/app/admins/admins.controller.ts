@@ -3,19 +3,19 @@ import { AdminsService } from './admins.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { Admin } from './entities/admin.entity';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from 'src/app/common/decorators/roles.decorator';
 import { Role } from '../common/declare/enum'
 import { RolesGuard } from 'src/app/auth/roles.guard';
 import { MongoIdParams } from '../common/class/mongo-id-params';
 import { PhoneNumberParams } from '../common/class/phone-number-params';
+import { AdminJwtAuthGuard } from '../auth/admins/admin-jwt-auth.guard';
 
 @Controller('admins')
 export class AdminsController {
   constructor(private readonly adminsService: AdminsService) {}
 
   @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(AdminJwtAuthGuard, RolesGuard)
   @Post()
   async create(@Body() createAdminDto: CreateAdminDto): Promise<Admin> {
     const newAdmin: Admin = (await this.adminsService.create(createAdminDto)).toObject();
@@ -24,28 +24,28 @@ export class AdminsController {
   }
 
   @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(AdminJwtAuthGuard, RolesGuard)
   @Get()
   async findAll() {
     return await this.adminsService.findAll();
   }
 
   @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(AdminJwtAuthGuard, RolesGuard)
   @Get(':phoneNumber')
   async findOne(@Param() params: PhoneNumberParams) {
     return await this.adminsService.findByPhone(params.phoneNumber);
   }
 
   @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(AdminJwtAuthGuard, RolesGuard)
   @Patch(':_id')
   update(@Param() params: MongoIdParams, @Body() updateAdminDto: UpdateAdminDto) {
     return this.adminsService.update(params._id, updateAdminDto);
   }
 
   @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(AdminJwtAuthGuard, RolesGuard)
   @Delete(':_id')
   remove(@Param() params: MongoIdParams) {
     return this.adminsService.remove(params._id);

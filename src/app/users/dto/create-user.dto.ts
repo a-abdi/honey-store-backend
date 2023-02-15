@@ -46,8 +46,6 @@ export class CreateUserDto {
     @IsOptional()
     password: string;
 
-    @IsString({message: 'تایید پسورد باید به صورت حروف وارد شود'})
     @Match('password', {message: 'تایید پسورد و پسورد با هم مطابقت ندارند'})
-    @IsOptional()
     passwordConfirm: string;
 }

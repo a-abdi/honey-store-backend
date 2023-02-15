@@ -1,24 +1,24 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth-user.service';
-import { LocalStrategy } from './user-local.strategy';
-import { AdminsModule } from '../../admins/admins.module';
+import { UserAuthService } from './auth-user.service';
+import { UserLocalStrategy } from './user-local.strategy';
+import { UsersModule } from '../../users/users.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthController } from './auth-user.controller';
-import { JwtStrategy } from '../admins/jwt.strategy';
+import { UserAuthController } from './auth-user.controller';
+import { UserJwtStrategy } from './user-jwt.strategy';
 import 'dotenv/config';
 
 @Module({
-  controllers: [AuthController],
+  controllers: [UserAuthController],
   imports: [
-    AdminsModule,
+    UsersModule,
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '60s' },
+      secret: process.env.USER_JWT_SECRET,
+      signOptions: { expiresIn: process.env.USER_TOKEN_EXPIRE_TIME },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
-  exports: [AuthService],
+  providers: [UserAuthService, UserLocalStrategy, UserJwtStrategy],
+  exports: [UserAuthService],
 })
 export class AuthModule {}

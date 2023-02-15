@@ -4,21 +4,21 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { fileStorage } from 'src/app/common/helper';
-import { FileMaxSizeValidator } from '../common/service/file-max-size-validation';
-import { FileTypeValidator } from '../common/service/file-type-validation';
+import { FileMaxSizeValidator } from '../service/file-max-size-validation';
+import { FileTypeValidator } from '../service/file-type-validation';
 import { Roles } from '../common/decorators/roles.decorator';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Role } from '../common/declare/enum';
 import { Request } from 'express';
 import { MongoIdParams } from '../common/class/mongo-id-params';
+import { AdminJwtAuthGuard } from '../auth/admins/admin-jwt-auth.guard';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(AdminJwtAuthGuard, RolesGuard)
   @Post()
   @UseInterceptors(FileInterceptor('file',{ storage: fileStorage('upload/product') }))
   create(
@@ -30,7 +30,7 @@ export class ProductsController {
     }))
     file: Express.Multer.File,
     @Body() createProductDto: CreateProductDto,
-    @Req() request: Request
+    @Req() request: Request,
   ) {
     return this.productsService.create(createProductDto, file, request.user);
   }
@@ -46,14 +46,14 @@ export class ProductsController {
   }
 
   @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(AdminJwtAuthGuard, RolesGuard)
   @Patch(':id')
   update(@Param() params: MongoIdParams, @Body() updateProductDto: UpdateProductDto) {
     return this.productsService.update(params._id, updateProductDto);
   }
 
   @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(AdminJwtAuthGuard, RolesGuard)
   @Delete(':_id')
   remove(@Param() params: MongoIdParams) {
     return this.productsService.remove(params._id);
