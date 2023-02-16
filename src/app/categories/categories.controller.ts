@@ -3,7 +3,7 @@ import { RolesGuard } from 'src/app/auth/roles.guard';
 import { Role } from 'src/common/declare/enum';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { MongoIdParams } from '../../common/class/mongo-id-params';
+import { MongoIdParams } from 'src/common/helper';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';

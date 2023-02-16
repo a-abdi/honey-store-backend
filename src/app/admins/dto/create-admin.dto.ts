@@ -1,11 +1,12 @@
 import { Transform } from "class-transformer";
-import { IsEmail, IsMobilePhone, IsOptional, IsString, Matches, MinLength, Validate } from "class-validator";
+import { IsEmail, IsMobilePhone, IsNotEmpty, IsOptional, IsString, Matches, MinLength, Validate } from "class-validator";
 import { Match } from "src/common/decorators/match.decolator";
 import { standardPhonNumber } from "src/common/helper";
 import { IsPhoneAlreadyExist } from "../service/is-phone-already-exist";
 
 export class CreateAdminDto {
     @IsString({message: 'نام باید به صورت حروف وارد شود'})
+    @IsNotEmpty({message: 'نام الزامی است'})
     firstName: string;
 
     @IsString({message: 'نام خانوادگی باید به صورت حروف وارد شود'})

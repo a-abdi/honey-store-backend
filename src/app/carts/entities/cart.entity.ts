@@ -1,7 +1,7 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { User } from 'src/app/users/entities/user.entity';
-import { CartProduct } from '../types.ts/cart-product';
+import { CartProduct } from '../values/cart-product';
 
 @Schema({timestamps: true})
 export class Cart {

@@ -23,7 +23,8 @@ import { AuthModule as UserAuthModule } from './auth/users/auth-user.module';
     UserAuthModule,
     CartsModule,
     CategoriesModule,
-    UsersModule
+    UsersModule,
+    CartsModule,
   ],
   controllers: [],
   providers: [],
