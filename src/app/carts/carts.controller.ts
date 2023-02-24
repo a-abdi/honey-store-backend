@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { MongoIdParams } from 'src/common/helper';
 import { CartsService } from './carts.service';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
@@ -17,18 +18,18 @@ export class CartsController {
     return this.cartsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cartsService.findOne(+id);
+  @Get(':_id')
+  findOne(@Param() params: MongoIdParams) {
+    return this.cartsService.findOne(params._id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCartDto: UpdateCartDto) {
-    return this.cartsService.update(+id, updateCartDto);
+  @Patch(':_id')
+  update(@Param() params: MongoIdParams, @Body() updateCartDto: UpdateCartDto) {
+    return this.cartsService.update(params._id, updateCartDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cartsService.remove(+id);
+  @Delete(':_id')
+  remove(@Param() params: MongoIdParams) {
+    return this.cartsService.remove(params._id);
   }
 }

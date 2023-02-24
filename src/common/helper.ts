@@ -5,23 +5,23 @@ import { IsMobilePhone } from 'class-validator';
 import { IsMongoId } from 'class-validator';
 
 export class MongoIdParams {
-    @IsMongoId({message: 'شناسه به درستی وارد نشده است'})
-    _id: string;
+  @IsMongoId({message: 'شناسه به درستی وارد نشده است'})
+  _id: string;
 }
 
 export class PhoneNumberParams {
-    @IsMobilePhone(['fa-IR'],{}, {message: 'فرمت شماره موبایل اشتباه است'})
-    phoneNumber: string;
+  @IsMobilePhone(['fa-IR'],{}, {message: 'فرمت شماره موبایل اشتباه است'})
+  phoneNumber: string;
 }
 
 export const standardPhonNumber = (phoneNumber: string) => phoneNumber.replace(/^0/, '+98');
 
 export const fileStorage = (destination: string) => diskStorage({
-    destination,
-    filename: (req, file, cb) => {
-      const randomName: string = uuid();
-      cb(null, `${randomName}${extname(file.originalname)}`);
-    }
+  destination,
+  filename: (req, file, cb) => {
+    const randomName: string = uuid();
+    cb(null, `${randomName}${extname(file.originalname)}`);
+  }
 });
 
 const PERSIAN_NUMBER = [/۰/g, /۱/g, /۲/g, /۳/g, /۴/g, /۵/g, /۶/g, /۷/g, /۸/g, /۹/g];

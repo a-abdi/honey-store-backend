@@ -20,6 +20,6 @@ export class Cart {
   IsBought: boolean;
 }
 
-export type ProductDocument = Cart & Document;
+export type CartDocument = Cart & Document;
 
-export const ProductSchema = SchemaFactory.createForClass(Cart);
+export const CartSchema = SchemaFactory.createForClass(Cart);
