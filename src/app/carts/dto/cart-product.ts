@@ -6,9 +6,9 @@ import { convertToEn } from 'src/common/helper';
 import { Message } from 'src/common/message';
 import { Name } from 'src/common/message/name';
 
-export class CartProduct {
+export class CartProductDto {
     @IsMongoId({message: Message.INVALID_MONGO_ID()})
-    product: Schema.Types.ObjectId;
+    _id: Schema.Types.ObjectId;
 
     @IsString({message: Message.IS_STRING(Name.PRODUCT_NAME)})
     name: string;
@@ -16,15 +16,15 @@ export class CartProduct {
     @IsString({message: Message.IS_STRING(Name.IMAGE_SRC)})
     imageSrc: string;
 
-    @Transform(({value}) => parseInt(convertToEn(value)))
+    @Transform(({value}) => parseInt(convertToEn(value.toString())))
     @PersianLatinNumber({message: Message.MUST_BE_NUMBER(Name.PRICE)})
     price: number;
 
-    @Transform(({value}) => parseInt(convertToEn(value)))
+    @Transform(({value}) => parseInt(convertToEn(value.toString())))
     @PersianLatinNumber({message: Message.MUST_BE_NUMBER(Name.DISCOUNT)})
     discount: number;
 
-    @Transform(({value}) => parseInt(convertToEn(value)))
+    @Transform(({value}) => parseInt(convertToEn(value.toString())))
     @PersianLatinNumber({message: Message.MUST_BE_NUMBER(Name.QUANTITY)})
     quantity: number;
 }

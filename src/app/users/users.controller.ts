@@ -25,7 +25,6 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
-  // @Roles(Role.Admin, Role.User)
   @UseGuards(JwtAuthGuard, SelfUser)
   @Get(':_id')
   findOne(@Param() params: MongoIdParams) {
