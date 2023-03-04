@@ -16,7 +16,7 @@ export class AdminLocalStrategy extends PassportStrategy(Strategy, 'admin-local'
   async validate(phoneNumber: string, password: string): Promise<any> {
     const admin = await this.authService.validateUser(phoneNumber, password);
     if (!admin) {
-      throw new UnauthorizedException({error: INVALID_PHONE_OR_PASSWORD});
+      throw new UnauthorizedException(INVALID_PHONE_OR_PASSWORD);
     }
     
     return admin;

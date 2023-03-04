@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/app/users/users.service';
 import { AdminsService } from 'src/app/admins/admins.service';
 import 'dotenv/config';
@@ -31,7 +31,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     if (!user) {
-      throw new UnauthorizedException({error: INVALID_PHONE_OR_PASSWORD});
+      throw new UnauthorizedException(INVALID_PHONE_OR_PASSWORD);
     }
 
     if (payload?.phoneNumber !== user.phoneNumber) {
