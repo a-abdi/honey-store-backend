@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { Role } from 'src/common/declare/enum';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { MongoIdParams } from 'src/common/helper';
@@ -7,16 +7,16 @@ import { CartsService } from './carts.service';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { RolesGuard } from '../auth/roles.guard';
+import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('carts')
 export class CartsController {
   constructor(private readonly cartsService: CartsService) {}
 
-  // @Roles(Role.User)
   @UseGuards(JwtAuthGuard)
   @Post('products')
-  addToCart(@Body() createCartDto: CreateCartDto, @Req() request: any) {
-    return this.cartsService.addToCart(createCartDto, request);
+  addToCart(@Body() createCartDto: CreateCartDto, @User() user: any) {
+    return this.cartsService.addToCart(createCartDto, user);
   }
 
   @Roles(Role.Admin)
@@ -38,13 +38,13 @@ export class CartsController {
 
   @UseGuards(JwtAuthGuard)
   @Patch('products/:_id')
-  update(@Param() params: MongoIdParams, @Body() updateCartDto: UpdateCartDto, @Req() request: any) {
-    return this.cartsService.update(params._id, updateCartDto, request);
+  update(@Param() params: MongoIdParams, @Body() updateCartDto: UpdateCartDto, @User() user: any) {
+    return this.cartsService.update(params._id, updateCartDto, user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('products/:_id')
-  remove(@Param() params: MongoIdParams, @Req() request: any) {
-    return this.cartsService.remove(params._id, request);
+  remove(@Param() params: MongoIdParams, @User() user: any) {
+    return this.cartsService.remove(params._id, user);
   }
 }

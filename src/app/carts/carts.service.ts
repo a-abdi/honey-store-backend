@@ -9,9 +9,8 @@ import { Cart, CartDocument } from './entities/cart.entity';
 export class CartsService {
   constructor(@InjectModel(Cart.name) private readonly cartsModel: Model<CartDocument>){}
 
-  async addToCart(createCartDto: CreateCartDto, request: any) {
+  async addToCart(createCartDto: CreateCartDto, user: any) {
     const { product } = createCartDto;
-    const { user } = request;
     return await this.cartsModel.findOneAndUpdate(
       { user: user.userId },
       { $addToSet: {products: product} }, 
@@ -31,9 +30,8 @@ export class CartsService {
     return this.cartsModel.findOne({ $and: [{_id}, {user}]}).exec();
   }
 
-  async update(productId: string, updateCartDto: UpdateCartDto, request: any) {
+  async update(productId: string, updateCartDto: UpdateCartDto, user: any) {
     const { product } = updateCartDto;
-    const { user } = request;
     return await this.cartsModel.findOneAndUpdate( 
       { 
         $and: [ 
@@ -56,8 +54,7 @@ export class CartsService {
   )
   }
 
-  async remove(_id: string, request: any) {
-    const { user } = request;
+  async remove(_id: string, user: any) {
     return await this.cartsModel.findOneAndUpdate(
       { user: user.userId },
       { $pull: { products: { _id } } },
