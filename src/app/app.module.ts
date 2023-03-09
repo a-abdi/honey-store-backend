@@ -9,6 +9,8 @@ import { CartsModule } from './carts/carts.module';
 import { CategoriesModule } from './categories/categories.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule as UserAuthModule } from './auth/users/auth-user.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { TransformResponse } from '../common/interceptor/transform-response';
 
 @Module({
   imports: [
@@ -27,6 +29,11 @@ import { AuthModule as UserAuthModule } from './auth/users/auth-user.module';
     CartsModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformResponse,
+    },
+  ],
 })
 export class AppModule {}

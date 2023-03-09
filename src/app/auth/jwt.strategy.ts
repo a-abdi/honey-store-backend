@@ -35,7 +35,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     if (payload?.phoneNumber !== user.phoneNumber) {
-      throw new UnauthorizedException({error: INVALID_PHONE_OR_PASSWORD});
+      throw new UnauthorizedException(INVALID_PHONE_OR_PASSWORD);
     }
 
     return { 
