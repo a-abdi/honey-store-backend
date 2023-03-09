@@ -30,10 +30,10 @@ import { TransformResponse } from '../common/interceptor/transform-response';
   ],
   controllers: [],
   providers: [
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: TransformResponse,
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   useClass: TransformResponse,
+    // },
   ],
 })
 export class AppModule {}
