@@ -1,8 +1,5 @@
 export interface Response<T> {
-    statusCode: number;
     message: string;
-    data: {
-      result: Partial<T>,
-      meta: Partial<T>
-    };
-}
+    data: Partial<T>;
+    metaData: Partial<T>;
+};
