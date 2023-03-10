@@ -7,7 +7,10 @@ import { MongoIdParams } from 'src/common/helper';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { Message } from 'src/common/message';
 
+@ResponseMessage(Message.SUCCESS())
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
