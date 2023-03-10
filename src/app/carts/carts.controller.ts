@@ -9,7 +9,10 @@ import { UpdateCartDto } from './dto/update-cart.dto';
 import { RolesGuard } from '../auth/roles.guard';
 import { User } from 'src/common/decorators/user.decorator';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
+import { Message } from 'src/common/message';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 
+@ResponseMessage(Message.SUCCESS())
 @Controller('carts')
 export class CartsController {
   constructor(private readonly cartsService: CartsService) {}

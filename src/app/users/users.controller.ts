@@ -8,7 +8,10 @@ import { RolesGuard } from '../auth/roles.guard';
 import { MongoIdParams } from '../../common/helper';
 import { SelfUser } from '../auth/self-user.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Message } from 'src/common/message';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 
+@ResponseMessage(Message.SUCCESS())
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

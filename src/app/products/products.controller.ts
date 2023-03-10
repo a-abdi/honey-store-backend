@@ -12,7 +12,10 @@ import { Role } from '../../common/declare/enum';
 import { Request } from 'express';
 import { MongoIdParams } from '../../common/helper';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Message } from 'src/common/message';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 
+@ResponseMessage(Message.SUCCESS())
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
