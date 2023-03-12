@@ -13,10 +13,10 @@ export class TransformResponse<T> implements NestInterceptor<T, Response<T>> {
       context.getHandler(),
       context.getClass(),
     ]);
-    return next.handle().pipe(map(data => ({ 
+    return next.handle().pipe(map(response => ({ 
       message,
-      data: data?.result || data,
-      metaData: data.meta
+      data: response?.result || response,
+      metaData: response?.meta
     })));
   }
 }

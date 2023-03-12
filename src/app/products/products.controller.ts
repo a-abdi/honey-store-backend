@@ -14,6 +14,7 @@ import { MongoIdParams } from '../../common/helper';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Message } from 'src/common/message';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { AddHostUrl } from 'src/common/interceptor/add-host-url';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('products')
@@ -23,7 +24,7 @@ export class ProductsController {
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
-  @UseInterceptors(FileInterceptor('file',{ storage: fileStorage('upload/product') }))
+  @UseInterceptors(FileInterceptor('file', { storage: fileStorage('upload/product') }))
   create(
     @UploadedFile('file', new ParseFilePipe({
       validators: [
@@ -39,11 +40,13 @@ export class ProductsController {
   }
 
   @Get()
+  @UseInterceptors(new AddHostUrl('imageSrc'))
   findAll() {
     return this.productsService.findAll();
   }
 
   @Get(':_id')
+  @UseInterceptors(new AddHostUrl('imageSrc'))
   findOne(@Param() params: MongoIdParams) {
     return this.productsService.findOne(params._id);
   }
