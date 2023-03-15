@@ -9,13 +9,15 @@ import { FileTypeValidator } from '../../service/file-type-validation';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { Role } from '../../common/declare/enum';
-import { Request } from 'express';
 import { MongoIdParams } from '../../common/helper';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Message } from 'src/common/message';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { AddHostUrl } from 'src/common/interceptor/add-host-url';
 import { BindProductCode } from 'src/common/interceptor/bindProductCode';
+import { User } from 'src/common/decorators/user.decorator';
+import { AuthUserInfo } from 'src/interface/auth-user-info';
+import { createUpdateData } from './service/create-update-data';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('products')
@@ -36,9 +38,9 @@ export class ProductsController {
     }))
     file: Express.Multer.File,
     @Body() createProductDto: CreateProductDto,
-    @Req() request: Request,
+    @User() user: AuthUserInfo
   ) {
-    return this.productsService.create(createProductDto, file, request.user);
+    return this.productsService.create(createProductDto, file, user);
   }
 
   @Get()
@@ -55,9 +57,23 @@ export class ProductsController {
 
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseInterceptors(new AddHostUrl('imageSrc'))
+  @UseInterceptors(FileInterceptor('file', { storage: fileStorage('upload/product') }))
   @Patch(':_id')
-  update(@Param() params: MongoIdParams, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(params._id, updateProductDto);
+  update(
+    @UploadedFile('file', new ParseFilePipe({
+      validators: [
+        new FileMaxSizeValidator({maxSize: 500000}),
+        new FileTypeValidator({validType: ['jpg', 'jpeg', 'png']})
+      ],
+      fileIsRequired: false
+    })) file: Express.Multer.File,
+    @Param() params: MongoIdParams,
+    @Body() updateProductDto: UpdateProductDto,
+    @User() user: AuthUserInfo,
+  ) {
+    const updateData = createUpdateData(file, user, updateProductDto);
+    return this.productsService.update(params._id, updateData);
   }
 
   @Roles(Role.Admin)
