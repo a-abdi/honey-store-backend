@@ -1,4 +1,6 @@
 import { Injectable, FileValidator } from '@nestjs/common';
+import { Message } from 'src/common/message';
+import { Name } from 'src/common/message/name';
 
 @Injectable()
 export class FileMaxSizeValidator extends FileValidator{
@@ -11,6 +13,6 @@ export class FileMaxSizeValidator extends FileValidator{
   }
 
   buildErrorMessage(file: any): string {
-    return `حجم فایل ارسالی نباید بیش از ${this.validationOptions.maxSize} باشد`;
+    return  Message.MAXIMUM_VOLUME_FILE(Name.PRODUCT, this.validationOptions.maxSize);
   }
 }

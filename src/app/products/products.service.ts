@@ -13,15 +13,11 @@ export class ProductsService {
   {}
   
   async create(createProductDto: CreateProductDto, file: any, user: any): Promise<Product> {
-    try {    
-      return await new this.productModel({
-        ...createProductDto,
-        imageSrc: file.path,
-        admin: user.adminId
-      }).save();
-    } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-    }
+    return await new this.productModel({
+      ...createProductDto,
+      imageSrc: file.path,
+      admin: user.adminId
+    }).save();
   }
 
   findAll() {
@@ -29,7 +25,7 @@ export class ProductsService {
   }
 
   async findOne(_id: string) {
-    return this.productModel.findOne({_id}).exec();
+    return this.productModel.findOne({_id}).populate('category').exec();
   }
 
   async update(_id: string, updateProductDto: UpdateProductDto) {

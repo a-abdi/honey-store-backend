@@ -4,8 +4,7 @@ import { HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/app/users/users.service';
 import { AdminsService } from 'src/app/admins/admins.service';
 import 'dotenv/config';
-
-const INVALID_PHONE_OR_PASSWORD = 'شماره تماس یا پسورد اشتباه است';
+import { Message } from 'src/common/message';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -31,11 +30,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     }
 
     if (!user) {
-      throw new UnauthorizedException(INVALID_PHONE_OR_PASSWORD);
+      throw new UnauthorizedException(Message.INVALID_PHONE_OR_PASSWORD());
     }
 
     if (payload?.phoneNumber !== user.phoneNumber) {
-      throw new UnauthorizedException(INVALID_PHONE_OR_PASSWORD);
+      throw new UnauthorizedException(Message.INVALID_PHONE_OR_PASSWORD());
     }
 
     return { 

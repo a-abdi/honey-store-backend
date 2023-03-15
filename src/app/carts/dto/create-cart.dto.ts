@@ -7,7 +7,7 @@ import { CartProductDto } from "./cart-product";
 export class CreateCartDto { 
     @IsDefined({message: Message.SHOULD_BE_DEFINED(Name.PRODUCT)})
     @IsNotEmptyObject({}, {message: Message.NOT_BE_EMPTY(Name.PRODUCT)})
-    @IsObject({message: Message.MUST_BE_OBJECT(Name.PRODUCT)})
+    @IsObject({message: Message.INCORRECT(Name.PRODUCT)})
     @ValidateNested({ each: true })
     @Type(() => CartProductDto)
     product: CartProductDto;

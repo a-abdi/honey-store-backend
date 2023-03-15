@@ -3,14 +3,16 @@ import { extname } from "path";
 import { v4 as uuid } from 'uuid';
 import { IsMobilePhone } from 'class-validator';
 import { IsMongoId } from 'class-validator';
+import { Message } from "./message";
+import { Name } from "./message/name";
 
 export class MongoIdParams {
-  @IsMongoId({message: 'شناسه به درستی وارد نشده است'})
+  @IsMongoId({message: Message.INCORRECT(Name.ID)})
   _id: string;
 }
 
 export class PhoneNumberParams {
-  @IsMobilePhone(['fa-IR'],{}, {message: 'فرمت شماره موبایل اشتباه است'})
+  @IsMobilePhone(['fa-IR'],{}, {message: Message.INCORRECT_FORMAT(Name.PHONE_NUMBER)})
   phoneNumber: string;
 }
 
@@ -29,7 +31,7 @@ export const convertToEn = (str: string) =>
 {
   for(let i=0; i<10; i++)
   {
-    const strNumber: string = ""+i;
+    const strNumber: string = `${i}`;
     str = str.replace(PERSIAN_NUMBER[i], strNumber);
   }
   

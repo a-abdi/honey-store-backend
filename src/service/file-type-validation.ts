@@ -1,5 +1,7 @@
 import { Injectable, FileValidator } from '@nestjs/common';
 import { extname } from 'path';
+import { Message } from 'src/common/message';
+import { Name } from 'src/common/message/name';
 
 @Injectable()
 export class FileTypeValidator extends FileValidator{
@@ -13,6 +15,6 @@ export class FileTypeValidator extends FileValidator{
   }
 
   buildErrorMessage(file: any): string {
-    return `فرمت فایل ارسالی معتبر نیست`;
+    return Message.INCORRECT_FORMAT(Name.FILE);
   }
 }
