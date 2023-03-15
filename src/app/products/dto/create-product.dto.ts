@@ -20,7 +20,7 @@ export class CreateProductDto {
     @PersianLatinNumber({message: Message.MUST_BE_NUMBER(Name.QUANTITY)})
     quantity: number;
 
-    @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.DESCRIPTION)})
+    @IsString({message: Message.MUST_BE_STRING(Name.DESCRIPTION)})
     @IsOptional()
     description?: string;
 

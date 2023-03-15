@@ -29,7 +29,7 @@ export class ProductsService {
   }
 
   async update(_id: string, updateProductDto: UpdateProductDto) {
-    return await this.productModel.updateOne({_id}, updateProductDto, {new: true});
+    return await this.productModel.findOneAndUpdate({_id}, updateProductDto, {new: true}).exec();
 
   }
 
