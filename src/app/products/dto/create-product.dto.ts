@@ -6,34 +6,34 @@ import { Message } from 'src/common/message';
 import { Name } from 'src/common/message/name';
 
 export class CreateProductDto {
-    @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.NAME)})
     @IsString({message: Message.MUST_BE_STRING(Name.NAME)})
+    @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.NAME)})
     name: string;
 
-    @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.PRICE)})
     @Transform(({value}) => parseInt(convertToEn(value)))
     @PersianLatinNumber({message: Message.MUST_BE_NUMBER(Name.PRICE)})
+    @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.PRICE)})
     price: number;
 
-    @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.QUANTITY)})
     @Transform(({value}) => parseInt(convertToEn(value)))
     @PersianLatinNumber({message: Message.MUST_BE_NUMBER(Name.QUANTITY)})
+    @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.QUANTITY)})
     quantity: number;
 
     @IsString({message: Message.MUST_BE_STRING(Name.DESCRIPTION)})
     @IsOptional()
     description?: string;
 
-    @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.CODE)})
     @IsAlphanumeric('en-US', {message: Message.INCORRECT(Name.CODE)})
+    @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.CODE)})
     code: string;
 
-    @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.DISCOUNT)})
     @Transform(({value}) => parseInt(convertToEn(value)))
     @PersianLatinNumber({message: Message.MUST_BE_NUMBER(Name.DISCOUNT)})
+    @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.DISCOUNT)})
     discount?: number;
 
-    @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.CATEGORY)})
     @IsMongoId({message: Message.INCORRECT(Name.CATEGORY)})
+    @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.CATEGORY)})
     category: string;
 }
