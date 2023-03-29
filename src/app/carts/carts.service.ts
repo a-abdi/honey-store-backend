@@ -11,10 +11,10 @@ export class CartsService {
   constructor(@InjectModel(Cart.name) private readonly cartsModel: Model<CartDocument>){}
 
   async addToCart(createCartDto: CreateCartDto, user: AuthUserInfo) {
-    const { product } = createCartDto;
+    const { products } = createCartDto;
     return await this.cartsModel.findOneAndUpdate(
       { user: user.userId },
-      { $addToSet: {products: product} }, 
+      { $addToSet: { products: { $each: products } } }, 
       { new: true, upsert: true }
     ).exec();
   }
