@@ -29,6 +29,10 @@ export class ProductsService {
     return this.productModel.findOne({_id}).populate('category').exec();
   }
 
+  async productList(ids) {
+    return await this.productModel.find({_id: { $in: ids }}).exec();
+  }
+
   async update(_id: string, updateData) {
     return await this.productModel.findOneAndUpdate( {_id}, updateData, {new: true}).exec();
   }

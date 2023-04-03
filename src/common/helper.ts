@@ -38,3 +38,22 @@ export const convertToEn = (str: string) =>
   
   return str;
 };
+
+export const breakArrayOfObjectToOneArray = <T, K extends keyof T> ( arrayOfObject: T[], key: K ) => {
+  let objectValues = [];
+  for (const object of arrayOfObject) {
+    objectValues.push(object[key]);
+  }
+  return objectValues;
+};
+
+export const grabObjectInArrayOfObject = <T, K extends keyof T> ( arrayOfObject: T[], key: K, equal: any ) => {
+  if (Array.isArray(arrayOfObject)) {
+    for (const object of arrayOfObject) {
+      if (object[key] == equal) {
+        return object;
+      }
+    }
+  }
+  return null;
+};

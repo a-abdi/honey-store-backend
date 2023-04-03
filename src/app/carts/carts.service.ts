@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
-import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { Cart, CartDocument } from './entities/cart.entity';
 
@@ -10,14 +9,13 @@ import { Cart, CartDocument } from './entities/cart.entity';
 export class CartsService {
   constructor(@InjectModel(Cart.name) private readonly cartsModel: Model<CartDocument>){}
 
-  async addToCart(createCartDto: CreateCartDto, user: AuthUserInfo) {
-    const { products } = createCartDto;
-    return await this.cartsModel.findOneAndUpdate(
+  async addToCart(product: any, user: AuthUserInfo) {
+    await this.cartsModel.findOneAndUpdate(
       { user: user.userId },
-      { $addToSet: { products: { $each: products } } }, 
-      { new: true, upsert: true }
-    ).exec();
-  }
+      { $push: { "products": product }},
+      { upsert: true }
+    );
+  };
 
   async findAll() {
     return await this.cartsModel.find().exec();
@@ -55,11 +53,10 @@ export class CartsService {
   )
   }
 
-  async remove(_id: string, user: AuthUserInfo) {
+  async removeFromCart(_id: string, user: AuthUserInfo) {
     return await this.cartsModel.findOneAndUpdate(
       { user: user.userId },
-      { $pull: { products: { _id } } },
-      { new: true }
+      { $pull: { products: { _id } } }
     )
   }
 }

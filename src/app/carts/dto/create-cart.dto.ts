@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsArray, IsNotEmpty, ValidateNested } from "class-validator";
+import { IsArray, ValidateNested } from "class-validator";
 import { Message } from "src/common/message";
 import { Name } from "src/common/message/name";
 import { CartProductDto } from "./cart-product";

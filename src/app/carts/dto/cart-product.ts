@@ -1,6 +1,5 @@
 import { Transform } from 'class-transformer';
 import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
-import { Schema } from 'mongoose';
 import { PersianLatinNumber } from 'src/common/decorators/credit-number.decorator';
 import { convertToEn } from 'src/common/helper';
 import { Message } from 'src/common/message';
@@ -8,7 +7,7 @@ import { Name } from 'src/common/message/name';
 
 export class CartProductDto {
     @IsMongoId({message: Message.INVALID_MONGO_ID()})
-    _id: Schema.Types.ObjectId;
+    _id: string;
 
     @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.NAME)})
     @IsString({message: Message.MUST_BE_STRING(Name.NAME)})

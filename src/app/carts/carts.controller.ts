@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { Role } from 'src/common/declare/enum';
 import { Roles } from 'src/common/decorators/roles.decorator';
-import { MongoIdParams } from 'src/common/helper';
+import { MongoIdParams, breakArrayOfObjectToOneArray, grabObjectInArrayOfObject } from 'src/common/helper';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CartsService } from './carts.service';
 import { CreateCartDto } from './dto/create-cart.dto';
@@ -11,16 +11,36 @@ import { User } from 'src/common/decorators/user.decorator';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { Message } from 'src/common/message';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { ProductsService } from '../products/products.service';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('carts')
 export class CartsController {
-  constructor(private readonly cartsService: CartsService) {}
+  constructor(
+    private readonly cartsService: CartsService,
+    private readonly productService: ProductsService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('products')
-  addToCart(@Body() createCartDto: CreateCartDto, @User() user: AuthUserInfo) {
-    return this.cartsService.addToCart(createCartDto, user);
+  async addToCart(@Body() createCartDto: CreateCartDto, @User() user: AuthUserInfo) {
+    const { products } = createCartDto;
+    const productsId = breakArrayOfObjectToOneArray(products, "_id");
+    const productList = await this.productService.productList(productsId);
+    for (const newCartProduct of products) {
+      const product = grabObjectInArrayOfObject(productList, "_id", newCartProduct._id);
+      const maxQuantity = product?.quantity;
+      const oldCartProducts = await this.cartsService.removeFromCart(newCartProduct._id, user);
+      const oldProduct = grabObjectInArrayOfObject(oldCartProducts?.products, "_id", newCartProduct._id);
+      let newQuantity = newCartProduct?.quantity;
+      if (oldProduct?.quantity) {
+        newQuantity = oldProduct?.quantity + newCartProduct?.quantity;
+      }
+      newCartProduct.quantity = (newQuantity > maxQuantity ? maxQuantity : newQuantity);
+      if (maxQuantity > 0) {
+        this.cartsService.addToCart(newCartProduct, user);
+      }
+    }
   }
 
   @Roles(Role.Admin)
@@ -49,6 +69,6 @@ export class CartsController {
   @UseGuards(JwtAuthGuard)
   @Delete('products/:_id')
   remove(@Param() params: MongoIdParams, @User() user: AuthUserInfo) {
-    return this.cartsService.remove(params._id, user);
+    return this.cartsService.removeFromCart(params._id, user);
   }
 }
