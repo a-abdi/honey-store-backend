@@ -22,6 +22,12 @@ export class CartsController {
   ) {}
 
   @UseGuards(JwtAuthGuard)
+  @Get()
+  cart(@User() user: AuthUserInfo) {
+    return this.cartsService.findUserCart(user);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post('products')
   async addToCart(@Body() createCartDto: CreateCartDto, @User() user: AuthUserInfo) {
     const { products } = createCartDto;
@@ -50,16 +56,6 @@ export class CartsController {
     return this.cartsService.findAll();
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get(':_id')
-  // findOne(
-  //   @Param() params: MongoIdParams,
-  //   @Req() request: any
-  //   ) {
-  //   const {user} = request;
-  //   return this.cartsService.findByIdAndUserId(params._id, user?.userId);
-  // }
-
   @UseGuards(JwtAuthGuard)
   @Patch('products/:_id')
   update(@Param() params: MongoIdParams, @Body() updateCartDto: UpdateCartDto, @User() user: AuthUserInfo) {
@@ -68,7 +64,10 @@ export class CartsController {
 
   @UseGuards(JwtAuthGuard)
   @Delete('products/:_id')
-  remove(@Param() params: MongoIdParams, @User() user: AuthUserInfo) {
-    return this.cartsService.removeFromCart(params._id, user);
+  async remove(@Param() params: MongoIdParams, @User() user: AuthUserInfo,) {
+    const cartProduct = await this.cartsService.removeFromCart(params._id, user, { new: true });
+    if (!cartProduct?.products.length) {
+      this.cartsService.remove(user);
+    }
   }
 }

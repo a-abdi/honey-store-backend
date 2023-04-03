@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, QueryOptions } from 'mongoose';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { Cart, CartDocument } from './entities/cart.entity';
@@ -23,6 +23,10 @@ export class CartsService {
 
   async findOne(_id: string) {
     return this.cartsModel.findOne({_id}).exec();
+  }
+
+  async findUserCart(user: AuthUserInfo) {
+    return this.cartsModel.findOne({user: user.userId}).exec();
   }
 
   async findByIdAndUserId(_id: string, user: string) {
@@ -53,10 +57,15 @@ export class CartsService {
   )
   }
 
-  async removeFromCart(_id: string, user: AuthUserInfo) {
+  async removeFromCart(_id: string, user: AuthUserInfo, opt: QueryOptions = {}) {
     return await this.cartsModel.findOneAndUpdate(
       { user: user.userId },
-      { $pull: { products: { _id } } }
+      { $pull: { products: { _id } } },
+      opt
     )
+  }
+
+  async remove(user: AuthUserInfo) {
+    return await this.cartsModel.findOneAndRemove({user: user.userId});
   }
 }
