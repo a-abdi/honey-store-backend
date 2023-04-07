@@ -1,10 +1,11 @@
-import { Transform } from "class-transformer";
-import { IsMobilePhone, IsOptional, IsPostalCode, IsString, Matches, MaxLength, MinLength, Validate } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import { IsDefined, IsMobilePhone, IsNotEmptyObject, IsObject, IsOptional, IsString, Matches, MaxLength, MinLength, Validate, ValidateNested } from "class-validator";
 import { IsPhoneAlreadyExist } from "src/app/users/service/is-phone-already-exist";
 import { Match } from "src/common/decorators/match.decolator";
 import { standardPhonNumber } from "src/common/helper";
 import { Message } from "src/common/message";
 import { Name } from "src/common/message/name";
+import { AddressUserDto } from "./address-user-dto";
 
 export class CreateUserDto {
     @IsString({message: Message.MUST_BE_STRING(Name.NAME)})
@@ -15,7 +16,7 @@ export class CreateUserDto {
 
     @IsString({message: Message.MUST_BE_STRING(Name.LAST_NAME)})
     @MinLength(2, {message: Message.MINIMUM_STRING(Name.LAST_NAME, 2)})
-    @MaxLength(80, {message: Message.MAXIMUM_STRING(Name.NAME, 80)})
+    @MaxLength(80, {message: Message.MAXIMUM_STRING(Name.LAST_NAME, 80)})
     @IsOptional()
     lastName: string;
 
@@ -24,23 +25,13 @@ export class CreateUserDto {
     @Validate(IsPhoneAlreadyExist)
     phoneNumber: string;
 
-    @IsString({message: Message.MUST_BE_STRING(Name.ADDRESS)})
-    @MinLength(8, {message: Message.MINIMUM_STRING(Name.ADDRESS, 8)})
-    @MaxLength(300, {message: Message.MAXIMUM_STRING(Name.ADDRESS, 300)})
+    @IsDefined({message: Message.SHOULD_BE_DEFINED(Name.ADDRESS)})
+    @IsNotEmptyObject({}, {message: Message.NOT_BE_EMPTY(Name.ADDRESS)})
+    @IsObject({message: Message.INCORRECT(Name.ADDRESS)})
+    @ValidateNested({ each: true })
+    @Type(() => AddressUserDto)
     @IsOptional()
-    address: string;
-
-    @IsString({message: Message.MUST_BE_STRING(Name.POSTAL_CODE)})
-    @IsPostalCode(['IR'], {message: Message.INCORRECT(Name.POSTAL_CODE)})
-    @Transform(({value}) => value.replace('-', ''))
-    @IsOptional()
-    postalCode: string;
-
-    @IsString({message: Message.MUST_BE_STRING(Name.CITY)})
-    @MinLength(2, {message: Message.MINIMUM_STRING(Name.CITY, 2)})
-    @MaxLength(100, {message: Message.MAXIMUM_STRING(Name.CITY, 100)})
-    @IsOptional()
-    city: string;
+    address: AddressUserDto;
 
     @IsString({message: Message.MUST_BE_STRING(Name.PASSWORD)})
     @MinLength(8, {message: Message.MINIMUM_STRING(Name.PASSWORD, 8)})

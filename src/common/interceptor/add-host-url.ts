@@ -17,11 +17,11 @@ export class AddHostUrl<T> implements NestInterceptor<T, Response<T>> {
       .handle()
       .pipe(
         map(response => {
-          if(Array.isArray(response)) {
+          if(Array.isArray(response) && response) {
             response.map(
               data => data[this.key] = (data[this.key] &&`${hostAddress}/${data[this.key]}`)
             );
-          } else if(typeof response == 'object') {
+          } else if(typeof response == 'object' && response) {
             response[this.key] = (response[this.key] && `${hostAddress}/${response[this.key]}`);
           }
           return response;

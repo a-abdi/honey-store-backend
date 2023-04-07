@@ -14,7 +14,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Message } from 'src/common/message';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { AddHostUrl } from 'src/common/interceptor/add-host-url';
-import { BindProductCode } from 'src/common/interceptor/bindProductCode';
+import { BindProductCode } from 'src/common/interceptor/bind-product-code';
 import { User } from 'src/common/decorators/user.decorator';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { createUpdateData } from './service/create-update-data';
@@ -45,14 +45,14 @@ export class ProductsController {
 
   @Get()
   @UseInterceptors(new AddHostUrl('imageSrc'))
-  findAll() {
-    return this.productsService.findAll();
+  async findAll() {
+    return await this.productsService.findAll();
   }
 
   @Get(':_id')
   @UseInterceptors(new AddHostUrl('imageSrc'))
-  findOne(@Param() params: MongoIdParams) {
-    return this.productsService.findOne(params._id);
+  async findOne(@Param() params: MongoIdParams) {
+    return await  this.productsService.findOne(params._id);
   }
 
   @Roles(Role.Admin)
