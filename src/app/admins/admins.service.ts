@@ -20,7 +20,7 @@ export class AdminsService {
   }
 
   async findByPhone(phoneNumber: string) {
-    return await this.adminModel.findOne({phoneNumber}).exec();
+    return await this.adminModel.findOne({phoneNumber}).select(['phoneNumber','password']).exec();
   }
 
   async findByID(_id: string) {

@@ -19,7 +19,7 @@ export class User {
     @Prop()
     address: [AddressUserDto];
 
-    @Prop()
+    @Prop({select: false})
     password: string;
 }
 

@@ -22,7 +22,7 @@ export class UsersService {
   }
 
   async findByPhone(phoneNumber: string) {
-    return await this.userModel.findOne({phoneNumber}).exec();
+    return await this.userModel.findOne({phoneNumber}).select(['phoneNumber','password']).exec();
   }
 
   async update(_id: string, updateUserDto: UpdateUserDto) {

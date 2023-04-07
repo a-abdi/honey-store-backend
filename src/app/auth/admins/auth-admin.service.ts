@@ -13,11 +13,11 @@ export class AdminAuthService {
 
   async validateUser(phoneNumber: string, pass: string): Promise<any> {
     const admin = (await this.adminsService.findByPhone(standardPhonNumber(phoneNumber)))?.toObject();
-    if (!admin) {
+    if (!admin || !admin.password) {
       return null;
     }
     
-    const isValidPassword = await bcrypt.compare(pass, admin.password)
+    const isValidPassword = await bcrypt.compare(pass, admin.password);
     if (admin && isValidPassword) {
       const { password, ...result } = admin;
       return {...result};

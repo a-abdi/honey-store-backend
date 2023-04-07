@@ -35,13 +35,6 @@ export class AdminsController {
 
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Get(':phoneNumber')
-  async findOne(@Param() params: PhoneNumberParams) {
-    return await this.adminsService.findByPhone(params.phoneNumber);
-  }
-
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(':_id')
   update(@Param() params: MongoIdParams, @Body() updateAdminDto: UpdateAdminDto) {
     return this.adminsService.update(params._id, updateAdminDto);

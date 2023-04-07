@@ -18,7 +18,7 @@ export class Admin {
     @Prop()
     email: string
 
-    @Prop()
+    @Prop({select: false})
     password: string;
 }
 

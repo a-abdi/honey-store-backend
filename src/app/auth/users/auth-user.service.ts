@@ -13,11 +13,12 @@ export class UserAuthService {
 
   async validateUser(phoneNumber: string, pass: string): Promise<any> {
     const user = (await this.usersService.findByPhone(standardPhonNumber(phoneNumber)))?.toObject();
-    if (!user) {
+    
+    if (!user || !user.password) {
       return null;
     }
     
-    const isValidPassword = await bcrypt.compare(pass, user.password)
+    const isValidPassword = await bcrypt.compare(pass, user.password);
     if (user && isValidPassword) {
       const { password, ...result } = user;
       return {...result};

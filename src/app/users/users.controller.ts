@@ -10,6 +10,7 @@ import { SelfUser } from '../auth/self-user.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Message } from 'src/common/message';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { User } from './entities/user.entity';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('users')
@@ -18,7 +19,9 @@ export class UsersController {
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    return await this.usersService.create(createUserDto);
+    const newUser = (await this.usersService.create(createUserDto)).toObject();
+    delete newUser.password;
+    return newUser;
   }
 
   @Roles(Role.Admin)
