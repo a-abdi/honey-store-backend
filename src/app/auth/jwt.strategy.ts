@@ -5,6 +5,7 @@ import { UsersService } from 'src/app/users/users.service';
 import { AdminsService } from 'src/app/admins/admins.service';
 import 'dotenv/config';
 import { Message } from 'src/common/message';
+import { Schema } from 'mongoose';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -20,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    const _id: string = payload.sub;
+    const _id: Schema.Types.ObjectId = payload.sub;
     const roles: string[] = payload.roles;
     let user: any = null;
     if (roles.includes('admin')) {

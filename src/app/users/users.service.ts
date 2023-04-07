@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, UserDocument } from './entities/user.entity';
@@ -17,7 +17,7 @@ export class UsersService {
     return await this.userModel.find().exec();
   }
 
-  async findOne(_id: string) {
+  async findOne(_id: Schema.Types.ObjectId) {
     return await this.userModel.findOne({_id}).exec();
   }
 
@@ -25,8 +25,8 @@ export class UsersService {
     return await this.userModel.findOne({phoneNumber}).select(['phoneNumber','password']).exec();
   }
 
-  async update(_id: string, updateUserDto: UpdateUserDto) {
-    return await this.userModel.updateOne({_id}, updateUserDto, {new: true});
+  async update(_id: Schema.Types.ObjectId, updateUserDto: UpdateUserDto) {
+    return await this.userModel.findOneAndUpdate({_id}, updateUserDto, {new: true}).exec();
   }
 
   async remove(_id: string) {
