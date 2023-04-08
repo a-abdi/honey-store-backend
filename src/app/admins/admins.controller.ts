@@ -7,7 +7,6 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from '../../common/declare/enum'
 import { RolesGuard } from 'src/app/auth/roles.guard';
 import { MongoIdParams } from 'src/common/helper';
-import { PhoneNumberParams } from '../../common/helper';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Message } from 'src/common/message';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';

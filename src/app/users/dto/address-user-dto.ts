@@ -1,5 +1,5 @@
 import { Transform, Type } from "class-transformer";
-import { IsDefined, IsNotEmpty, IsNotEmptyObject, IsObject, IsPostalCode, IsString, MaxLength, MinLength, ValidateNested } from "class-validator";
+import { IsBoolean, IsDefined, IsNotEmpty, IsNotEmptyObject, IsObject, IsPostalCode, IsString, MaxLength, MinLength, ValidateNested } from "class-validator";
 import { Message } from "src/common/message";
 import { Name } from "src/common/message/name";
 import { RecipientUserDto } from "./recipient-user-dto";
@@ -41,5 +41,8 @@ export class AddressUserDto {
     @IsPostalCode(['IR'], {message: Message.INCORRECT(Name.POSTAL_CODE)})
     @Transform(({value}) => value.replace('-', ''))
     postalCode: string;
+
+    @IsBoolean()
+    selected: boolean;
 };
 
