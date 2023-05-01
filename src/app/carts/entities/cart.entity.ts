@@ -13,7 +13,7 @@ export class Cart {
   @Prop()
   products: [CartProductDto];
 
-  @Prop()
+  @Prop({default: false})
   IsBought: boolean;
 }
 

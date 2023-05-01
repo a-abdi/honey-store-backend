@@ -32,8 +32,8 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
-  findOne( @User() user: AuthUserInfo) {
+  @Get('info')
+  findOne(@User() user: AuthUserInfo) {
     return this.usersService.findOne(user.userId);
   }
 
