@@ -17,20 +17,8 @@ export class CartsService {
     );
   };
 
-  async findAll() {
-    return await this.cartsModel.find().exec();
-  }
-
-  async findOne(_id: string) {
-    return this.cartsModel.findOne({_id}).exec();
-  }
-
   async findUserCart(user: AuthUserInfo) {
     return this.cartsModel.findOne({user: user.userId}).exec();
-  }
-
-  async findByIdAndUserId(_id: string, user: string) {
-    return this.cartsModel.findOne({ $and: [{_id}, {user}]}).exec();
   }
 
   async update(productId: string, updateCartDto: UpdateCartDto, user: AuthUserInfo) {

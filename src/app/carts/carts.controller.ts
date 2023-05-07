@@ -1,12 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { Role } from 'src/common/declare/enum';
-import { Roles } from 'src/common/decorators/roles.decorator';
 import { MongoIdParams, breakArrayOfObjectToOneArray, grabObjectInArrayOfObject } from 'src/common/helper';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CartsService } from './carts.service';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
-import { RolesGuard } from '../auth/roles.guard';
 import { User } from 'src/common/decorators/user.decorator';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { Message } from 'src/common/message';
@@ -47,13 +44,6 @@ export class CartsController {
         this.cartsService.addToCart(newCartProduct, user);
       }
     }
-  }
-
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Get('products')
-  findAll() {
-    return this.cartsService.findAll();
   }
 
   @UseGuards(JwtAuthGuard)
