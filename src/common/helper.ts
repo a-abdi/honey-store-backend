@@ -5,10 +5,11 @@ import { IsMobilePhone } from 'class-validator';
 import { IsMongoId } from 'class-validator';
 import { Message } from "./message";
 import { Name } from "./message/name";
+import { Schema } from "mongoose";
 
 export class MongoIdParams {
   @IsMongoId({message: Message.INCORRECT(Name.ID)})
-  _id: string;
+  _id: Schema.Types.ObjectId;
 }
 
 export class PhoneNumberParams {

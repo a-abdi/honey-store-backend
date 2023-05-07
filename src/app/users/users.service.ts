@@ -29,7 +29,7 @@ export class UsersService {
     return await this.userModel.findOneAndUpdate({_id}, updateUserDto, {new: true}).exec();
   }
 
-  async remove(_id: string) {
+  async remove(_id: Schema.Types.ObjectId) {
     return await this.userModel.findOneAndRemove();
   }
 }

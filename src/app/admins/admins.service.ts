@@ -27,11 +27,11 @@ export class AdminsService {
     return await this.adminModel.findOne({_id}).exec();
   }
 
-  async update(_id: string, updateAdminDto: UpdateAdminDto) {
+  async update(_id: Schema.Types.ObjectId, updateAdminDto: UpdateAdminDto) {
     return await this.adminModel.updateOne({_id}, updateAdminDto, {new: true});
   }
 
-  async remove(_id: string) {
+  async remove(_id: Schema.Types.ObjectId) {
     return await this.adminModel.findOneAndRemove({_id});
   }
 }

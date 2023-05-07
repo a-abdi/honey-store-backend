@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -25,19 +25,19 @@ export class ProductsService {
     return this.productModel.find().populate('category').exec();
   }
 
-  async findOne(_id: string) {
+  async findOne(_id: Schema.Types.ObjectId) {
     return this.productModel.findOne({_id}).populate('category').exec();
   }
 
-  async productList(ids) {
+  async productList(ids: Schema.Types.ObjectId[]) {
     return await this.productModel.find({_id: { $in: ids }}).exec();
   }
 
-  async update(_id: string, updateData) {
+  async update(_id: Schema.Types.ObjectId, updateData) {
     return await this.productModel.findOneAndUpdate( {_id}, updateData, {new: true}).exec();
   }
 
-  async remove(_id: string) {
+  async remove(_id: Schema.Types.ObjectId) {
     return await this.productModel.findOneAndRemove({_id});
   }
 }

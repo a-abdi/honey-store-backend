@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category, CategoryDocument } from './entities/category.entity';
@@ -19,7 +19,7 @@ export class CategoriesService {
     return await this.categoryModel.find().exec();
   }
 
-  async findByID(_id: string) {
+  async findByID(_id: Schema.Types.ObjectId) {
     return await this.categoryModel.findOne({_id}).exec();
   }
 
@@ -27,11 +27,11 @@ export class CategoriesService {
     return await this.categoryModel.findOne({name}).exec();
   }
 
-  async update(_id: string, updateCategoryDto: UpdateCategoryDto) {
+  async update(_id: Schema.Types.ObjectId, updateCategoryDto: UpdateCategoryDto) {
     return await this.categoryModel.findOneAndUpdate({_id}, updateCategoryDto, {new: true});
   }
 
-  async remove(_id: string) {
+  async remove(_id: Schema.Types.ObjectId) {
     return await this.categoryModel.deleteOne({_id}) 
   }
 }

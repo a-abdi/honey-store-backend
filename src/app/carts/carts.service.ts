@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, QueryOptions } from 'mongoose';
+import { Model, QueryOptions, Schema } from 'mongoose';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { Cart, CartDocument } from './entities/cart.entity';
@@ -18,10 +18,16 @@ export class CartsService {
   };
 
   async findUserCart(user: AuthUserInfo) {
-    return this.cartsModel.findOne({user: user.userId}).exec();
+    return this.cartsModel.findOne({user: user.userId})
+      .populate({
+        path: 'products', populate: {
+          path: '_id',
+          model: 'Product'
+        }
+      }).exec();
   }
 
-  async update(productId: string, updateCartDto: UpdateCartDto, user: AuthUserInfo) {
+  async update(productId: Schema.Types.ObjectId, updateCartDto: UpdateCartDto, user: AuthUserInfo) {
     const { product } = updateCartDto;
     return await this.cartsModel.findOneAndUpdate( 
       { 
@@ -32,20 +38,16 @@ export class CartsService {
       },
       {
         $set: {
-          "products.$.name": product?.name,
-          "products.$.imageSrc": product?.imageSrc,
-          "products.$.price": product?.price,
-          "products.$.discount": product?.discount,
           "products.$.quantity": product?.quantity,
         }
       },
       {
         new: true
       }
-  )
+    )
   }
 
-  async removeFromCart(_id: string, user: AuthUserInfo, opt: QueryOptions = {}) {
+  async removeFromCart(_id: Schema.Types.ObjectId, user: AuthUserInfo, opt: QueryOptions = {}) {
     return await this.cartsModel.findOneAndUpdate(
       { user: user.userId },
       { $pull: { products: { _id } } },
