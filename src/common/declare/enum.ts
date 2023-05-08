@@ -3,7 +3,7 @@ export enum Role {
     Admin = 'admin',
 }
 
-export enum Status {
+export enum OrderStatus {
     WatingPay,
     Payment,
     Cancel,
