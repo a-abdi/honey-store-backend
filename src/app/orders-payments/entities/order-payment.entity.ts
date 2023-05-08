@@ -4,11 +4,12 @@ import { Payment } from "./payment.entity";
 import { CartProduct } from "./cart-order.entity";
 import { Prop } from "@nestjs/mongoose";
 
-export class Order {
+export class OrderPayment {
     @Prop({type: Schema.Types.ObjectId, ref: 'User'})
     userId: Schema.Types.ObjectId;
     
-    @Prop({ type: [{ 
+    @Prop({ 
+        type: [{ 
             productId: { type: Schema.Types.ObjectId },
             name: { type: String },
             imageSrc: { type: String },
