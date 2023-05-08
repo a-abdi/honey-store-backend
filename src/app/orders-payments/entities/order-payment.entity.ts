@@ -1,16 +1,19 @@
-import { Schema } from "mongoose";
+import { Document, Schema as MongooseSchema } from "mongoose";
 import { OrderStatus } from "src/common/declare/enum";
 import { Payment } from "./payment.entity";
 import { CartProduct } from "./cart-order.entity";
-import { Prop } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
+@Schema({timestamps: true})
 export class OrderPayment {
-    @Prop({type: Schema.Types.ObjectId, ref: 'User'})
-    userId: Schema.Types.ObjectId;
+    _id: MongooseSchema.Types.ObjectId;
+
+    @Prop({type: MongooseSchema.Types.ObjectId, ref: 'User'})
+    userId: MongooseSchema.Types.ObjectId;
     
     @Prop({ 
         type: [{ 
-            productId: { type: Schema.Types.ObjectId },
+            productId: { type: MongooseSchema.Types.ObjectId, ref: 'Product' },
             name: { type: String },
             imageSrc: { type: String },
             price: { type: Number },
@@ -21,7 +24,7 @@ export class OrderPayment {
     cart: CartProduct[];
     
     @Prop()
-    amout: number;
+    amount: number;
     
     @Prop()
     code: string;
@@ -39,3 +42,7 @@ export class OrderPayment {
     })
     payment: Payment;
 }
+
+export type OrderPaymentDocument = OrderPayment & Document;
+
+export const OrderPaymetSchema = SchemaFactory.createForClass(OrderPayment);

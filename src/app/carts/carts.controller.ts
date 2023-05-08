@@ -28,11 +28,15 @@ export class CartsController {
   @Post('products')
   async addToCart(@Body() createCartDto: CreateCartDto, @User() user: AuthUserInfo) {
     const { products } = createCartDto;
+    // get product id list
     const productsId = breakArrayOfObjectToOneArray(products, "_id");
+    // find product in product id list
     const productList = await this.productService.productList(productsId);
     for (const newCartProduct of products) {
+      // get product wich find from product for use max count
       const product = grabObjectInArrayOfObject(productList, "_id", newCartProduct._id);
       const maxQuantity = product?.quantity;
+      // delete duplicat product form user cart then sum count insert new product
       const oldCartProducts = await this.cartsService.removeFromCart(newCartProduct._id, user);
       const oldProduct = grabObjectInArrayOfObject(oldCartProducts?.products, "_id", newCartProduct._id);
       let newQuantity = newCartProduct?.quantity;

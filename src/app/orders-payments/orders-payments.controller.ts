@@ -1,34 +1,42 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { OrdersPaymentsService } from './orders-payments.service';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { User } from 'src/common/decorators/user.decorator';
+import { AuthUserInfo } from 'src/interface/auth-user-info';
+import { CartsService } from '../carts/carts.service';
+import { createRandomCode } from 'src/common/helper';
+import { getAmount } from './helper/get-amount';
+import { getCartProduct } from './helper/get-cart-product';
+import { OrderPaymentInterface } from './helper/interface';
 
-@Controller('orders')
+@Controller()
 export class OrdersPaymentsController {
-  constructor(private readonly ordersService: OrdersPaymentsService) {}
+  constructor(
+    private readonly ordersPaymentsService: OrdersPaymentsService,
+    private readonly cartService: CartsService,
+  ) {}
 
-  @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.ordersService.create(createOrderDto);
-  }
+  @UseGuards(JwtAuthGuard)
+  @Get('checkout/payment')
+  async checkoutPayement(@User() user: AuthUserInfo) {
+    const opt = { new: true };
+    const carts = await (await this.cartService.remove(user, opt))?.populate({
+      path: 'products', populate: {
+        path: '_id',
+        model: 'Product'
+      }
+    });
 
-  @Get()
-  findAll() {
-    return this.ordersService.findAll();
-  }
+    if (carts) {
+      const orderPayment: OrderPaymentInterface = {
+        amount: getAmount(carts),
+        cart: getCartProduct(carts),
+        userId: user.userId,
+        code: createRandomCode(),
+      };
+      this.ordersPaymentsService.createOrder(orderPayment);
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ordersService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.ordersService.update(+id, updateOrderDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ordersService.remove(+id);
+    return carts;
   }
 }

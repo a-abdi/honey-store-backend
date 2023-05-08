@@ -1,11 +1,11 @@
-import { Schema, Prop, SchemaFactory, raw } from '@nestjs/mongoose';
+import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { User } from 'src/app/users/entities/user.entity';
 import { Product } from 'src/app/products/entities/product.entity';
 
 class CartProducts {
   @Prop({type: MongooseSchema.Types.ObjectId, ref: 'Product'})
-  _id: MongooseSchema.Types.ObjectId | Product;
+  _id: Product;
 
   @Prop()
   quantity: number;

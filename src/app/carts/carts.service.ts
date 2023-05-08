@@ -55,7 +55,7 @@ export class CartsService {
     )
   }
 
-  async remove(user: AuthUserInfo) {
-    return await this.cartsModel.findOneAndRemove({user: user.userId});
+  async remove(user: AuthUserInfo, opt = {}) {
+    return await this.cartsModel.findOneAndRemove({user: user.userId}, opt);
   }
 }

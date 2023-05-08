@@ -11,6 +11,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule as UserAuthModule } from './auth/users/auth-user.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformResponse } from '../common/interceptor/transform-response';
+import { OrdersPaymentsModule } from './orders-payments/orders-payments.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { TransformResponse } from '../common/interceptor/transform-response';
     CategoriesModule,
     UsersModule,
     CartsModule,
+    OrdersPaymentsModule,
   ],
   controllers: [],
   providers: [

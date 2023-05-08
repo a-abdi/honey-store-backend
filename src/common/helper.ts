@@ -58,3 +58,7 @@ export const grabObjectInArrayOfObject = <T, K extends keyof T> ( arrayOfObject:
   }
   return null;
 };
+
+export const createRandomCode = () => {
+  return (Math.random() + 1).toString(36).substring(2);
+}
