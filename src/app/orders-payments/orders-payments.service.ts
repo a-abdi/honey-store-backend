@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { OrderPaymentInterface } from './helper/interface';
+import { OrderPaymentInterface } from './interface/interface';
 import { OrderPayment, OrderPaymentDocument } from './entities/order-payment.entity';
 import { Model } from 'mongoose';
 

@@ -1,4 +1,4 @@
-import { CartProductInterface } from "./interface";
+import { CartProductInterface } from "../interface/interface";
 
 export const getCartProduct = carts => {
     let cartProductList: CartProductInterface[] = [];

@@ -5,27 +5,24 @@ import { User } from 'src/common/decorators/user.decorator';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { CartsService } from '../carts/carts.service';
 import { createRandomCode } from 'src/common/helper';
-import { getAmount } from './helper/get-amount';
-import { getCartProduct } from './helper/get-cart-product';
-import { OrderPaymentInterface } from './helper/interface';
+import { getAmount } from './helper/get-amount.helper';
+import { getCartProduct } from './helper/get-cart-product.helper';
+import { OrderPaymentInterface } from './interface/interface';
+import { ProductHelper } from './helper/product.helper';
+import { CartHelper } from './helper/cart.helper';
 
 @Controller()
 export class OrdersPaymentsController {
   constructor(
     private readonly ordersPaymentsService: OrdersPaymentsService,
-    private readonly cartService: CartsService,
+    private readonly cartHelper: CartHelper,
+    private readonly productHelper: ProductHelper,
   ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('checkout/payment')
   async checkoutPayement(@User() user: AuthUserInfo) {
-    const opt = { new: true };
-    const carts = await (await this.cartService.remove(user, opt))?.populate({
-      path: 'products', populate: {
-        path: '_id',
-        model: 'Product'
-      }
-    });
+    const carts = await this.cartHelper.removeUserCartGetValue(user);
 
     if (carts) {
       const orderPayment: OrderPaymentInterface = {
@@ -35,6 +32,7 @@ export class OrdersPaymentsController {
         code: createRandomCode(),
       };
       this.ordersPaymentsService.createOrder(orderPayment);
+      this.productHelper.decreaseProductQuantity(carts);
     }
 
     return carts;
