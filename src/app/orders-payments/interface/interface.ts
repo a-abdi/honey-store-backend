@@ -15,6 +15,7 @@ export interface OrderPaymentInterface {
 export interface PaymentInterface {
     status?: number;
     transactionId?: string;
+    transactionLink?: string;
     trackId?: number;
     cartNo?: string;
     error?: any;

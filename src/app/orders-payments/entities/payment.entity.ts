@@ -9,6 +9,9 @@ export class Payment {
     transactionId: string;
 
     @Prop()
+    transactionLink: string;
+
+    @Prop()
     trackId: number;
 
     @Prop()

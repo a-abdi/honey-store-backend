@@ -38,6 +38,7 @@ export class OrderPayment {
         type: {
             status: { type: Number },
             transactionId: { type: String },
+            transactionLink: { type: String },
             trackId: { type: Number },
             cartNo: { type: String },
             error: { type: MongooseSchema.Types.Mixed },
