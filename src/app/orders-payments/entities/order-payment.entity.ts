@@ -3,13 +3,14 @@ import { OrderStatus } from "src/common/declare/enum";
 import { Payment } from "./payment.entity";
 import { CartProduct } from "./cart-order.entity";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { User } from "src/app/users/entities/user.entity";
 
 @Schema({timestamps: true})
 export class OrderPayment {
     _id: MongooseSchema.Types.ObjectId;
 
     @Prop({type: MongooseSchema.Types.ObjectId, ref: 'User'})
-    userId: MongooseSchema.Types.ObjectId;
+    user: MongooseSchema.Types.ObjectId | User;
     
     @Prop({ 
         type: [{ 
@@ -19,7 +20,8 @@ export class OrderPayment {
             price: { type: Number },
             discount: { type: Number },
             quantity: { type: Number },
-        }] 
+        }],
+        _id: false
     })
     cart: CartProduct[];
     
@@ -38,7 +40,9 @@ export class OrderPayment {
             transactionId: { type: String },
             trackId: { type: Number },
             cartNo: { type: String },
-        }
+            error: { type: MongooseSchema.Types.Mixed },
+        },
+        _id: false
     })
     payment: Payment;
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { OrderPaymentInterface } from './interface/interface';
 import { OrderPayment, OrderPaymentDocument } from './entities/order-payment.entity';
-import { Model } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 
 @Injectable()
 export class OrdersPaymentsService {
@@ -10,5 +10,9 @@ export class OrdersPaymentsService {
     
     async createOrder(orderPayment: OrderPaymentInterface) {
         return await this.orderPaymentModel.create(orderPayment);
+    }
+
+    async updateOrder(_id: Schema.Types.ObjectId, orderPayment: Partial<OrderPaymentInterface>) {
+        return await this.orderPaymentModel.findOneAndUpdate({ _id }, orderPayment).exec();
     }
 }

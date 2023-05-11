@@ -32,7 +32,7 @@ export class ProductsService {
     return await this.productModel.find({_id: { $in: ids }}).exec();
   }
 
-  async update(_id, updateData) {
+  async update(_id, updateData: any) {
     return await this.productModel.findOneAndUpdate( {_id}, updateData, {new: true}).exec();
   }
 

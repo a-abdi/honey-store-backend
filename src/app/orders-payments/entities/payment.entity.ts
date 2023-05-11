@@ -1,4 +1,5 @@
 import { Prop } from "@nestjs/mongoose";
+import { Schema } from "mongoose";
 
 export class Payment {
     @Prop()
@@ -12,4 +13,7 @@ export class Payment {
 
     @Prop()
     cartNo: string;
+
+    @Prop()
+    error: Schema.Types.Mixed;
 }

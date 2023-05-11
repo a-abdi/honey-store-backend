@@ -3,13 +3,13 @@ import { OrdersPaymentsService } from './orders-payments.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from 'src/common/decorators/user.decorator';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
-import { CartsService } from '../carts/carts.service';
 import { createRandomCode } from 'src/common/helper';
 import { getAmount } from './helper/get-amount.helper';
 import { getCartProduct } from './helper/get-cart-product.helper';
 import { OrderPaymentInterface } from './interface/interface';
 import { ProductHelper } from './helper/product.helper';
 import { CartHelper } from './helper/cart.helper';
+import { PaymentHelper } from './helper/payment.helper';
 
 @Controller()
 export class OrdersPaymentsController {
@@ -17,6 +17,7 @@ export class OrdersPaymentsController {
     private readonly ordersPaymentsService: OrdersPaymentsService,
     private readonly cartHelper: CartHelper,
     private readonly productHelper: ProductHelper,
+    private readonly paymentHelper: PaymentHelper,
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -28,13 +29,16 @@ export class OrdersPaymentsController {
       const orderPayment: OrderPaymentInterface = {
         amount: getAmount(carts),
         cart: getCartProduct(carts),
-        userId: user.userId,
+        user: user.userId,
         code: createRandomCode(),
       };
-      this.ordersPaymentsService.createOrder(orderPayment);
-      this.productHelper.decreaseProductQuantity(carts);
+      const order = await this.ordersPaymentsService.createOrder(orderPayment);
+      
+      await this.productHelper.decreaseProductQuantity(carts);
+      const transaction = await this.paymentHelper.createTransaction(user, order);
+      return transaction
     }
-
+    
     return carts;
   }
 }

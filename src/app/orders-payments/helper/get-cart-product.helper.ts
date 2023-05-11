@@ -1,6 +1,7 @@
+import { Cart } from "src/app/carts/entities/cart.entity";
 import { CartProductInterface } from "../interface/interface";
 
-export const getCartProduct = carts => {
+export const getCartProduct = (carts: Cart) => {
     let cartProductList: CartProductInterface[] = [];
     for (const cart of carts.products) {
       const product = cart._id;

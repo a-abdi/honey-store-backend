@@ -1,9 +1,10 @@
 import { Schema } from "mongoose";
 import { Product } from "src/app/products/entities/product.entity";
+import { User } from "src/app/users/entities/user.entity";
 import { OrderStatus } from "src/common/declare/enum";
 
 export interface OrderPaymentInterface {
-    userId: Schema.Types.ObjectId;
+    user: Schema.Types.ObjectId | User;
     cart: CartProductInterface[];
     amount: number;
     code: string;
@@ -12,10 +13,11 @@ export interface OrderPaymentInterface {
 }
 
 export interface PaymentInterface {
-        status: number;
-        transactionId: string;
-        trackId: number;
-        cartNo: string;
+    status?: number;
+    transactionId?: string;
+    trackId?: number;
+    cartNo?: string;
+    error?: any;
 }
 
 export interface CartProductInterface {
