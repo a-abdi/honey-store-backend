@@ -12,10 +12,11 @@ import { AuthModule as UserAuthModule } from './auth/users/auth-user.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformResponse } from '../common/interceptor/transform-response';
 import { OrdersPaymentsModule } from './orders-payments/orders-payments.module';
+import 'dotenv/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/asal'), 
+    MongooseModule.forRoot(process.env.DATABASE_URL), 
     ConfigModule.forRoot({
       isGlobal: true,
       load: [config]

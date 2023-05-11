@@ -7,28 +7,30 @@ import { Document, Types } from "mongoose";
 import { AxiosError } from "axios";
 import {  PaymentInterface } from "../interface/interface";
 import { OrdersPaymentsService } from "../orders-payments.service";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class PaymentHelper {
     constructor(
         private readonly httpService: HttpService,
         private readonly ordersPaymentsService: OrdersPaymentsService,
+        private configService: ConfigService
     ) {}
 
     async createTransaction(user: AuthUserInfo, order: OrderPayment & Document<any, any, any> & {
         _id: Types.ObjectId;
     } ) {
-        const url = 'https://api.idpay.ir/v1.1/payment';
+        const url = this.configService.get<string>('CREATE_TRANSACTION_URL');
         const headers = {
             'Content-Type': 'application/json',
-            'X-API-KEY': 'e852d706-76cc-44ec-8360-df1b6b43bada',
-            'X-SANDBOX': 1,
+            'X-API-KEY': this.configService.get<string>('X_API_KEY'),
+            'X-SANDBOX': this.configService.get<boolean>('X_SANDBOX'),
         };
         const data = {
             'order_id': order.id,
             'amount': order.id,
             'phone': user.phoneNumber,
-            'callback': 'http://localhost/callback',
+            'callback': this.configService.get<string>('TRANSACTION_CALLBACK'),
         };
 
         return await firstValueFrom(
