@@ -29,3 +29,8 @@ export interface CartProductInterface {
     discount: number;
     quantity: number;
 }
+
+export interface TransactionInterFace {
+    id: string,
+    link: string
+}

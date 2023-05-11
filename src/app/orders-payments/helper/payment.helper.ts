@@ -5,7 +5,7 @@ import { HttpService } from "@nestjs/axios";
 import { catchError, firstValueFrom, map } from "rxjs";
 import { Document, Types } from "mongoose";
 import { AxiosError } from "axios";
-import {  PaymentInterface } from "../interface/interface";
+import {  PaymentInterface, TransactionInterFace } from "../interface/interface";
 import { OrdersPaymentsService } from "../orders-payments.service";
 import { ConfigService } from "@nestjs/config";
 
@@ -18,8 +18,8 @@ export class PaymentHelper {
     ) {}
 
     async createTransaction(user: AuthUserInfo, order: OrderPayment & Document<any, any, any> & {
-        _id: Types.ObjectId;
-    } ) {
+            _id: Types.ObjectId;
+        } ) {
         const url = this.configService.get<string>('CREATE_TRANSACTION_URL');
         const headers = {
             'Content-Type': 'application/json',
@@ -28,17 +28,16 @@ export class PaymentHelper {
         };
         const data = {
             'order_id': order.id,
-            'amount': order.id,
+            'amount': order.amount,
             'phone': user.phoneNumber,
             'callback': this.configService.get<string>('TRANSACTION_CALLBACK'),
         };
 
         return await firstValueFrom(
-        this.httpService.post(url, data, { headers }).pipe(map((res) => res.data)).pipe(
+        this.httpService.post<TransactionInterFace>(url, data, { headers }).pipe(map((res) => res.data)).pipe(
             catchError((error: AxiosError) => {
                 const payment: PaymentInterface =  {
                     error: error.response.data
-                    
                 }
                 this.ordersPaymentsService.updateOrder(order.id, { payment });
                 throw new ForbiddenException('خطا در ارتباط با درگاه پرداخت');

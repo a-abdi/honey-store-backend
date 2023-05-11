@@ -6,7 +6,7 @@ import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { createRandomCode } from 'src/common/helper';
 import { getAmount } from './helper/get-amount.helper';
 import { getCartProduct } from './helper/get-cart-product.helper';
-import { OrderPaymentInterface } from './interface/interface';
+import { OrderPaymentInterface, PaymentInterface } from './interface/interface';
 import { ProductHelper } from './helper/product.helper';
 import { CartHelper } from './helper/cart.helper';
 import { PaymentHelper } from './helper/payment.helper';
@@ -36,6 +36,11 @@ export class OrdersPaymentsController {
       
       await this.productHelper.decreaseProductQuantity(carts);
       const transaction = await this.paymentHelper.createTransaction(user, order);
+      const payment: PaymentInterface = {
+        transactionId: transaction.id,
+        transactionLink: transaction.link,
+      };
+      await this.ordersPaymentsService.updateOrder(order.id, { payment });
       return transaction
     }
     
