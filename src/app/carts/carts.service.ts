@@ -9,7 +9,7 @@ import { Cart, CartDocument } from './entities/cart.entity';
 export class CartsService {
   constructor(@InjectModel(Cart.name) private readonly cartsModel: Model<CartDocument>){}
 
-  async addToCart(product: any, user: AuthUserInfo) {
+  async addToCart(product: {quantity: number, product: Schema.Types.ObjectId}, user: AuthUserInfo) {
     await this.cartsModel.findOneAndUpdate(
       { user: user.userId },
       { $push: { "products": product }},

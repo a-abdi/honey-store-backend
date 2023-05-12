@@ -10,7 +10,7 @@ export class CartHelper {
         const opt = { new: true };
         return await (await this.cartService.remove(user, opt))?.populate({
           path: 'products', populate: {
-            path: '_id',
+            path: 'product',
             model: 'Product'
           }
         });

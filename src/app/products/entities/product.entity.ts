@@ -28,7 +28,7 @@ export class Product {
   @Prop()
   code: string;
 
-  @Prop({type: MongooseSchema.Types.ObjectId, ref: 'Admin'})
+  @Prop({type: MongooseSchema.Types.ObjectId, ref: 'Admin', select: false})
   admin: MongooseSchema.Types.ObjectId | Admin;
 
   @Prop({type: MongooseSchema.Types.ObjectId, ref: 'Category'})

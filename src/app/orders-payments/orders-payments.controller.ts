@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Res, UseGuards } from '@nestjs/common';
 import { OrdersPaymentsService } from './orders-payments.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from 'src/common/decorators/user.decorator';
@@ -10,6 +10,7 @@ import { OrderPaymentInterface, PaymentInterface } from './interface/interface';
 import { ProductHelper } from './helper/product.helper';
 import { CartHelper } from './helper/cart.helper';
 import { PaymentHelper } from './helper/payment.helper';
+import { Response } from 'express';
 
 @Controller()
 export class OrdersPaymentsController {
@@ -22,9 +23,8 @@ export class OrdersPaymentsController {
 
   @UseGuards(JwtAuthGuard)
   @Get('checkout/payment')
-  async checkoutPayement(@User() user: AuthUserInfo) {
+  async checkoutPayement(@User() user: AuthUserInfo, @Res() res: Response) {
     const carts = await this.cartHelper.removeUserCartGetValue(user);
-
     if (carts) {
       const orderPayment: OrderPaymentInterface = {
         amount: getAmount(carts),
@@ -33,7 +33,6 @@ export class OrdersPaymentsController {
         code: createRandomCode(),
       };
       const order = await this.ordersPaymentsService.createOrder(orderPayment);
-      
       await this.productHelper.decreaseProductQuantity(carts);
       const transaction = await this.paymentHelper.createTransaction(user, order);
       const payment: PaymentInterface = {
@@ -41,7 +40,7 @@ export class OrdersPaymentsController {
         transactionLink: transaction.link,
       };
       await this.ordersPaymentsService.updateOrder(order.id, { payment });
-      return transaction
+      return res.redirect(transaction.link);
     }
     
     return carts;

@@ -5,7 +5,7 @@ import { Product } from 'src/app/products/entities/product.entity';
 
 class CartProducts {
   @Prop({type: MongooseSchema.Types.ObjectId, ref: 'Product'})
-  _id: Product;
+  product: MongooseSchema.Types.ObjectId | Product;
 
   @Prop()
   quantity: number;
@@ -18,7 +18,7 @@ export class Cart {
   @Prop({type: MongooseSchema.Types.ObjectId, ref: 'User'})
   user: MongooseSchema.Types.ObjectId | User;
 
-  @Prop({ type: [{ quantity:{ type:Number }, _id:{ type: MongooseSchema.Types.ObjectId } }] })
+  @Prop({ type: [{ quantity:{ type:Number }, product:{ type: MongooseSchema.Types.ObjectId, ref: 'Product' }, _id: false }] })
   products: CartProducts[];
 }
 

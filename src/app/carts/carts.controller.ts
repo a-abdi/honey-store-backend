@@ -38,14 +38,14 @@ export class CartsController {
       const maxQuantity = product?.quantity;
       // delete duplicat product form user cart then sum count insert new product
       const oldCartProducts = await this.cartsService.removeFromCart(newCartProduct._id, user);
-      const oldProduct = grabObjectInArrayOfObject(oldCartProducts?.products, "_id", newCartProduct._id);
+      const oldProduct = grabObjectInArrayOfObject(oldCartProducts?.products, "product", newCartProduct._id);
       let newQuantity = newCartProduct?.quantity;
       if (oldProduct?.quantity) {
         newQuantity = oldProduct?.quantity + newCartProduct?.quantity;
       }
       newCartProduct.quantity = (newQuantity > maxQuantity ? maxQuantity : newQuantity);
       if (maxQuantity > 0) {
-        this.cartsService.addToCart(newCartProduct, user);
+        this.cartsService.addToCart({quantity: newCartProduct.quantity, product: newCartProduct._id}, user);
       }
     }
   }
