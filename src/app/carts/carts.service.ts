@@ -33,7 +33,7 @@ export class CartsService {
       { 
         $and: [ 
           { user: user.userId }, 
-          { "products._id": productId } 
+          { "products.product": productId } 
         ] 
       },
       {

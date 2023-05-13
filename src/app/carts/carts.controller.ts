@@ -24,11 +24,13 @@ export class CartsController {
   @Get()
   async cart(@User() user: AuthUserInfo, @Req() request: Request) {
     const userCart = await this.cartsService.findUserCart(user);
-    const hostAddress = `${request.protocol}://${request.get('host')}`;
-    userCart.products.map(cartProduct => { 
-      const product = cartProduct.product as Product;
-      product.imageSrc = `${hostAddress}/${product.imageSrc}`;
-    })
+    if (userCart) {
+      userCart?.products?.map(cartProduct => { 
+        const hostAddress = `${request.protocol}://${request.get('host')}`;
+        const product = cartProduct.product as Product;
+        product.imageSrc = `${hostAddress}/${product?.imageSrc}`;
+      })
+    };
     return userCart;
   }
 
@@ -62,7 +64,7 @@ export class CartsController {
   @Patch('products/:_id')
   async update(@Param() params: MongoIdParams, @Body() updateCartDto: UpdateCartDto, @User() user: AuthUserInfo) {
     const product = await this.productService.findOne(params._id);
-    if(product.quantity < updateCartDto?.product?.quantity) {
+    if(product?.quantity < updateCartDto?.product?.quantity) {
       updateCartDto.product.quantity = product.quantity;
     }
     return this.cartsService.update(params._id, updateCartDto, user);
