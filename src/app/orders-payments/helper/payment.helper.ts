@@ -3,7 +3,7 @@ import { AuthUserInfo } from "src/interface/auth-user-info";
 import { OrderPayment } from "../entities/order-payment.entity";
 import { HttpService } from "@nestjs/axios";
 import { catchError, firstValueFrom, map } from "rxjs";
-import { Document, Types } from "mongoose";
+import { Document, Schema, Types } from "mongoose";
 import { AxiosError } from "axios";
 import {  PaymentInterface, TransactionInterFace } from "../interface/interface";
 import { OrdersPaymentsService } from "../orders-payments.service";
@@ -44,6 +44,30 @@ export class PaymentHelper {
             }),
             ),
         );
+    };
 
+    async verifyPaymentHelper(orderId: Schema.Types.ObjectId, id: string) {
+        const url = this.configService.get<string>('VERIFY_PAYMENT_URL');
+        const headers = {
+            'Content-Type': 'application/json',
+            'X-API-KEY': this.configService.get<string>('X_API_KEY'),
+            'X-SANDBOX': this.configService.get<boolean>('X_SANDBOX'),
+        };
+        const data = {
+            'order_id': orderId,
+            id,
+        };
+
+        return await firstValueFrom(
+        this.httpService.post(url, data, { headers }).pipe(map((res) => res.data)).pipe(
+            catchError((error: AxiosError) => {
+                const payment: PaymentInterface =  {
+                    error: error.response.data
+                }
+                this.ordersPaymentsService.updateOrder(orderId, { payment });
+                throw new ForbiddenException('خطا در ارتباط با درگاه پرداخت');
+            }),
+            ),
+        );
     }
 }
