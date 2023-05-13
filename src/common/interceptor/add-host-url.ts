@@ -12,20 +12,24 @@ export class AddHostUrl<T> implements NestInterceptor<T, Response<T>> {
   constructor(private key: string) {}
   intercept(context: ExecutionContext, next: CallHandler): Observable<Response<T>> {
     const request = context.switchToHttp().getRequest<Request>();
-    const hostAddress = `${request.protocol}://${request.get('host')}`
+    const hostAddress = `${request.protocol}://${request.get('host')}`;
     return next
       .handle()
       .pipe(
         map(response => {
-          if(Array.isArray(response) && response) {
-            response.map(
-              data => data[this.key] = (data[this.key] &&`${hostAddress}/${data[this.key]}`)
-            );
-          } else if(typeof response == 'object' && response) {
-            response[this.key] = (response[this.key] && `${hostAddress}/${response[this.key]}`);
-          }
-          return response;
+          return mapResponse(response, this.key, hostAddress);
         })
       );
   };
 };
+
+const mapResponse = (response: any, key: string, hostAddress: string) => {
+  if(Array.isArray(response) && response) {
+    response.map(
+      data => data[key] = (data[key] &&`${hostAddress}/${data[key]}`)
+    );
+  } else if(typeof response == 'object' && response) {
+    response[key] = (response[key] && `${hostAddress}/${response[key]}`);
+  }
+  return response;
+}

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { MongoIdParams, breakArrayOfObjectToOneArray, grabObjectInArrayOfObject } from 'src/common/helper';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CartsService } from './carts.service';
@@ -9,6 +9,8 @@ import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { Message } from 'src/common/message';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { ProductsService } from '../products/products.service';
+import { Product } from '../products/entities/product.entity';
+import { Request } from 'express';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('carts')
@@ -20,8 +22,14 @@ export class CartsController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  cart(@User() user: AuthUserInfo) {
-    return this.cartsService.findUserCart(user);
+  async cart(@User() user: AuthUserInfo, @Req() request: Request) {
+    const userCart = await this.cartsService.findUserCart(user);
+    const hostAddress = `${request.protocol}://${request.get('host')}`;
+    userCart.products.map(cartProduct => { 
+      const product = cartProduct.product as Product;
+      product.imageSrc = `${hostAddress}/${product.imageSrc}`;
+    })
+    return userCart;
   }
 
   @UseGuards(JwtAuthGuard)

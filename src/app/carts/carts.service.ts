@@ -21,7 +21,7 @@ export class CartsService {
     return this.cartsModel.findOne({user: user.userId})
       .populate({
         path: 'products', populate: {
-          path: '_id',
+          path: 'product',
           model: 'Product'
         }
       }).exec();
