@@ -52,7 +52,7 @@ export class ProductsController {
   @Get(':_id')
   @UseInterceptors(new AddHostUrl('imageSrc'))
   async findOne(@Param() params: MongoIdParams) {
-    return await  this.productsService.findOne(params._id);
+    return await this.productsService.findOne(params._id);
   }
 
   @Roles(Role.Admin)
