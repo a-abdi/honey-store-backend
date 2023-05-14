@@ -19,6 +19,7 @@ export class OrdersTransactionsService {
             { _id }, 
             {
                 $set: {
+                    status: orderTransaction.status,
                     "transaction.status": transaction.status,
                     "transaction.id": transaction.id,
                     "transaction.link": transaction.link,
@@ -33,5 +34,13 @@ export class OrdersTransactionsService {
 
     async find(orderTransactionFilter: any) {
         return await this.orderTransactionModel.findOne(orderTransactionFilter).exec();
-    }
+    };
+
+    async updateOrder(_id: Schema.Types.ObjectId, orderTransaction: Partial<OrderTransactionInterface>) {
+        return await this.orderTransactionModel.findOneAndUpdate(
+            { _id }, 
+            { $set: orderTransaction },
+            { new: true }
+        ).exec();
+    };
 }

@@ -14,7 +14,7 @@ export class TransactionHelper {
     constructor(
         private readonly httpService: HttpService,
         private readonly ordersTransactionsService: OrdersTransactionsService,
-        private configService: ConfigService
+        private readonly configService: ConfigService
     ) {}
 
     async createTransaction(user: AuthUserInfo, order: OrderTransaction & Document<any, any, any> & {
@@ -74,7 +74,15 @@ export class TransactionHelper {
     async uniqueTransactionIdAndTrackId(id: string, trackId: number, orderId: Schema.Types.ObjectId) {
         const queryFilter = {
             $or: [{
-                "transaction.id": id
+                $and: [ 
+                    {
+                        "transaction.id": id
+                    },
+                    {
+
+                        _id: { $ne: orderId } 
+                    }
+                ]
             },
             {
                 "transaction.trackId": trackId

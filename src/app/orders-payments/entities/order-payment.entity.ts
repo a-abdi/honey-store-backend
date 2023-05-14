@@ -31,7 +31,7 @@ export class OrderTransaction {
     @Prop()
     code: string;
     
-    @Prop({ type: String, enum: OrderStatus, default: 'WatingPay'})
+    @Prop({ type: Number, enum: OrderStatus, default: 0})
     status: OrderStatus;
     
     @Prop({

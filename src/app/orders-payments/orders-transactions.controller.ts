@@ -14,6 +14,8 @@ import { ResponseMessage } from 'src/common/decorators/response-message.decorato
 import { Message } from 'src/common/message';
 import { CreateOrderPaymentDto } from './dto/create-orders-payment.dto';
 import { Response } from 'express';
+import { OrderStatus } from 'src/common/declare/enum';
+import { ConfigService } from "@nestjs/config";
 
 @ResponseMessage(Message.SUCCESS())
 @Controller()
@@ -23,6 +25,7 @@ export class OrdersTransactionsController {
     private readonly cartHelper: CartHelper,
     private readonly productHelper: ProductHelper,
     private readonly transactionHelper: TransactionHelper,
+    private readonly configService: ConfigService,
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -55,44 +58,61 @@ export class OrdersTransactionsController {
 
   @Post('payment/verify')
   async verifyPayment(@Body() createOrderPaymentDto: CreateOrderPaymentDto, @Res() res: Response) {
-    const isUnique = await this.transactionHelper.uniqueTransactionIdAndTrackId(
-      createOrderPaymentDto.id,
-      createOrderPaymentDto.track_id,
-      createOrderPaymentDto.order_id
-    );
-    
+    const isUnique = await this.transactionHelper.uniqueTransactionIdAndTrackId(createOrderPaymentDto.id, createOrderPaymentDto.track_id, createOrderPaymentDto.order_id);
     if (!isUnique) {
-      return 
+      return res.redirect(this.configService.get("FAILD_PAYMENT_FRONT_URL"));
     }
-
     const transaction: TransactionInterface = {
       status: createOrderPaymentDto.status,
       trackId: createOrderPaymentDto.track_id,
       cartNo: createOrderPaymentDto.card_no,
     };
-
-    const orderTransaction = await this.ordersTransactionsService.updateOrderTransaction(createOrderPaymentDto.order_id, { transaction });
-    console.log(orderTransaction);
-    if (orderTransaction.amount !== createOrderPaymentDto.amount) {
-      return
+    const orderTransaction = await this.ordersTransactionsService.updateOrderTransaction(
+      createOrderPaymentDto.order_id, 
+      { transaction }
+    );
+    if (orderTransaction.amount != createOrderPaymentDto.amount) {
+      return res.redirect(this.configService.get("FAILD_PAYMENT_FRONT_URL"));
     }
-    
     if( createOrderPaymentDto.status == 10 ) {
       const verifyPayementResponse = await this.transactionHelper.verifyPaymentHelper(
         createOrderPaymentDto.order_id, 
         createOrderPaymentDto.id
       );
-      console.log(verifyPayementResponse);
       const verifyPaymentData = verifyPayementResponse.data;
       const statusCode = verifyPayementResponse.status;
       if(verifyPaymentData.status === 100 && statusCode == 200) {
-        res.redirect('http://localhost:5173');
+        const orderTransaction = await this.ordersTransactionsService.updateOrderTransaction(
+          createOrderPaymentDto.order_id, 
+          { 
+            status: OrderStatus.Payment,
+            transaction: {
+              status: verifyPaymentData.status
+            } 
+          }
+        );
+        return res.redirect(this.configService.get("ORDER_FRONT_URL"));
+      } else {
+        const orderTransaction = await this.ordersTransactionsService.updateOrderTransaction(
+          createOrderPaymentDto.order_id, 
+          { 
+            transaction: {
+              status: verifyPaymentData.status
+            } 
+          }
+        );
+        return res.redirect(this.configService.get("FAILD_PAYMENT_FRONT_URL"));
       }
-      
     } else {
-
+      const orderTransaction = await this.ordersTransactionsService.updateOrderTransaction(
+        createOrderPaymentDto.order_id, 
+        { 
+          transaction: {
+            status: createOrderPaymentDto.status
+          } 
+        }
+      );
+      return res.redirect(this.configService.get("FAILD_PAYMENT_FRONT_URL"));
     }
-
-  
   };
 }
