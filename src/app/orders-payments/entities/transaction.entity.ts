@@ -1,15 +1,15 @@
 import { Prop } from "@nestjs/mongoose";
 import { Schema } from "mongoose";
 
-export class Payment {
+export class Transaction {
     @Prop()
     status: number;
 
     @Prop()
-    transactionId: string;
+    id: string;
 
     @Prop()
-    transactionLink: string;
+    link: string;
 
     @Prop()
     trackId: number;

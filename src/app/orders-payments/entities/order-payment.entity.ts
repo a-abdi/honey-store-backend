@@ -1,12 +1,12 @@
 import { Document, Schema as MongooseSchema } from "mongoose";
 import { OrderStatus } from "src/common/declare/enum";
-import { Payment } from "./payment.entity";
+import { Transaction } from "./transaction.entity";
 import { CartProduct } from "./cart-order.entity";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { User } from "src/app/users/entities/user.entity";
 
 @Schema({timestamps: true})
-export class OrderPayment {
+export class OrderTransaction {
     _id: MongooseSchema.Types.ObjectId;
 
     @Prop({type: MongooseSchema.Types.ObjectId, ref: 'User'})
@@ -37,17 +37,17 @@ export class OrderPayment {
     @Prop({
         type: {
             status: { type: Number },
-            transactionId: { type: String },
-            transactionLink: { type: String },
+            id: { type: String },
+            link: { type: String },
             trackId: { type: Number },
             cartNo: { type: String },
             error: { type: MongooseSchema.Types.Mixed },
         },
         _id: false
     })
-    payment: Payment;
+    transaction: Transaction;
 }
 
-export type OrderPaymentDocument = OrderPayment & Document;
+export type OrderTransactionDocument = OrderTransaction & Document;
 
-export const OrderPaymetSchema = SchemaFactory.createForClass(OrderPayment);
+export const OrderTransactionSchema = SchemaFactory.createForClass(OrderTransaction);

@@ -11,7 +11,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule as UserAuthModule } from './auth/users/auth-user.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformResponse } from '../common/interceptor/transform-response';
-import { OrdersPaymentsModule } from './orders-payments/orders-payments.module';
+import { OrdersTransactionsModule } from './orders-payments/orders-transactions.module';
 import 'dotenv/config';
 
 @Module({
@@ -29,7 +29,7 @@ import 'dotenv/config';
     CategoriesModule,
     UsersModule,
     CartsModule,
-    OrdersPaymentsModule,
+    OrdersTransactionsModule,
   ],
   controllers: [],
   providers: [

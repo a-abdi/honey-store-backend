@@ -1,23 +1,23 @@
 import { ForbiddenException, Injectable } from "@nestjs/common";
 import { AuthUserInfo } from "src/interface/auth-user-info";
-import { OrderPayment } from "../entities/order-payment.entity";
+import { OrderTransaction } from "../entities/order-payment.entity";
 import { HttpService } from "@nestjs/axios";
 import { catchError, firstValueFrom, map } from "rxjs";
 import { Document, Schema, Types } from "mongoose";
 import { AxiosError } from "axios";
-import {  PaymentInterface, TransactionInterFace } from "../interface/interface";
-import { OrdersPaymentsService } from "../orders-payments.service";
+import { TransactionInterface, CreateTransactionInterFace } from "../interface/interface";
+import { OrdersTransactionsService } from "../orders-transactions.service";
 import { ConfigService } from "@nestjs/config";
 
 @Injectable()
-export class PaymentHelper {
+export class TransactionHelper {
     constructor(
         private readonly httpService: HttpService,
-        private readonly ordersPaymentsService: OrdersPaymentsService,
+        private readonly ordersTransactionsService: OrdersTransactionsService,
         private configService: ConfigService
     ) {}
 
-    async createTransaction(user: AuthUserInfo, order: OrderPayment & Document<any, any, any> & {
+    async createTransaction(user: AuthUserInfo, order: OrderTransaction & Document<any, any, any> & {
             _id: Types.ObjectId;
         } ) {
         const url = this.configService.get<string>('CREATE_TRANSACTION_URL');
@@ -34,12 +34,12 @@ export class PaymentHelper {
         };
 
         return await firstValueFrom(
-        this.httpService.post<TransactionInterFace>(url, data, { headers }).pipe(map((res) => res.data)).pipe(
+        this.httpService.post<CreateTransactionInterFace>(url, data, { headers }).pipe(map((res) => res.data)).pipe(
             catchError((error: AxiosError) => {
-                const payment: PaymentInterface =  {
+                const transaction: TransactionInterface =  {
                     error: error.response.data
                 }
-                this.ordersPaymentsService.updateOrder(order.id, { payment });
+                this.ordersTransactionsService.updateOrderTransaction(order.id, { transaction });
                 throw new ForbiddenException('خطا در ارتباط با درگاه پرداخت');
             }),
             ),
@@ -61,10 +61,10 @@ export class PaymentHelper {
         return await firstValueFrom(
         this.httpService.post(url, data, { headers }).pipe(map((res) => res.data)).pipe(
             catchError((error: AxiosError) => {
-                const payment: PaymentInterface =  {
+                const transaction: TransactionInterface =  {
                     error: error.response.data
                 }
-                this.ordersPaymentsService.updateOrder(orderId, { payment });
+                this.ordersTransactionsService.updateOrderTransaction(orderId, { transaction });
                 throw new ForbiddenException('خطا در ارتباط با درگاه پرداخت');
             }),
             ),

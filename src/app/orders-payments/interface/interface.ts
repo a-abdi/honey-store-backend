@@ -3,19 +3,19 @@ import { Product } from "src/app/products/entities/product.entity";
 import { User } from "src/app/users/entities/user.entity";
 import { OrderStatus } from "src/common/declare/enum";
 
-export interface OrderPaymentInterface {
+export interface OrderTransactionInterface {
     user: Schema.Types.ObjectId | User;
     cart: CartProductInterface[];
     amount: number;
     code: string;
     status?: OrderStatus;
-    payment?: PaymentInterface;
+    transaction?: TransactionInterface;
 }
 
-export interface PaymentInterface {
+export interface TransactionInterface {
     status?: number;
-    transactionId?: string;
-    transactionLink?: string;
+    id?: string;
+    link?: string;
     trackId?: number;
     cartNo?: string;
     error?: any;
@@ -30,7 +30,7 @@ export interface CartProductInterface {
     quantity: number;
 }
 
-export interface TransactionInterFace {
+export interface CreateTransactionInterFace {
     id: string,
     link: string
 }
