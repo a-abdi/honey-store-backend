@@ -5,13 +5,13 @@ export class Transaction {
     @Prop()
     status: number;
 
-    @Prop()
+    @Prop({unique: true})
     id: string;
 
     @Prop()
     link: string;
 
-    @Prop()
+    @Prop({unique: true})
     trackId: number;
 
     @Prop()

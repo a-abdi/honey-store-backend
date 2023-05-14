@@ -55,19 +55,37 @@ export class OrdersTransactionsController {
 
   @Post('payment/verify')
   async verifyPayment(@Body() createOrderPaymentDto: CreateOrderPaymentDto, @Res() res: Response) {
+    const isUnique = await this.transactionHelper.uniqueTransactionIdAndTrackId(
+      createOrderPaymentDto.id,
+      createOrderPaymentDto.track_id,
+      createOrderPaymentDto.order_id
+    );
+    
+    if (!isUnique) {
+      return 
+    }
+
     const transaction: TransactionInterface = {
       status: createOrderPaymentDto.status,
       trackId: createOrderPaymentDto.track_id,
       cartNo: createOrderPaymentDto.card_no,
     };
-    await this.ordersTransactionsService.updateOrderTransaction(createOrderPaymentDto.order_id, { transaction });
-    if( createOrderPaymentDto.status == 10 ) {
 
+    const orderTransaction = await this.ordersTransactionsService.updateOrderTransaction(createOrderPaymentDto.order_id, { transaction });
+    console.log(orderTransaction);
+    if (orderTransaction.amount !== createOrderPaymentDto.amount) {
+      return
+    }
+    
+    if( createOrderPaymentDto.status == 10 ) {
       const verifyPayementResponse = await this.transactionHelper.verifyPaymentHelper(
         createOrderPaymentDto.order_id, 
         createOrderPaymentDto.id
       );
-      if(verifyPayementResponse.status === 100) {
+      console.log(verifyPayementResponse);
+      const verifyPaymentData = verifyPayementResponse.data;
+      const statusCode = verifyPayementResponse.status;
+      if(verifyPaymentData.status === 100 && statusCode == 200) {
         res.redirect('http://localhost:5173');
       }
       

@@ -26,7 +26,12 @@ export class OrdersTransactionsService {
                     "transaction.cartNo": transaction.cartNo,
                     "transaction.error": transaction.error,
                 } 
-            }
+            },
+            { new: true }
         ).exec();
+    };
+
+    async find(orderTransactionFilter: any) {
+        return await this.orderTransactionModel.findOne(orderTransactionFilter).exec();
     }
 }

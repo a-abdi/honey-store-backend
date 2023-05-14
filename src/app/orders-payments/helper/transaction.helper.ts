@@ -59,7 +59,7 @@ export class TransactionHelper {
         };
 
         return await firstValueFrom(
-        this.httpService.post(url, data, { headers }).pipe(map((res) => res.data)).pipe(
+        this.httpService.post(url, data, { headers }).pipe(
             catchError((error: AxiosError) => {
                 const transaction: TransactionInterface =  {
                     error: error.response.data
@@ -69,5 +69,26 @@ export class TransactionHelper {
             }),
             ),
         );
+    };
+
+    async uniqueTransactionIdAndTrackId(id: string, trackId: number, orderId: Schema.Types.ObjectId) {
+        const queryFilter = {
+            $or: [{
+                "transaction.id": id
+            },
+            {
+                "transaction.trackId": trackId
+            }]
+        }
+        const order = await this.ordersTransactionsService.find(queryFilter);
+        if (order) {
+            const error = {
+                "error_code": 101,
+                "error_message":  "از قبل در دیتابیس موجود می باشد transactionId یا trackId کلید های "
+            }
+            await this.ordersTransactionsService.updateOrderTransaction(orderId, { transaction: { error } });
+            return false;
+        }
+        return true;
     }
 }
