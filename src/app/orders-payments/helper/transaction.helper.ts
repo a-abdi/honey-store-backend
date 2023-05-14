@@ -1,11 +1,11 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { AuthUserInfo } from "src/interface/auth-user-info";
 import { OrderTransaction } from "../entities/order-payment.entity";
 import { HttpService } from "@nestjs/axios";
 import { catchError, firstValueFrom, map } from "rxjs";
 import { Document, Schema, Types } from "mongoose";
 import { AxiosError } from "axios";
-import { TransactionInterface, CreateTransactionInterFace } from "../interface/interface";
+import { CreateTransactionInterFace } from "../interface/interface";
 import { OrdersTransactionsService } from "../orders-transactions.service";
 import { ConfigService } from "@nestjs/config";
 
@@ -36,11 +36,8 @@ export class TransactionHelper {
         return await firstValueFrom(
         this.httpService.post<CreateTransactionInterFace>(url, data, { headers }).pipe(map((res) => res.data)).pipe(
             catchError((error: AxiosError) => {
-                const transaction: TransactionInterface =  {
-                    error: error.response.data
-                }
-                this.ordersTransactionsService.updateOrderTransaction(order.id, { transaction });
-                throw new ForbiddenException('خطا در ارتباط با درگاه پرداخت');
+                this.ordersTransactionsService.updateOrder(order.id, { "transaction.error": error.response.data });
+                throw Error;
             }),
             ),
         );
@@ -61,17 +58,14 @@ export class TransactionHelper {
         return await firstValueFrom(
         this.httpService.post(url, data, { headers }).pipe(
             catchError((error: AxiosError) => {
-                const transaction: TransactionInterface =  {
-                    error: error.response.data
-                }
-                this.ordersTransactionsService.updateOrderTransaction(orderId, { transaction });
-                throw new ForbiddenException('خطا در ارتباط با درگاه پرداخت');
+                this.ordersTransactionsService.updateOrder(orderId, { "transaction.error": error.response.data });
+                throw Error;
             }),
             ),
         );
     };
 
-    async uniqueTransactionIdAndTrackId(id: string, trackId: number, orderId: Schema.Types.ObjectId) {
+    async uniqueTransaction(id: string, trackId: number, orderId: Schema.Types.ObjectId) {
         const queryFilter = {
             $or: [{
                 $and: [ 
@@ -79,7 +73,6 @@ export class TransactionHelper {
                         "transaction.id": id
                     },
                     {
-
                         _id: { $ne: orderId } 
                     }
                 ]
@@ -90,13 +83,18 @@ export class TransactionHelper {
         }
         const order = await this.ordersTransactionsService.find(queryFilter);
         if (order) {
-            const error = {
-                "error_code": 101,
-                "error_message":  "از قبل در دیتابیس موجود می باشد transactionId یا trackId کلید های "
+            const result = {
+                isUnique: false,
+                error: {
+                    error_code: 101,
+                    error_message: "از قبل در دیتابیس موجود می باشد transactionId یا trackId کلید های "
+                }
             }
-            await this.ordersTransactionsService.updateOrderTransaction(orderId, { transaction: { error } });
-            return false;
+            return result;
         }
-        return true;
+        return { 
+            isUnique: true,
+            error: null
+         };
     }
 }

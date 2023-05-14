@@ -1,7 +1,7 @@
 import { IsOptional, IsString } from "class-validator";
 import { Schema } from "mongoose";
 
-export class CreateOrderPaymentDto {
+export class VerifyPaymentDto {
     @IsString()
     @IsOptional()
     status: number;

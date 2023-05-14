@@ -12,21 +12,12 @@ export class OrdersTransactionsService {
         return await this.orderTransactionModel.create(orderTransaction);
     }
 
-    async updateOrderTransaction(_id: Schema.Types.ObjectId, orderTransaction: Partial<OrderTransactionInterface>) {
-        const { transaction } = orderTransaction;
+    async updateOrder(_id: Schema.Types.ObjectId, orderTransactionData: any) {
         return await this.orderTransactionModel
         .findOneAndUpdate(
             { _id }, 
             {
-                $set: {
-                    status: orderTransaction.status,
-                    "transaction.status": transaction.status,
-                    "transaction.id": transaction.id,
-                    "transaction.link": transaction.link,
-                    "transaction.trackId": transaction.trackId,
-                    "transaction.cartNo": transaction.cartNo,
-                    "transaction.error": transaction.error,
-                } 
+                $set: orderTransactionData 
             },
             { new: true }
         ).exec();
@@ -34,13 +25,5 @@ export class OrdersTransactionsService {
 
     async find(orderTransactionFilter: any) {
         return await this.orderTransactionModel.findOne(orderTransactionFilter).exec();
-    };
-
-    async updateOrder(_id: Schema.Types.ObjectId, orderTransaction: Partial<OrderTransactionInterface>) {
-        return await this.orderTransactionModel.findOneAndUpdate(
-            { _id }, 
-            { $set: orderTransaction },
-            { new: true }
-        ).exec();
     };
 }

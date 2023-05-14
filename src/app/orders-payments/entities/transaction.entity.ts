@@ -15,7 +15,28 @@ export class Transaction {
     trackId: number;
 
     @Prop()
-    cartNo: string;
+    cardNo: string;
+
+    @Prop()
+    hashedCardNo: string;
+
+    @Prop()
+    transactionDate: Date;
+
+    @Prop()
+    transactionAmount: number;
+
+    @Prop()
+    paymentTrackId: string;
+
+    @Prop()
+    paymentAmount: number;
+
+    @Prop()
+    paymentDate: Date;
+
+    @Prop()
+    verifyDate: Date;
 
     @Prop()
     error: Schema.Types.Mixed;

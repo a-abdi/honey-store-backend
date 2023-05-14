@@ -17,7 +17,14 @@ export interface TransactionInterface {
     id?: string;
     link?: string;
     trackId?: number;
-    cartNo?: string;
+    cardNo?: string;
+    hashedCardNo?: string;
+    transactionDate?: Date;
+    transactionAmount?: number;
+    paymentTrackId?: string;
+    paymentAmount?: number;
+    paymentDate?: Date;
+    verifyDate?: Date;
     error?: any;
 }
 

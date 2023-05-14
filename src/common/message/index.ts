@@ -1,4 +1,5 @@
 export const Message = {
+    ERROR_OCCURRED: (): string => "خطایی رخ داده است",
     INVALID_MONGO_ID: (name : string = ''): string => `شناسه ${name} به درستی وارد نشده است`,
     INCORRECT: (name: string): string => `${name} به درستی وارد نشده است`,
     INCORRECT_FORMAT: (name: string): string => `فرمت ${name} اشتباه است`,
