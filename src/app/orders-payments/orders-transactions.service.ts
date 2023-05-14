@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { OrderTransactionInterface } from './interface/interface';
-import { OrderTransaction, OrderTransactionDocument } from './entities/order-payment.entity';
+import { OrderTransaction, OrderTransactionDocument } from './entities/order-transaction.entity';
 import { Model, Schema } from 'mongoose';
 
 @Injectable()

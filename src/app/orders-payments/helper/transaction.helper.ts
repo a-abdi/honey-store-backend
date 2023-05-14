@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { AuthUserInfo } from "src/interface/auth-user-info";
-import { OrderTransaction } from "../entities/order-payment.entity";
+import { OrderTransaction } from "../entities/order-transaction.entity";
 import { HttpService } from "@nestjs/axios";
 import { catchError, firstValueFrom, map } from "rxjs";
 import { Document, Schema, Types } from "mongoose";
