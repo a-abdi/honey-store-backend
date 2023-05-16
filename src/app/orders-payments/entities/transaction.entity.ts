@@ -1,6 +1,7 @@
-import { Prop } from "@nestjs/mongoose";
-import { Schema } from "mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Schema as MongooseSchema } from "mongoose";
 
+@Schema({ _id: false })
 export class Transaction {
     @Prop()
     status: number;
@@ -39,5 +40,7 @@ export class Transaction {
     verifyDate: Date;
 
     @Prop()
-    error: Schema.Types.Mixed;
+    error: MongooseSchema.Types.Mixed;
 }
+
+export const TransactionSchema = SchemaFactory.createForClass(Transaction);

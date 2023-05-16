@@ -1,5 +1,6 @@
-import { Prop } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
+@Schema({ _id: false })
 export class RecipientUserEntity {
     @Prop()
     firstName: string;
@@ -10,3 +11,5 @@ export class RecipientUserEntity {
     @Prop()
     phoneNumber: string;
 }
+
+export const RecipientUserEntitySchema = SchemaFactory.createForClass(RecipientUserEntity);

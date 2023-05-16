@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Schema as MongooseSchema} from "mongoose";
 import * as bcrypt from 'bcrypt';
-import { AddressUserEntity } from "./address.entity";
+import { AddressUserEntity, AddressUserEntitySchema } from "./address.entity";
 
 @Schema({ timestamps: true })
 export class User {
@@ -13,10 +13,10 @@ export class User {
     @Prop()
     lastName: string;
 
-    @Prop({required: true, unique: true})
+    @Prop({ required: true, unique: true })
     phoneNumber: string;
 
-    @Prop()
+    @Prop({ type: AddressUserEntitySchema })
     address: AddressUserEntity[];
 
     @Prop({select: false})

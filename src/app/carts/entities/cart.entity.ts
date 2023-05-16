@@ -3,6 +3,7 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 import { User } from 'src/app/users/entities/user.entity';
 import { Product } from 'src/app/products/entities/product.entity';
 
+@Schema({ _id: false })
 class CartProducts {
   @Prop({type: MongooseSchema.Types.ObjectId, ref: 'Product'})
   product: MongooseSchema.Types.ObjectId | Product;
@@ -18,7 +19,7 @@ export class Cart {
   @Prop({type: MongooseSchema.Types.ObjectId, ref: 'User', unique: true, required: true})
   user: MongooseSchema.Types.ObjectId | User;
 
-  @Prop({ type: [{ quantity:{ type:Number }, product:{ type: MongooseSchema.Types.ObjectId, ref: 'Product' }, _id: false }] })
+  @Prop({ type: [{ quantity:{ type:Number }, product:{ type: MongooseSchema.Types.ObjectId, ref: 'Product' } }] })
   products: CartProducts[];
 }
 

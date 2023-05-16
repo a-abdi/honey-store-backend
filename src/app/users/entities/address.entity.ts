@@ -1,6 +1,7 @@
-import { Prop } from "@nestjs/mongoose";
-import { RecipientUserEntity } from "./recipoent-user.entity";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { RecipientUserEntity, RecipientUserEntitySchema } from "./recipoent-user.entity";
 
+@Schema({ _id: false })
 export class AddressUserEntity {
     @Prop()
     postalAddress: string;
@@ -14,7 +15,7 @@ export class AddressUserEntity {
     @Prop()
     plaque: string;
 
-    @Prop()
+    @Prop({ type: RecipientUserEntitySchema })
     recipient: RecipientUserEntity;
 
     @Prop()
@@ -23,3 +24,5 @@ export class AddressUserEntity {
     @Prop()
     selected: boolean;
 };
+
+export const AddressUserEntitySchema = SchemaFactory.createForClass(AddressUserEntity);

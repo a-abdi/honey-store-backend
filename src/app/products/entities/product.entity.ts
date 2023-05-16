@@ -25,7 +25,7 @@ export class Product {
   @Prop()
   description: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   code: string;
 
   @Prop({type: MongooseSchema.Types.ObjectId, ref: 'Admin', select: false})

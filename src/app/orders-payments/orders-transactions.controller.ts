@@ -74,7 +74,7 @@ export class OrdersTransactionsController {
       const transaction = {
         "transaction.status": verifyPaymentDto?.status,
         "transaction.trackId": verifyPaymentDto?.track_id,
-        "transaction.cartNo": verifyPaymentDto?.card_no,
+        "transaction.cardNo": verifyPaymentDto?.card_no,
         "transaction.hashedCardNo": verifyPaymentDto?.hashed_card_no,
         "transaction.transactionDate": verifyPaymentDto?.date,
         "transaction.transactionAmount": verifyPaymentDto?.amount,
