@@ -9,7 +9,7 @@ import { User } from "src/app/users/entities/user.entity";
 export class OrderTransaction {
     _id: MongooseSchema.Types.ObjectId;
 
-    @Prop({type: MongooseSchema.Types.ObjectId, ref: 'User'})
+    @Prop({type: MongooseSchema.Types.ObjectId, ref: 'User', required: true})
     user: MongooseSchema.Types.ObjectId | User;
     
     @Prop({ 
@@ -25,10 +25,10 @@ export class OrderTransaction {
     })
     cart: CartProduct[];
     
-    @Prop()
+    @Prop({required: true})
     amount: number;
     
-    @Prop()
+    @Prop({required: true})
     code: string;
     
     @Prop({ type: Number, enum: OrderStatus, default: 0})

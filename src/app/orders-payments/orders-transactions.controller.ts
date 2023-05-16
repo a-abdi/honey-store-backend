@@ -72,12 +72,12 @@ export class OrdersTransactionsController {
     try {
       const result = await this.transactionHelper.uniqueTransaction(verifyPaymentDto.id, verifyPaymentDto.track_id, verifyPaymentDto.order_id);
       const transaction = {
-        "transaction.status": verifyPaymentDto.status,
-        "transaction.trackId": verifyPaymentDto.track_id,
-        "transaction.cartNo": verifyPaymentDto.card_no,
-        "transaction.hashedCardNo": verifyPaymentDto.hashed_card_no,
-        "transaction.transactionDate": verifyPaymentDto.date,
-        "transaction.transactionAmount": verifyPaymentDto.amount,
+        "transaction.status": verifyPaymentDto?.status,
+        "transaction.trackId": verifyPaymentDto?.track_id,
+        "transaction.cartNo": verifyPaymentDto?.card_no,
+        "transaction.hashedCardNo": verifyPaymentDto?.hashed_card_no,
+        "transaction.transactionDate": verifyPaymentDto?.date,
+        "transaction.transactionAmount": verifyPaymentDto?.amount,
         "transaction.error": result.error,
       };
       const orderTransaction = await this.ordersService.updateOrder(verifyPaymentDto.order_id, transaction);
@@ -90,11 +90,11 @@ export class OrdersTransactionsController {
         const statusCode = verifyPayementResponse.status;
         const transactionData = { 
           status: OrderStatus.WatingPay,
-          "transaction.status": verifyPaymentData.status,
-          "transaction.paymentTrackId": verifyPaymentData.payment.track_id,
-          "transaction.paymentAmount": verifyPaymentData.payment.amount,
-          "transaction.paymentDate": verifyPaymentData.payment.date,
-          "transaction.verifyDate": verifyPaymentData.verify.date,
+          "transaction.status": verifyPaymentData?.status,
+          "transaction.paymentTrackId": verifyPaymentData.payment?.track_id,
+          "transaction.paymentAmount": verifyPaymentData?.payment?.amount,
+          "transaction.paymentDate": verifyPaymentData?.payment?.date,
+          "transaction.verifyDate": verifyPaymentData?.verify?.date,
         };
         if(verifyPaymentData.status === 100 && statusCode == 200) {
           transactionData.status = OrderStatus.Payment;

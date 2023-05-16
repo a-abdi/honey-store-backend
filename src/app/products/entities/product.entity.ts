@@ -7,13 +7,13 @@ import { Category } from 'src/app/categories/entities/category.entity';
 export class Product {
   _id: MongooseSchema.Types.ObjectId;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   name: string;
 
-  @Prop()
+  @Prop({ required: true })
   price: number;
 
-  @Prop()
+  @Prop({ required: true })
   quantity: number;
 
 //   @Prop()
@@ -25,7 +25,7 @@ export class Product {
   @Prop()
   description: string;
 
-  @Prop()
+  @Prop({ required: true })
   code: string;
 
   @Prop({type: MongooseSchema.Types.ObjectId, ref: 'Admin', select: false})

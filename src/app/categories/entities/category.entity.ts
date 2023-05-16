@@ -5,7 +5,7 @@ import { Document, Schema as MongooseSchema } from "mongoose";
 export class Category {
     _id: MongooseSchema.Types.ObjectId;
 
-    @Prop()
+    @Prop({required: true, unique: true})
     name: string;
 
     @Prop()

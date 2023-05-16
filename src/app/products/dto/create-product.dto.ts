@@ -1,5 +1,6 @@
 import { Transform } from "class-transformer";
 import { IsAlphanumeric, IsMongoId, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { Schema } from "mongoose";
 import { PersianLatinNumber } from "src/common/decorators/credit-number.decorator";
 import { convertToEn } from "src/common/helper";
 import { Message } from 'src/common/message';
@@ -35,5 +36,5 @@ export class CreateProductDto {
 
     @IsMongoId({message: Message.INCORRECT(Name.CATEGORY)})
     @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.CATEGORY)})
-    category: string;
+    category: Schema.Types.ObjectId;
 }
