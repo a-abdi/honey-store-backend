@@ -2,6 +2,7 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Admin } from 'src/app/admins/entities/admin.entity';
 import { Category } from 'src/app/categories/entities/category.entity';
+import { CustomPropertyEntity, CustomPropertySchema } from './custom-property.entity';
 
 @Schema({timestamps: true})
 export class Product {
@@ -15,12 +16,6 @@ export class Product {
 
   @Prop({ required: true })
   quantity: number;
-
-//   @Prop()
-//   specifications: {
-//     size: number;
-//     color: string;
-//   }
 
   @Prop()
   description: string;
@@ -39,6 +34,9 @@ export class Product {
 
   @Prop()
   imageSrc: string;
+
+  @Prop({type: [ CustomPropertySchema ] })
+  customProperty: CustomPropertyEntity[];
 }
 
 export type ProductDocument = Product & Document;

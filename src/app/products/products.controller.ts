@@ -29,7 +29,7 @@ export class ProductsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   @UseInterceptors(FileInterceptor('file', { storage: fileStorage('upload/product') }))
-  create(
+  async create(
     @UploadedFile('file', new ParseFilePipe({
       validators: [
         new FileMaxSizeValidator({maxSize: 500000}),
@@ -40,7 +40,7 @@ export class ProductsController {
     @Body() createProductDto: CreateProductDto,
     @User() user: AuthUserInfo
   ) {
-    return this.productsService.create(createProductDto, file, user);
+    return await this.productsService.create(createProductDto, file, user);
   }
 
   @Get()

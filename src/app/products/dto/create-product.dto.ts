@@ -1,10 +1,11 @@
-import { Transform } from "class-transformer";
-import { IsAlphanumeric, IsMongoId, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import { IsAlphanumeric, IsMongoId, IsNotEmpty, IsObject, IsOptional, IsString, ValidateNested } from "class-validator";
 import { Schema } from "mongoose";
 import { PersianLatinNumber } from "src/common/decorators/credit-number.decorator";
 import { convertToEn } from "src/common/helper";
 import { Message } from 'src/common/message';
 import { Name } from 'src/common/message/name';
+import { CustomPropertyDto } from "./custom-property.dto";
 
 export class CreateProductDto {
     @IsString({message: Message.MUST_BE_STRING(Name.NAME)})
@@ -37,4 +38,11 @@ export class CreateProductDto {
     @IsMongoId({message: Message.INCORRECT(Name.CATEGORY)})
     @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.CATEGORY)})
     category: Schema.Types.ObjectId;
+
+    @IsObject()
+    @ValidateNested({ each: true })
+    @Type(() => CustomPropertyDto )
+    @IsOptional()
+    customProperty: CustomPropertyDto[];
 }
+
