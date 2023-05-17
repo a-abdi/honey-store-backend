@@ -27,4 +27,7 @@ export const Name = {
     RECIPIENT_NAME: 'نام گیرنده',
     RECIPIENT_LAST_NAME: 'نام خانوادگی گیرنده',
     RECIPIENT_PHONE_NUMBER: 'شماره تلفن گیرنده',
+    LABEL: "برچسب",
+    TYPE: "نوع",
+    UNIT: "واحد",
 }
