@@ -30,6 +30,6 @@ export class UsersService {
   }
 
   async remove(_id: Schema.Types.ObjectId) {
-    return await this.userModel.findOneAndRemove();
+    return await this.userModel.findOneAndRemove({ _id }).exec();
   }
 }

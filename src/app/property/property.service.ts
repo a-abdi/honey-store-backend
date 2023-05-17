@@ -15,19 +15,19 @@ export class PropertyService {
     return await this.propertyModel.create(createPropertyDto);
   }
 
-  findAll() {
-    return `This action returns all property`;
+  async findAll() {
+    return this.propertyModel.find({}).exec();
   }
 
   async findOne(propertyFilter: any) {
     return await this.propertyModel.findOne(propertyFilter).exec();
 };
 
-  update(id: number, updatePropertyDto: UpdatePropertyDto) {
-    return `This action updates a #${id} property`;
+  async update(_id: Schema.Types.ObjectId, updatePropertyDto: UpdatePropertyDto) {
+    return await this.propertyModel.findByIdAndUpdate({ _id }, updatePropertyDto, { new: true }).exec();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} property`;
+  async remove(_id: Schema.Types.ObjectId) {
+    return this.propertyModel.findByIdAndRemove({ _id }).exec();
   }
 }
