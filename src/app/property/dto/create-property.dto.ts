@@ -1,11 +1,13 @@
-import { IsArray, IsMongoId, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsArray, IsMongoId, IsNotEmpty, IsOptional, IsString, Validate } from "class-validator";
 import { Schema } from "mongoose";
 import { Message } from "src/common/message";
 import { Name } from "src/common/message/name";
+import { CheckLabelExist } from "../service/check-label-exist";
 
 export class CreatePropertyDto {
     @IsString({message: Message.MUST_BE_STRING(Name.LABEL)})
     @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.LABEL)})
+    @Validate(CheckLabelExist)
     label: string;
 
     @IsString({message: Message.MUST_BE_STRING(Name.TYPE)})

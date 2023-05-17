@@ -3,7 +3,7 @@ import { CreatePropertyDto } from './dto/create-property.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Property, ProppertyDocument } from './entities/property.entity';
-import { Model } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 
 @Injectable()
 export class PropertyService {
@@ -19,9 +19,9 @@ export class PropertyService {
     return `This action returns all property`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} property`;
-  }
+  async findOne(propertyFilter: any) {
+    return await this.propertyModel.findOne(propertyFilter).exec();
+};
 
   update(id: number, updatePropertyDto: UpdatePropertyDto) {
     return `This action updates a #${id} property`;
