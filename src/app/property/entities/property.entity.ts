@@ -12,11 +12,11 @@ export class Property {
     @Prop({ required: true})
     type: string;
 
-    @Prop()
-    unit: string;
+    @Prop([String])
+    unit: string[];
 
-    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Category' })
-    category: MongooseSchema.Types.ObjectId | Category;
+    @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Category' }] })
+    category: Category[];
 }
 
 export type ProppertyDocument = Property & Document;

@@ -1,11 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Property, ProppertyDocument } from './entities/property.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class PropertyService {
-  create(createPropertyDto: CreatePropertyDto) {
-    return 'This action adds a new property';
+  constructor(
+    @InjectModel(Property.name) private readonly propertyModel: Model<ProppertyDocument> 
+  ){}
+
+  async create(createPropertyDto: CreatePropertyDto) {
+    return await this.propertyModel.create(createPropertyDto);
   }
 
   findAll() {

@@ -1,4 +1,4 @@
-import { IsMongoId, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsArray, IsMongoId, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { Schema } from "mongoose";
 import { Message } from "src/common/message";
 import { Name } from "src/common/message/name";
@@ -12,9 +12,11 @@ export class CreatePropertyDto {
     @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.TYPE)})
     type: string;
 
-    @IsString({message: Message.MUST_BE_STRING(Name.UNIT)})
-    unit: string;
+    @IsArray({message: Message.MUST_BE_ARRAY(Name.UNIT)})
+    @IsString({message: Message.MUST_BE_STRING(Name.UNIT), each: true})
+    unit: string[];
 
-    @IsMongoId({message: Message.INCORRECT(Name.CATEGORY)})
-    category: Schema.Types.ObjectId;
+    @IsArray({message: Message.MUST_BE_ARRAY(Name.CATEGORY)})
+    @IsMongoId({message: Message.INCORRECT(Name.CATEGORY), each: true})
+    category: Schema.Types.ObjectId[];
 }
