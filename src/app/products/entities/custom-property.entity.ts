@@ -1,12 +1,14 @@
-import { IntersectionType, OmitType } from "@nestjs/mapped-types";
+import { OmitType } from "@nestjs/mapped-types";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Schema as MongooseSchema } from "mongoose";
 import { Property } from "src/app/property/entities/property.entity";
 
 @Schema({ _id: false })
 export class CustomPropertyEntity extends OmitType(Property, ['category']) {
     @Prop()
-    value: MongooseSchema.Types.Mixed;
+    value: string;
+
+    @Prop()
+    code: string;
 
     @Prop({ required: true })
     label: string;

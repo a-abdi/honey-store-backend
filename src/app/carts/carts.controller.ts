@@ -28,7 +28,7 @@ export class CartsController {
       userCart?.products?.map(cartProduct => { 
         const hostAddress = `${request.protocol}://${request.get('host')}`;
         const product = cartProduct.product as Product;
-        product.imageSrc = `${hostAddress}/${product?.imageSrc}`;
+        // product.additionalsImageSrc = `${hostAddress}/${product?.imageSrc}`;
       })
     };
     return userCart;

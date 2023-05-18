@@ -7,7 +7,7 @@ import { CheckLabelExist } from "../service/check-label-exist";
 export class CreatePropertyDto {
     @IsString({message: Message.MUST_BE_STRING(Name.LABEL)})
     @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.LABEL)})
-    @Validate(CheckLabelExist)
+    @Validate(CheckLabelExist, [{ beExist: false }])
     label: string;
 
     @IsString({message: Message.MUST_BE_STRING(Name.TYPE)})

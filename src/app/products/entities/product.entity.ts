@@ -32,8 +32,11 @@ export class Product {
   @Prop()
   discount: number;
 
-  @Prop()
-  imageSrc: string;
+  @Prop([String])
+  productImagesSrc: string[];
+
+  @Prop([String])
+  additionalsImageSrc: string[];
 
   @Prop({type: [ CustomPropertySchema ] })
   customProperty: CustomPropertyEntity[];

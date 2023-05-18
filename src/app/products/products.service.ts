@@ -12,12 +12,18 @@ export class ProductsService {
     ) 
   {}
   
-  async create(createProductDto: CreateProductDto, file: Express.Multer.File, user: AuthUserInfo): Promise<Product> {
-    return await new this.productModel({
+  async create(
+    createProductDto: CreateProductDto, 
+    productImagesSrc: string[], 
+    additionalsImageSrc: string[], 
+    user: AuthUserInfo
+  ): Promise<Product> {
+    return await this.productModel.create({
       ...createProductDto,
-      imageSrc: file.path,
+      productImagesSrc,
+      additionalsImageSrc,
       admin: user.userId
-    }).save();
+    });
   }
 
   findAll() {

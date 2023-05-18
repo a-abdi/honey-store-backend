@@ -16,4 +16,5 @@ export const Message = {
     NOT_MATCH: (): string =>  'تایید پسورد و پسورد با هم مطابقت ندارند',
     INVALID_PHONE_OR_PASSWORD: (): string => 'شماره تماس یا پسورد اشتباه است',
     ALREADY_EXIST: (name: string): string => `${name} در سیستم وجود دارد`,
+    NOT_EXIST: (name: string): string => `${name} در سیستم وجود ندارد`,
 }

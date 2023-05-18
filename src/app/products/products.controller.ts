@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, ParseFilePipe, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, ParseFilePipe, UseGuards, UploadedFiles } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { fileStorage } from 'src/common/helper';
 import { FileMaxSizeValidator } from '../../service/file-max-size-validation';
 import { FileTypeValidator } from '../../service/file-type-validation';
@@ -18,29 +18,43 @@ import { BindProductCode } from 'src/common/interceptor/bind-product-code';
 import { User } from 'src/common/decorators/user.decorator';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { createUpdateData } from './service/create-update-data';
+import { ImageHelper } from './helper/image.helper';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly imageHelper: ImageHelper
+    ) {}
 
   @UseInterceptors(BindProductCode)
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
-  @UseInterceptors(FileInterceptor('file', { storage: fileStorage('upload/product') }))
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        { name: 'product', maxCount: 1 },
+        { name: 'attach', maxCount: 4 },
+        { name: 'additionals', maxCount: 4 },
+      ], 
+      { storage: fileStorage('upload/product') }
+    )  
+  )
   async create(
-    @UploadedFile('file', new ParseFilePipe({
-      validators: [
-        new FileMaxSizeValidator({maxSize: 500000}),
-        new FileTypeValidator({validType: ['jpg', 'jpeg', 'png']})
-      ],
-    }))
-    file: Express.Multer.File,
+    @UploadedFiles(new ParseFilePipe()) files: { 
+      product?: Express.Multer.File[], 
+      attach?: Express.Multer.File[],
+      additionals: Express.Multer.File[],
+    },
     @Body() createProductDto: CreateProductDto,
     @User() user: AuthUserInfo
   ) {
-    return await this.productsService.create(createProductDto, file, user);
+    this.imageHelper.injectAttachSrcToPropery(files?.attach, createProductDto);
+    const productImagesSrc = this.imageHelper.injectFileSrc(files.product);
+    const additionalsImageSrc = this.imageHelper.injectFileSrc(files.additionals);
+    return await this.productsService.create(createProductDto, productImagesSrc, additionalsImageSrc, user);
   }
 
   @Get()

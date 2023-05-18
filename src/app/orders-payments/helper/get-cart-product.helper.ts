@@ -12,7 +12,7 @@ export const getCartProduct = (carts: Cart) => {
           price: product.price,
           discount: product.discount,
           quantity: cart.quantity,
-          imageSrc: product.imageSrc,
+          imageSrc: product.productImagesSrc[0],
       }
       cartProductList.push(cartProduct);
     }
