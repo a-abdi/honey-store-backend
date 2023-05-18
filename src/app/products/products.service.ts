@@ -38,7 +38,7 @@ export class ProductsService {
     return await this.productModel.find({_id: { $in: ids }}).exec();
   }
 
-  async update(_id, updateData: any) {
+  async update(_id: Schema.Types.ObjectId, updateData: any) {
     return await this.productModel.findOneAndUpdate( {_id}, updateData, {new: true}).exec();
   }
 

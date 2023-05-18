@@ -51,9 +51,15 @@ export class ProductsController {
     @Body() createProductDto: CreateProductDto,
     @User() user: AuthUserInfo
   ) {
-    this.imageHelper.injectAttachSrcToPropery(files?.attach, createProductDto);
-    const productImagesSrc = this.imageHelper.injectFileSrc(files.product);
-    const additionalsImageSrc = this.imageHelper.injectFileSrc(files.additionals);
+    files?.attach && this.imageHelper.injectAttachSrcToPropery(files.attach, createProductDto);
+    let productImagesSrc: string[] = [];
+    if (files?.product) {
+      productImagesSrc = this.imageHelper.injectFileSrc(files.product);
+    }
+    let additionalsImageSrc: string[] = [];
+    if (files?.additionals) {
+      additionalsImageSrc = this.imageHelper.injectFileSrc(files.additionals);
+    }
     return await this.productsService.create(createProductDto, productImagesSrc, additionalsImageSrc, user);
   }
 
@@ -72,22 +78,37 @@ export class ProductsController {
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @UseInterceptors(new AddHostUrl('imageSrc'))
-  @UseInterceptors(FileInterceptor('file', { storage: fileStorage('upload/product') }))
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        { name: 'product', maxCount: 1 },
+        { name: 'attach', maxCount: 4 },
+        { name: 'additionals', maxCount: 4 },
+      ], 
+      { storage: fileStorage('upload/product') }
+    )  
+  )
   @Patch(':_id')
   update(
-    @UploadedFile('file', new ParseFilePipe({
-      validators: [
-        new FileMaxSizeValidator({maxSize: 500000}),
-        new FileTypeValidator({validType: ['jpg', 'jpeg', 'png']})
-      ],
-      fileIsRequired: false
-    })) file: Express.Multer.File,
+    @UploadedFiles() files: { 
+      product?: Express.Multer.File[], 
+      attach?: Express.Multer.File[],
+      additionals: Express.Multer.File[],
+    },
     @Param() params: MongoIdParams,
     @Body() updateProductDto: UpdateProductDto,
     @User() user: AuthUserInfo,
   ) {
-    const updateData = createUpdateData(file, user, updateProductDto);
-    return this.productsService.update(params._id, updateData);
+    files?.attach && this.imageHelper.injectAttachSrcToPropery(files.attach, updateProductDto);
+    const productUpdateData: any = {...updateProductDto};
+    if (files?.product) {
+      productUpdateData.productImagesSrc = this.imageHelper.injectFileSrc(files.product);
+    }
+    if (files?.additionals) {
+      productUpdateData.additionalsImageSrc = this.imageHelper.injectFileSrc(files.additionals);
+    }
+    productUpdateData.admin = user.userId;
+    return this.productsService.update(params._id, productUpdateData);
   }
 
   @Roles(Role.Admin)
