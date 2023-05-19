@@ -1,11 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, ParseFilePipe, UseGuards, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ParseFilePipe, UseGuards, UploadedFiles, Req } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { fileStorage } from 'src/common/helper';
-import { FileMaxSizeValidator } from '../../service/file-max-size-validation';
-import { FileTypeValidator } from '../../service/file-type-validation';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { Role } from '../../common/declare/enum';
@@ -13,19 +11,20 @@ import { MongoIdParams } from '../../common/helper';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Message } from 'src/common/message';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
-import { AddHostUrl } from 'src/common/interceptor/add-host-url';
 import { BindProductCode } from 'src/common/interceptor/bind-product-code';
 import { User } from 'src/common/decorators/user.decorator';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
-import { createUpdateData } from './service/create-update-data';
 import { ImageHelper } from './helper/image.helper';
+import { UrlHelper } from 'src/common/helper/url.helper';
+import { Request } from 'express';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('products')
 export class ProductsController {
   constructor(
     private readonly productsService: ProductsService,
-    private readonly imageHelper: ImageHelper
+    private readonly imageHelper: ImageHelper,
+    private readonly urlHelper: UrlHelper,
     ) {}
 
   @UseInterceptors(BindProductCode)
@@ -49,7 +48,8 @@ export class ProductsController {
       additionals: Express.Multer.File[],
     },
     @Body() createProductDto: CreateProductDto,
-    @User() user: AuthUserInfo
+    @User() user: AuthUserInfo,
+    @Req() request: Request
   ) {
     files?.attach && this.imageHelper.injectAttachSrcToPropery(files.attach, createProductDto);
     let productImagesSrc: string[] = [];
@@ -60,24 +60,29 @@ export class ProductsController {
     if (files?.additionals) {
       additionalsImageSrc = this.imageHelper.injectFileSrc(files.additionals);
     }
-    return await this.productsService.create(createProductDto, productImagesSrc, additionalsImageSrc, user);
+    const product = await this.productsService.create(createProductDto, productImagesSrc, additionalsImageSrc, user);
+    this.urlHelper.bindHostUrlToProduct(product, request);
+    return product;
   }
 
   @Get()
-  @UseInterceptors(new AddHostUrl('imageSrc'))
-  async findAll() {
-    return await this.productsService.findAll();
+  async findAll(@Req() request: Request) {
+    const result = await this.productsService.findAll();
+    result.map(product => {
+      this.urlHelper.bindHostUrlToProduct(product, request);
+    });
+    return result;
   }
 
   @Get(':_id')
-  @UseInterceptors(new AddHostUrl('imageSrc'))
-  async findOne(@Param() params: MongoIdParams) {
-    return await this.productsService.findOne(params._id);
+  async findOne(@Param() params: MongoIdParams, @Req() request: Request) {
+    const product = await this.productsService.findOne(params._id);
+    this.urlHelper.bindHostUrlToProduct(product, request);
+    return product;
   }
 
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @UseInterceptors(new AddHostUrl('imageSrc'))
   @UseInterceptors(
     FileFieldsInterceptor(
       [
@@ -89,7 +94,7 @@ export class ProductsController {
     )  
   )
   @Patch(':_id')
-  update(
+  async update(
     @UploadedFiles() files: { 
       product?: Express.Multer.File[], 
       attach?: Express.Multer.File[],
@@ -98,6 +103,7 @@ export class ProductsController {
     @Param() params: MongoIdParams,
     @Body() updateProductDto: UpdateProductDto,
     @User() user: AuthUserInfo,
+    @Req() request: Request
   ) {
     files?.attach && this.imageHelper.injectAttachSrcToPropery(files.attach, updateProductDto);
     const productUpdateData: any = {...updateProductDto};
@@ -108,13 +114,17 @@ export class ProductsController {
       productUpdateData.additionalsImageSrc = this.imageHelper.injectFileSrc(files.additionals);
     }
     productUpdateData.admin = user.userId;
-    return this.productsService.update(params._id, productUpdateData);
+    const product = await this.productsService.update(params._id, productUpdateData);
+    this.urlHelper.bindHostUrlToProduct(product, request);
+    return product;
   }
 
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':_id')
-  remove(@Param() params: MongoIdParams) {
-    return this.productsService.remove(params._id);
+  async remove(@Param() params: MongoIdParams, @Req() request: Request) {
+    const product = await this.productsService.remove(params._id);
+    this.urlHelper.bindHostUrlToProduct(product, request);
+    return product;
   }
 }
