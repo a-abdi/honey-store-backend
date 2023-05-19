@@ -11,6 +11,7 @@ import { ResponseMessage } from 'src/common/decorators/response-message.decorato
 import { ProductsService } from '../products/products.service';
 import { Product } from '../products/entities/product.entity';
 import { Request } from 'express';
+import { UrlHelper } from 'src/common/helper/url.helper';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('carts')
@@ -18,6 +19,7 @@ export class CartsController {
   constructor(
     private readonly cartsService: CartsService,
     private readonly productService: ProductsService,
+    private readonly urlHelper: UrlHelper,
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -26,9 +28,8 @@ export class CartsController {
     const userCart = await this.cartsService.findUserCart(user);
     if (userCart) {
       userCart?.products?.map(cartProduct => { 
-        const hostAddress = `${request.protocol}://${request.get('host')}`;
         const product = cartProduct.product as Product;
-        // product.additionalsImageSrc = `${hostAddress}/${product?.imageSrc}`;
+        this.urlHelper.bindHostUrlToProduct(product, request);
       })
     };
     return userCart;
