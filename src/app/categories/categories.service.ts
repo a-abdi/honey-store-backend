@@ -16,11 +16,11 @@ export class CategoriesService {
   }
 
   async findAll() {
-    return await this.categoryModel.find().exec();
+    return await this.categoryModel.find().populate('properties').exec();
   }
 
   async findByID(_id: Schema.Types.ObjectId) {
-    return await this.categoryModel.findOne({_id}).exec();
+    return await this.categoryModel.findOne({_id}).populate('properties').exec();
   }
 
   async findByName(name: string) {
@@ -28,10 +28,10 @@ export class CategoriesService {
   }
 
   async update(_id: Schema.Types.ObjectId, updateCategoryDto: UpdateCategoryDto) {
-    return await this.categoryModel.findOneAndUpdate({_id}, updateCategoryDto, {new: true});
+    return await this.categoryModel.findOneAndUpdate({_id}, updateCategoryDto, {new: true}).populate('properties').exec();
   }
 
   async remove(_id: Schema.Types.ObjectId) {
-    return await this.categoryModel.deleteOne({_id}) 
+    return await this.categoryModel.deleteOne({_id}).exec();
   }
 }

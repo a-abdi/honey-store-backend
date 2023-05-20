@@ -30,4 +30,5 @@ export const Name = {
     LABEL: "برچسب",
     TYPE: "نوع",
     UNIT: "واحد",
+    PROPERTIES: "خصوصیات",
 }
