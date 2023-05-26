@@ -6,9 +6,13 @@ import { UpdateProductDto } from "../dto/update-product.dto";
 export class ImageHelper {
     injectAttachSrcToPropery(attachList: Express.Multer.File[], productDto: CreateProductDto | UpdateProductDto) {
         for (const attach of attachList) {
-            const { originalname } = attach;
-            const property = productDto?.customProperty.find(property => property.code == originalname)
-            property && ( property.value = attach.path);
+            const { size } = attach;
+            for (let index = 0; index < productDto?.customProperty.length; index++) {
+                productDto?.customProperty[index];
+                if (productDto?.customProperty[index]?.value == size) {
+                    productDto.customProperty[index].value = attach.path
+                }
+            }
         }
     }
 

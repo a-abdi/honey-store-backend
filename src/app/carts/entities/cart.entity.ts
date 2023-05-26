@@ -19,7 +19,7 @@ export class Cart {
   @Prop({type: MongooseSchema.Types.ObjectId, ref: 'User', unique: true, required: true})
   user: MongooseSchema.Types.ObjectId | User;
 
-  @Prop({ type: [{ quantity:{ type:Number }, product:{ type: MongooseSchema.Types.ObjectId, ref: 'Product' } }] })
+  @Prop({ type: [{ quantity:{ type: Number }, product:{ type: MongooseSchema.Types.ObjectId, ref: 'Product' } }], _id: false })
   products: CartProducts[];
 }
 

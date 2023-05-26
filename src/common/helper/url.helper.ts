@@ -21,7 +21,7 @@ export class UrlHelper {
             hostAddress
         );
         product.customProperty.map(property => { 
-            if (property?.value && property.type == "image") {
+            if (property?.value && property.type == "file") {
                 property.value = `${hostAddress}/${property.value}`;
             }
         })

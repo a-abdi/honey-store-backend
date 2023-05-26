@@ -47,10 +47,10 @@ export class CartsService {
     )
   }
 
-  async removeFromCart(_id: Schema.Types.ObjectId, user: AuthUserInfo, opt: QueryOptions = {}) {
+  async removeFromCart(product: Schema.Types.ObjectId, user: AuthUserInfo, opt: QueryOptions = {}) {
     return await this.cartsModel.findOneAndUpdate(
       { user: user.userId },
-      { $pull: { products: { _id } } },
+      { $pull: { products: { product } } },
       opt
     )
   }
