@@ -16,6 +16,8 @@ import { VerifyPaymentDto } from './dto/verify-payment.dto';
 import { Response } from 'express';
 import { OrderStatus } from 'src/common/declare/enum';
 import { ConfigService } from "@nestjs/config";
+import { UserHelper } from './helper/user.helperts';
+import { Name } from 'src/common/message/name';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller()
@@ -26,12 +28,21 @@ export class OrdersTransactionsController {
     private readonly productHelper: ProductHelper,
     private readonly transactionHelper: TransactionHelper,
     private readonly configService: ConfigService,
+    private readonly userHelper: UserHelper,
   ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('checkout/payment')
   async checkoutPayement(@User() user: AuthUserInfo, @Res() res: Response) {
     try {
+      if (this.userHelper.addressIstEmpty(user.userId)) {
+        return res.send({
+          message: Message.NOT_BE_EMPTY(Name.ADDRESS),
+          data: {
+            transactionLink: null
+          }
+        });
+      }
       const carts = await this.cartHelper.removeUserCartGetValue(user, { new: true });
       let transactionLink = null;
       if (carts) {
@@ -51,7 +62,7 @@ export class OrdersTransactionsController {
         await this.ordersService.updateOrder(order.id, { transaction } );
         transactionLink = link;
       }
-      res.send({
+      return res.send({
         message: Message.SUCCESS(),
         data: {
           transactionLink
