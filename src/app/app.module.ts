@@ -13,6 +13,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformResponse } from '../common/interceptor/transform-response';
 import { OrdersTransactionsModule } from './orders-payments/orders-transactions.module';
 import { PropertyModule } from './property/property.module';
+import { ViewpointModule } from './viewpoint/viewpoint.module';
 import 'dotenv/config';
 
 @Module({
@@ -32,6 +33,7 @@ import 'dotenv/config';
     CartsModule,
     OrdersTransactionsModule,
     PropertyModule,
+    ViewpointModule,
   ],
   controllers: [],
   providers: [
