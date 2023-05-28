@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { OrderTransactionInterface } from './interface/interface';
 import { OrderTransaction, OrderTransactionDocument } from './entities/order-transaction.entity';
 import { Model, Schema } from 'mongoose';
+import { AuthUserInfo } from 'src/interface/auth-user-info';
 
 @Injectable()
 export class OrdersTransactionsService {
@@ -25,5 +26,9 @@ export class OrdersTransactionsService {
 
     async find(orderTransactionFilter: any) {
         return await this.orderTransactionModel.findOne(orderTransactionFilter).exec();
+    };
+
+    async findUserOrders(user: AuthUserInfo) {
+        return await this.orderTransactionModel.find({user: user.userId}).exec();
     };
 }

@@ -6,13 +6,12 @@ import { AuthUserInfo } from "src/interface/auth-user-info";
 export class CartHelper {
     constructor(private readonly cartService: CartsService) {}
     
-    async removeUserCartGetValue(user: AuthUserInfo) {
-        const opt = { new: true };
-        return await (await this.cartService.remove(user, opt))?.populate({
-          path: 'products', populate: {
-            path: 'product',
-            model: 'Product'
-          }
-        });
+    async removeUserCartGetValue(user: AuthUserInfo, opt: any = {}) {
+      return await (await this.cartService.remove(user, opt))?.populate({
+        path: 'products', populate: {
+          path: 'product',
+          model: 'Product'
+        }
+      });
     }
 }

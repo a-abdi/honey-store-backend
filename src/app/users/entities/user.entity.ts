@@ -17,7 +17,7 @@ export class User {
     phoneNumber: string;
 
     @Prop({ type: AddressUserEntitySchema })
-    address: AddressUserEntity[];
+    address: AddressUserEntity;
 
     @Prop({select: false})
     password: string;

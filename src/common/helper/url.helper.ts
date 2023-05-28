@@ -21,7 +21,8 @@ export class UrlHelper {
             hostAddress
         );
         product.customProperty.map(property => { 
-            if (property?.value && property.type == "file") {
+            const regex = new RegExp(hostAddress, 'g');
+            if (property?.value && property.type == "file" && !regex.test(property.value)) {
                 property.value = `${hostAddress}/${property.value}`;
             }
         })

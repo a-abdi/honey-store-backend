@@ -30,9 +30,9 @@ export class OrdersTransactionsController {
 
   @UseGuards(JwtAuthGuard)
   @Get('checkout/payment')
-  async checkoutPayement(@User() user: AuthUserInfo,  @Res() res: Response) {
+  async checkoutPayement(@User() user: AuthUserInfo, @Res() res: Response) {
     try {
-      const carts = await this.cartHelper.removeUserCartGetValue(user);
+      const carts = await this.cartHelper.removeUserCartGetValue(user, { new: true });
       let transactionLink = null;
       if (carts) {
         const orderData: OrderTransactionInterface = {
@@ -111,4 +111,10 @@ export class OrdersTransactionsController {
       return res.redirect(this.configService.get("FAILD_PAYMENT_FRONT_URL"));
     }
   };
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/order')
+  async userOrder(@User() user: AuthUserInfo) {
+    return await this.ordersService.findUserOrders(user);
+  }
 }
