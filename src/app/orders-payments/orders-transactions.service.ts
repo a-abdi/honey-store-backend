@@ -31,4 +31,15 @@ export class OrdersTransactionsService {
     async findUserOrders(user: AuthUserInfo) {
         return await this.orderTransactionModel.find({user: user.userId}).exec();
     };
+
+    async findByUserAndProduct(user: AuthUserInfo, productId: Schema.Types.ObjectId) {
+        return await this.orderTransactionModel.findOne(
+            {
+                $and: [
+                    {user: user.userId},
+                    {"cart.productId": productId}
+                ] 
+            }
+        ).exec();
+    };
 }

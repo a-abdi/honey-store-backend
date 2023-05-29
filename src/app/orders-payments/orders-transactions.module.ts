@@ -27,6 +27,9 @@ import { UserHelper } from './helper/user.helperts';
     UsersModule,
     HttpModule,
     MongooseModule.forFeature([{name: OrderTransaction.name, schema: OrderTransactionSchema}]),
+  ],
+  exports: [
+    OrdersTransactionsService,
   ]
 })
 export class OrdersTransactionsModule {}

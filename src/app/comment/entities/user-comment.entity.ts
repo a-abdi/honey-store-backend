@@ -5,7 +5,7 @@ import { User } from "src/app/users/entities/user.entity";
 @Schema({ _id: false })
 export class UserComment {
     @Prop()
-    fullname: string;
+    fullName: string;
 
     @Prop({type: MongooseSchema.Types.ObjectId, ref: 'User'})
     id: MongooseSchema.Types.ObjectId | User;

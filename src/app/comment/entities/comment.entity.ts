@@ -14,8 +14,11 @@ export class Comment {
     @Prop({ type: UserCommentSchema })
     user: UserComment;
 
-    @Prop()
+    @Prop({default: false})
     verify: boolean;
+
+    @Prop()
+    score: number;
 
     @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Product'})
     product: MongooseSchema.Types.ObjectId | Product;

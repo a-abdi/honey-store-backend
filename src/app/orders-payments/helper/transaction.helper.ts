@@ -67,19 +67,21 @@ export class TransactionHelper {
 
     async uniqueTransaction(id: string, trackId: number, orderId: Schema.Types.ObjectId) {
         const queryFilter = {
-            $or: [{
-                $and: [ 
-                    {
-                        "transaction.id": id
-                    },
-                    {
-                        _id: { $ne: orderId } 
-                    }
-                ]
-            },
-            {
-                "transaction.trackId": trackId
-            }]
+            $or: [
+                {
+                    $and: [ 
+                        {
+                            "transaction.id": id
+                        },
+                        {
+                            _id: { $ne: orderId } 
+                        }
+                    ]
+                },
+                {
+                    "transaction.trackId": trackId
+                }
+            ]
         }
         const order = await this.ordersTransactionsService.find(queryFilter);
         if (order) {
