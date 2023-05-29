@@ -16,8 +16,4 @@ export class CreateViewpointDto {
     @IsOptional()
     @IsNumber()
     score: number;
-
-    @IsNotEmpty()
-    @IsMongoId()
-    productId: Schema.Types.ObjectId;
 }

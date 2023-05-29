@@ -1,15 +1,24 @@
 import { diskStorage } from "multer";
 import { extname } from "path";
 import { v4 as uuid } from 'uuid';
-import { IsMobilePhone } from 'class-validator';
+import { IsMobilePhone, IsOptional } from 'class-validator';
 import { IsMongoId } from 'class-validator';
 import { Message } from "./message";
 import { Name } from "./message/name";
 import { Schema } from "mongoose";
 
 export class MongoIdParams {
+  @IsOptional()
   @IsMongoId({message: Message.INCORRECT(Name.ID)})
   _id: Schema.Types.ObjectId;
+
+  @IsOptional()
+  @IsMongoId({message: Message.INCORRECT(Name.ID)})
+  productId: Schema.Types.ObjectId;
+
+  @IsOptional()
+  @IsMongoId({message: Message.INCORRECT(Name.ID)})
+  commentId: Schema.Types.ObjectId;
 }
 
 export class PhoneNumberParams {

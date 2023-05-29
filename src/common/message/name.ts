@@ -20,6 +20,8 @@ export const Name = {
     POSTAL_CODE: 'کد پستی',
     CITY: 'شهر',
     ID: 'شناسه',
+    PRODUCT_ID: 'شناسه محصول',
+    COMMENT_ID: 'شناسه نظر',
     FILE: 'فایل',
     PROVINCE: 'استان',
     PLAQUE: 'پلاک',

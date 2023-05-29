@@ -2,33 +2,34 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ViewpointService } from './viewpoint.service';
 import { CreateViewpointDto } from './dto/create-viewpoint.dto';
 import { UpdateViewpointDto } from './dto/update-viewpoint.dto';
+import { MongoIdParams } from 'src/common/helper';
 
-@Controller('viewpoint')
+@Controller('product')
 export class ViewpointController {
   constructor(private readonly viewpointService: ViewpointService) {}
 
-  @Post()
-  create(@Body() createViewpointDto: CreateViewpointDto) {
-    return this.viewpointService.create(createViewpointDto);
+  @Post(':productId/comment')
+  async create(@Param() params: MongoIdParams, @Body() createViewpointDto: CreateViewpointDto) {
+    return await this.viewpointService.create(params.productId, createViewpointDto);
   }
 
-  @Get()
-  findAll() {
-    return this.viewpointService.findAll();
+  @Get(':productId/comment')
+  async findAll(@Param() params: MongoIdParams) {
+    return await this.viewpointService.findAll(params.productId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.viewpointService.findOne(+id);
+  @Get(':productId/comment/commentId')
+  findOne(@Param() params: MongoIdParams) {
+    return this.viewpointService.findOne(params.commentId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateViewpointDto: UpdateViewpointDto) {
-    return this.viewpointService.update(+id, updateViewpointDto);
+  @Patch(':productId/comment/commentId')
+  update(@Param() params: MongoIdParams, @Body() updateViewpointDto: UpdateViewpointDto) {
+    return this.viewpointService.update(params.commentId, updateViewpointDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.viewpointService.remove(+id);
+  @Delete(':productId/comment/commentId')
+  remove(@Param() params: MongoIdParams) {
+    return this.viewpointService.remove(params.commentId);
   }
 }
