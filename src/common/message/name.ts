@@ -33,4 +33,8 @@ export const Name = {
     TYPE: "نوع",
     UNIT: "واحد",
     PROPERTIES: "خصوصیات",
+    COMMENT: "کامنت",
+    TITLE: "عنوان",
+    TEXT: "متن",
+    SCORE: "امتیاز",
 }
