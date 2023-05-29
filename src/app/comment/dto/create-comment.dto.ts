@@ -1,7 +1,6 @@
-import { IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString, Max, MaxLength, Min, MinLength } from "class-validator";
-import { Schema } from "mongoose";
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Max, MaxLength, Min } from "class-validator";
 
-export class CreateViewpointDto {
+export class CreateCommentDto {
     @MaxLength(25)
     @IsOptional()
     @IsString()

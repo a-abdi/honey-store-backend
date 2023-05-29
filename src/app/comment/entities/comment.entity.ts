@@ -1,18 +1,18 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Schema as MongooseSchema} from "mongoose";
 import { Product } from "src/app/products/entities/product.entity";
-import { UserViewpoint, UserViewpointSchema } from "./user-viewpoint.entity";
+import { UserComment, UserCommentSchema } from "./user-comment.entity";
 
 @Schema({timestamps: true})
-export class Viewpoint {
+export class Comment {
     @Prop()
     title: string;
 
     @Prop()
     text: string;
 
-    @Prop({ type: UserViewpointSchema })
-    user: UserViewpoint;
+    @Prop({ type: UserCommentSchema })
+    user: UserComment;
 
     @Prop()
     verify: boolean;
@@ -21,6 +21,6 @@ export class Viewpoint {
     product: MongooseSchema.Types.ObjectId | Product;
 }
 
-export const ViewpointSchema = SchemaFactory.createForClass(Viewpoint);
+export const CommentSchema = SchemaFactory.createForClass(Comment);
 
-export type ViewpointDocument = Viewpoint & Document;
+export type CommentDocument = Comment & Document;

@@ -3,7 +3,7 @@ import { Schema as MongooseSchema } from "mongoose";
 import { User } from "src/app/users/entities/user.entity";
  
 @Schema({ _id: false })
-export class UserViewpoint {
+export class UserComment {
     @Prop()
     fullname: string;
 
@@ -14,4 +14,4 @@ export class UserViewpoint {
     buyer: boolean;
 }
 
-export const UserViewpointSchema = SchemaFactory.createForClass(UserViewpoint);
+export const UserCommentSchema = SchemaFactory.createForClass(UserComment);
