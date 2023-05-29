@@ -9,17 +9,22 @@ import { UsersService } from '../users/users.service';
 import { UserComment } from './entities/user-comment.entity';
 import { OrdersTransactionsService } from '../orders-payments/orders-transactions.service';
 import { AdminUpdateCommentDto } from './dto/admin-update-comment.dto';
-import { Role } from 'src/common/declare/enum';
+import { OrderStatus, Role } from 'src/common/declare/enum';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
+import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
+import { Message } from 'src/common/message';
+import { NameHelper } from 'src/common/helper/name.helper';
 
+@ResponseMessage(Message.SUCCESS())
 @Controller('product')
 export class CommentController {
   constructor(
     private readonly commentService: CommentService,
     private readonly userService: UsersService,
     private readonly orderService: OrdersTransactionsService,
+    private readonly nameHelper: NameHelper,
   ) {}
 
   @Roles(Role.User)
@@ -30,16 +35,18 @@ export class CommentController {
     const comment = await this.commentService.userFindOne(productId, user);
     if (!comment) {
       const userData = await this.userService.findOne(user.userId);
-      const orderData = await this.orderService.findByUserAndProduct(user, productId);
+      const statusList = [OrderStatus.Payment, OrderStatus.Send, OrderStatus.Delivered];
+      const orderData = await this.orderService.findByUserAndProduct(user, productId, statusList);
       const userCommentData = {
         id: user.userId,
-        fullName: `${ userData.firstName} ${userData.lastName}`,
+        fullName: this.nameHelper.userFullName(userData),
         buyer: orderData ? true : false
       };
       this.commentService.create(params.productId, createCommentDto, userCommentData);
     }
   }
 
+  @Get(':productId/comment')
   async findAll(@Param() params: MongoIdParams) {
     return await this.commentService.findAll(params.productId);
   }

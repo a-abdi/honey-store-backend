@@ -4,6 +4,7 @@ import { OrderTransactionInterface } from './interface/interface';
 import { OrderTransaction, OrderTransactionDocument } from './entities/order-transaction.entity';
 import { Model, Schema } from 'mongoose';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
+import { OrderStatus } from 'src/common/declare/enum';
 
 @Injectable()
 export class OrdersTransactionsService {
@@ -32,12 +33,15 @@ export class OrdersTransactionsService {
         return await this.orderTransactionModel.find({user: user.userId}).exec();
     };
 
-    async findByUserAndProduct(user: AuthUserInfo, productId: Schema.Types.ObjectId) {
+    async findByUserAndProduct(user: AuthUserInfo, productId: Schema.Types.ObjectId, statusList: OrderStatus[]) {
         return await this.orderTransactionModel.findOne(
             {
                 $and: [
                     {user: user.userId},
-                    {"cart.productId": productId}
+                    {"cart.productId": productId},
+                    {
+                        status: { $in: statusList }
+                    }
                 ] 
             }
         ).exec();
