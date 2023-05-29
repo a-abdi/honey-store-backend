@@ -31,7 +31,7 @@ export class CommentController {
     if (!comment) {
       const userData = await this.userService.findOne(user.userId);
       const orderData = await this.orderService.findByUserAndProduct(user, productId);
-      const userCommentData: UserComment = {
+      const userCommentData = {
         id: user.userId,
         fullName: `${ userData.firstName} ${userData.lastName}`,
         buyer: orderData ? true : false

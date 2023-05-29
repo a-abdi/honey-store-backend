@@ -24,7 +24,7 @@ export class CommentService {
       {
         $and: [
           {product: productId}, 
-          {user: user.userId},
+          {"user.id": user.userId},
           {verify: false}
         ] }).exec();
   }
@@ -34,7 +34,7 @@ export class CommentService {
       {
         $and: [
           {_id: commentId},
-          {user: user.userId},
+          {"user.id": user.userId},
           {verify: false}
         ] 
       }, updateCommentDto, opt).exec();
@@ -45,7 +45,7 @@ export class CommentService {
       {
         $and: [
           {_id: commentId},
-          {user: user.userId},
+          {"user.id": user.userId},
           {verify: false}
         ] 
       }).exec();
