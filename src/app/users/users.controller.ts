@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -11,11 +11,18 @@ import { Message } from 'src/common/message';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { User } from 'src/common/decorators/user.decorator';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
+import { Password } from './service/password';
+import { Name } from 'src/common/message/name';
+import { UpdatePasswordDto } from './dto/update-password';
+import * as bcrypt from 'bcrypt';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly password: Password,
+  ) {}
 
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
@@ -38,8 +45,18 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Patch('password')
+  async passwordUpdate(@Body() updatePasswordDto: UpdatePasswordDto, @User() user: AuthUserInfo) {
+    if (!await this.password.isValid(user.phoneNumber, updatePasswordDto.password)) {
+      throw new UnauthorizedException({Message: Message.INCORRECT(Name.PASSWORD)});
+    };
+    const password = await bcrypt.hash(updatePasswordDto.newPassword, 10)
+    return this.usersService.updateOne(user.userId, { password });
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Patch()
-  update(@Body() updateUserDto: UpdateUserDto, @User() user: AuthUserInfo) {
+  async update(@Body() updateUserDto: UpdateUserDto, @User() user: AuthUserInfo) {
     return this.usersService.update(user.userId, updateUserDto);
   }
 
