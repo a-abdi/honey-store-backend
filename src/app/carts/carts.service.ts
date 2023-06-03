@@ -55,7 +55,7 @@ export class CartsService {
     )
   }
 
-  async remove(user: AuthUserInfo, opt = {}) {
-    return await this.cartsModel.findOneAndRemove({user: user.userId}, opt);
+  async remove(userId: Schema.Types.ObjectId, opt = {}) {
+    return await this.cartsModel.findOneAndRemove({user: userId}, opt);
   }
 }

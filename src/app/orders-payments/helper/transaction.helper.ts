@@ -12,6 +12,8 @@ import { CartsService } from "src/app/carts/carts.service";
 import { CartHelper } from "./cart.helper";
 import { createRandomCode } from "src/common/helper";
 import { Message } from "src/common/message";
+import { VerifyPaymentDto } from "../dto/verify-payment.dto";
+import { OrderStatus } from "src/common/declare/enum";
 
 @Injectable()
 export class TransactionHelper {
@@ -21,11 +23,11 @@ export class TransactionHelper {
         private readonly configService: ConfigService,
         private readonly cartService: CartsService,
         private readonly cartHelper: CartHelper
-    ) {}
+    ) { }
 
     async createTransaction(user: AuthUserInfo, order: OrderTransaction & Document<any, any, any> & {
-            _id: Types.ObjectId;
-        } ) {
+        _id: Types.ObjectId;
+    }) {
         const url = this.configService.get<string>('CREATE_TRANSACTION_URL');
         const headers = {
             'Content-Type': 'application/json',
@@ -40,12 +42,12 @@ export class TransactionHelper {
         };
 
         return await firstValueFrom(
-        this.httpService.post<CreateTransactionInterFace>(url, data, { headers }).pipe(map((res) => res.data)).pipe(
-            catchError((error: AxiosError) => {
-                this.ordersTransactionsService.updateOrder(order.id, { "transaction.error": error.response.data });
-                throw new InternalServerErrorException(Message.ERROR_OCCURRED());
+            this.httpService.post<CreateTransactionInterFace>(url, data, { headers }).pipe(map((res) => res.data)).pipe(
+                catchError((error: AxiosError) => {
+                    this.ordersTransactionsService.updateOrder(order.id, { "transaction.error": error.response.data });
+                    throw new InternalServerErrorException(Message.ERROR_OCCURRED());
 
-            }),
+                }),
             ),
         );
     };
@@ -63,11 +65,11 @@ export class TransactionHelper {
         };
 
         return await firstValueFrom(
-        this.httpService.post(url, data, { headers }).pipe(
-            catchError((error: AxiosError) => {
-                this.ordersTransactionsService.updateOrder(orderId, { "transaction.error": error.response.data });
-                throw Error;
-            }),
+            this.httpService.post(url, data, { headers }).pipe(
+                catchError((error: AxiosError) => {
+                    this.ordersTransactionsService.updateOrder(orderId, { "transaction.error": error.response.data });
+                    throw new InternalServerErrorException(Message.ERROR_OCCURRED());
+                }),
             ),
         );
     };
@@ -76,12 +78,12 @@ export class TransactionHelper {
         const queryFilter = {
             $or: [
                 {
-                    $and: [ 
+                    $and: [
                         {
                             "transaction.id": id
                         },
                         {
-                            _id: { $ne: orderId } 
+                            _id: { $ne: orderId }
                         }
                     ]
                 },
@@ -101,10 +103,10 @@ export class TransactionHelper {
             }
             return result;
         }
-        return { 
+        return {
             isUnique: true,
             error: null
-         };
+        };
     }
 
     async getData(user: AuthUserInfo) {
@@ -116,5 +118,31 @@ export class TransactionHelper {
             code: createRandomCode(),
         } : null;
         return { userCart, transactionData };
+    }
+
+    getVerifyPaymentDto(verifyPaymentDto: VerifyPaymentDto, error: {
+        error_code: number;
+        error_message: string;
+    } | null) {
+        return {
+            "transaction.status": verifyPaymentDto?.status,
+            "transaction.trackId": verifyPaymentDto?.track_id,
+            "transaction.cardNo": verifyPaymentDto?.card_no,
+            "transaction.hashedCardNo": verifyPaymentDto?.hashed_card_no,
+            "transaction.transactionDate": verifyPaymentDto?.date,
+            "transaction.transactionAmount": verifyPaymentDto?.amount,
+            "transaction.error": error,
+        };
+    }
+
+    getTransactionData(verifyPaymentData: any) {
+        return { 
+            status: OrderStatus.WatingPay,
+            "transaction.status": verifyPaymentData?.status,
+            "transaction.paymentTrackId": verifyPaymentData.payment?.track_id,
+            "transaction.paymentAmount": verifyPaymentData?.payment?.amount,
+            "transaction.paymentDate": verifyPaymentData?.payment?.date,
+            "transaction.verifyDate": verifyPaymentData?.verify?.date,
+          }
     }
 }

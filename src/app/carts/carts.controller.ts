@@ -76,7 +76,7 @@ export class CartsController {
   async remove(@Param() params: MongoIdParams, @User() user: AuthUserInfo,) {
     const cartProduct = await this.cartsService.removeFromCart(params._id, user, { new: true });
     if (!cartProduct?.products.length) {
-      this.cartsService.remove(user);
+      this.cartsService.remove(user.userId);
     }
   }
 }
