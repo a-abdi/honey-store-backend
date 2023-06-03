@@ -11,6 +11,7 @@ import { HttpModule } from '@nestjs/axios';
 import { TransactionHelper } from './helper/transaction.helper';
 import { UsersModule } from '../users/users.module';
 import { UserHelper } from './helper/user.helperts';
+import { CommonHelper } from './helper/coomon.helper';
 
 @Module({
   controllers: [OrdersTransactionsController],
@@ -20,6 +21,7 @@ import { UserHelper } from './helper/user.helperts';
     CartHelper, 
     TransactionHelper,
     UserHelper,
+    CommonHelper,
   ],
   imports: [
     CartsModule,

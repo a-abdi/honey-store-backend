@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Schema } from 'mongoose';
+import mongoose, { Model, Schema } from 'mongoose';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Product, ProductDocument } from './entities/product.entity';
@@ -38,8 +38,8 @@ export class ProductsService {
     return await this.productModel.find({_id: { $in: ids }}).exec();
   }
 
-  async update(_id: Schema.Types.ObjectId, updateData: any): Promise<Product> {
-    return await this.productModel.findOneAndUpdate( {_id}, updateData, {new: true}).exec();
+  async update(_id: Schema.Types.ObjectId, updateData: any, session: mongoose.ClientSession | null = null): Promise<Product> {
+    return await this.productModel.findOneAndUpdate( {_id}, updateData, {new: true}).session(session).exec();
   }
 
   async remove(_id: Schema.Types.ObjectId): Promise<Product> {

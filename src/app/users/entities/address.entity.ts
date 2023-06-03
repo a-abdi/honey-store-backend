@@ -20,9 +20,6 @@ export class AddressUserEntity {
 
     @Prop()
     postalCode: string;
-
-    @Prop()
-    selected: boolean;
 };
 
 export const AddressUserEntitySchema = SchemaFactory.createForClass(AddressUserEntity);

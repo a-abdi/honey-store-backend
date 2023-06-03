@@ -25,7 +25,7 @@ export class CartsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async cart(@User() user: AuthUserInfo, @Req() request: Request) {
-    const userCart = await this.cartsService.findUserCart(user);
+    const userCart = await this.cartsService.findUserCart(user.userId);
     if (userCart) {
       userCart?.products?.map(cartProduct => { 
         const product = cartProduct.product as Product;

@@ -1,11 +1,9 @@
-import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { OrdersTransactionsService } from './orders-transactions.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from 'src/common/decorators/user.decorator';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { createRandomCode } from 'src/common/helper';
-import { getAmount } from './helper/get-amount.helper';
-import { getCartProduct } from './helper/get-cart-product.helper';
 import { OrderTransactionInterface } from './interface/interface';
 import { ProductHelper } from './helper/product.helper';
 import { CartHelper } from './helper/cart.helper';
@@ -18,6 +16,7 @@ import { OrderStatus } from 'src/common/declare/enum';
 import { ConfigService } from "@nestjs/config";
 import { UserHelper } from './helper/user.helperts';
 import { Name } from 'src/common/message/name';
+import { CommonHelper } from './helper/coomon.helper';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller()
@@ -29,53 +28,28 @@ export class OrdersTransactionsController {
     private readonly transactionHelper: TransactionHelper,
     private readonly configService: ConfigService,
     private readonly userHelper: UserHelper,
+    private readonly commonHelper: CommonHelper,
   ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('checkout/payment')
-  async checkoutPayement(@User() user: AuthUserInfo, @Res() res: Response) {
-    try {
-      if (this.userHelper.addressIstEmpty(user.userId)) {
-        return res.send({
-          message: Message.NOT_BE_EMPTY(Name.ADDRESS),
-          data: {
-            transactionLink: null
-          }
-        });
-      }
-      const carts = await this.cartHelper.removeUserCartGetValue(user, { new: true });
-      let transactionLink = null;
-      if (carts) {
-        const orderData: OrderTransactionInterface = {
-          amount: getAmount(carts),
-          cart: getCartProduct(carts),
-          user: user.userId,
-          code: createRandomCode(),
-        };
-        const order = await this.ordersService.createOrder(orderData);
-        await this.productHelper.decreaseProductQuantity(carts);
-        const { id, link } = await this.transactionHelper.createTransaction(user, order);
-        const transaction = {
-          id,
-          link,
-        };
-        await this.ordersService.updateOrder(order.id, { transaction } );
-        transactionLink = link;
-      }
-      return res.send({
-        message: Message.SUCCESS(),
-        data: {
-          transactionLink
-        }
-      });
-    } catch (error) {
-      return res.send({
-        message: Message.ERROR_OCCURRED(),
-        data: {
-          transactionLink: null
-        }
-      });
+  async checkoutPayement(@User() user: AuthUserInfo) {
+    if (await this.userHelper.addressIstEmpty(user.userId)) {
+      throw new BadRequestException(Message.NOT_BE_EMPTY(Name.ADDRESS));
     }
+    const { transactionData, userCart } = await this.transactionHelper.getData(user);
+    if (!userCart) {
+      throw new BadRequestException(Message.NOT_BE_EMPTY(Name.CART));
+    }
+    if (transactionData?.amount < 1000) {
+      throw new BadRequestException(Message.AMOUNTIS_LESS_1000());
+    }
+    await this.productHelper.decreaseProductQuantity(userCart);
+    const order = await this.ordersService.createOrder(transactionData);
+    const { id, link } = await this.transactionHelper.createTransaction(user, order);
+    const transaction = { id, link };
+    await this.ordersService.updateOrder(order.id, { transaction } );
+    return { transactionLink: link }
   };
 
   @Post('payment/verify')

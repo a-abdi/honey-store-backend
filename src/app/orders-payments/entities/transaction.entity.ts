@@ -6,13 +6,13 @@ export class Transaction {
     @Prop()
     status: number;
 
-    @Prop({unique: true})
+    @Prop({unique: true, sparse: true})
     id: string;
 
     @Prop()
     link: string;
 
-    @Prop({unique: true})
+    @Prop({unique: true, sparse: true})
     trackId: number;
 
     @Prop()

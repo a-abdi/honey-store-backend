@@ -1,20 +1,26 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { AuthUserInfo } from "src/interface/auth-user-info";
 import { OrderTransaction } from "../entities/order-transaction.entity";
 import { HttpService } from "@nestjs/axios";
 import { catchError, firstValueFrom, map } from "rxjs";
 import { Document, Schema, Types } from "mongoose";
 import { AxiosError } from "axios";
-import { CreateTransactionInterFace } from "../interface/interface";
+import { CreateTransactionInterFace, OrderTransactionInterface } from "../interface/interface";
 import { OrdersTransactionsService } from "../orders-transactions.service";
 import { ConfigService } from "@nestjs/config";
+import { CartsService } from "src/app/carts/carts.service";
+import { CartHelper } from "./cart.helper";
+import { createRandomCode } from "src/common/helper";
+import { Message } from "src/common/message";
 
 @Injectable()
 export class TransactionHelper {
     constructor(
         private readonly httpService: HttpService,
         private readonly ordersTransactionsService: OrdersTransactionsService,
-        private readonly configService: ConfigService
+        private readonly configService: ConfigService,
+        private readonly cartService: CartsService,
+        private readonly cartHelper: CartHelper
     ) {}
 
     async createTransaction(user: AuthUserInfo, order: OrderTransaction & Document<any, any, any> & {
@@ -37,7 +43,8 @@ export class TransactionHelper {
         this.httpService.post<CreateTransactionInterFace>(url, data, { headers }).pipe(map((res) => res.data)).pipe(
             catchError((error: AxiosError) => {
                 this.ordersTransactionsService.updateOrder(order.id, { "transaction.error": error.response.data });
-                throw Error;
+                throw new InternalServerErrorException(Message.ERROR_OCCURRED());
+
             }),
             ),
         );
@@ -98,5 +105,16 @@ export class TransactionHelper {
             isUnique: true,
             error: null
          };
+    }
+
+    async getData(user: AuthUserInfo) {
+        const userCart = await this.cartService.findUserCart(user?.userId);
+        const transactionData: OrderTransactionInterface = userCart ? {
+            amount: this.cartHelper.getAmount(userCart),
+            cart: this.cartHelper.getCartProduct(userCart),
+            user: user.userId,
+            code: createRandomCode(),
+        } : null;
+        return { userCart, transactionData };
     }
 }

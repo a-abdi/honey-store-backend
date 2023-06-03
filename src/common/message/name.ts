@@ -39,4 +39,5 @@ export const Name = {
     TITLE: "عنوان",
     TEXT: "متن",
     SCORE: "امتیاز",
+    CART: "سبد خرید",
 }

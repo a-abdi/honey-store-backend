@@ -17,8 +17,8 @@ export class CartsService {
     );
   };
 
-  async findUserCart(user: AuthUserInfo) {
-    return this.cartsModel.findOne({user: user.userId})
+  async findUserCart(user: Schema.Types.ObjectId) {
+    return this.cartsModel.findOne({user})
       .populate({
         path: 'products', populate: {
           path: 'product',

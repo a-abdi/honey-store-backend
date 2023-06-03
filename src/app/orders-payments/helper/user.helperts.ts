@@ -8,7 +8,7 @@ export class UserHelper {
 
     async addressIstEmpty(id: Schema.Types.ObjectId) {
         const user = await this.userService.findOne(id);
-        if (!user.address || Object.keys(user.address).length ) {
+        if (!user.address || Object.keys(user.address).length == 0 ) {
             return true;
         }
         return false;

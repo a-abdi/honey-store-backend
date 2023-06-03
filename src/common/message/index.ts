@@ -19,4 +19,6 @@ export const Message = {
     INVALID_PHONE_OR_PASSWORD: (): string => 'شماره تماس یا پسورد اشتباه است',
     ALREADY_EXIST: (name: string): string => `${name} در سیستم وجود دارد`,
     NOT_EXIST: (name: string): string => `${name} در سیستم وجود ندارد`,
+    AMOUNTIS_LESS_1000: (): string => `مبلغ کمتر از 1000 است`,
+    NOT_ENOUGH_PRODUCT: (name: string) => `محصول ${name} به این تعداد درخواستی موجود نمی باشد. سبد خریدتان را ویرایش کنید`
 }
