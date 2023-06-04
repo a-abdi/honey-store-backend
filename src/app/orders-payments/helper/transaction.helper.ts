@@ -139,7 +139,7 @@ export class TransactionHelper {
         return { 
             status: OrderStatus.WatingPay,
             "transaction.status": verifyPaymentData?.status,
-            "transaction.paymentTrackId": verifyPaymentData.payment?.track_id,
+            "transaction.paymentTrackId": verifyPaymentData?.payment?.track_id,
             "transaction.paymentAmount": verifyPaymentData?.payment?.amount,
             "transaction.paymentDate": verifyPaymentData?.payment?.date,
             "transaction.verifyDate": verifyPaymentData?.verify?.date,

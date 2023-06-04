@@ -59,7 +59,9 @@ export class OrdersTransactionsController {
       const result = await this.transactionHelper.uniqueTransaction(verifyPaymentDto.id, verifyPaymentDto.track_id, verifyPaymentDto.order_id);
       const transaction = this.transactionHelper.getVerifyPaymentDto(verifyPaymentDto, result.error);
       const orderTransaction = await this.ordersService.updateOrder(verifyPaymentDto.order_id, transaction);
+      this.cartService.remove(orderTransaction.user as Schema.Types.ObjectId);
       if (!result.isUnique || orderTransaction?.amount != verifyPaymentDto?.amount) {
+        await this.ordersService.updateOrder(verifyPaymentDto.order_id, { status: OrderStatus.Cancel });
         return res.redirect(this.configService.get("FAILD_PAYMENT_FRONT_URL"));
       }
       if( verifyPaymentDto.status == 10 ) {
@@ -67,20 +69,22 @@ export class OrdersTransactionsController {
         const verifyPaymentData = verifyPayementResponse.data;
         const statusCode = verifyPayementResponse.status;
         const transactionData = this.transactionHelper.getTransactionData(verifyPaymentData);
-        this.cartService.remove(orderTransaction.user as Schema.Types.ObjectId);
         if(verifyPaymentData.status === 100 && statusCode == 200) {
-          transactionData.status = OrderStatus.Payment;
           try {
+            transactionData.status = OrderStatus.Payment;
             await this.ordersService.updateOrder(verifyPaymentDto.order_id, transactionData);
+            return res.redirect(this.configService.get("VERIFY_ORDER_FRONT_URL"));
           } catch (error) {
             this.commonHelper.saveVerifyLog(orderTransaction.user as Schema.Types.ObjectId, {orderTransaction, verifyPaymentData});
+            return res.redirect(this.configService.get("FAILD_VERIFY_DB_FRONT_URL"));
           }
-          return res.redirect(this.configService.get("ORDER_FRONT_URL"));
         } else {
+          transactionData.status = OrderStatus.Cancel;
           await this.ordersService.updateOrder(verifyPaymentDto.order_id, transactionData);
           return res.redirect(this.configService.get("FAILD_PAYMENT_FRONT_URL"));
         }
       } else {
+        await this.ordersService.updateOrder(verifyPaymentDto.order_id, { status: OrderStatus.Cancel });
         return res.redirect(this.configService.get("FAILD_PAYMENT_FRONT_URL"));
       }
     } catch (error) {
