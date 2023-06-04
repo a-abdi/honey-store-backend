@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { OrdersTransactionsService } from './orders-transactions.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from 'src/common/decorators/user.decorator';
@@ -8,7 +8,7 @@ import { TransactionHelper } from './helper/transaction.helper';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { Message } from 'src/common/message';
 import { VerifyPaymentDto } from './dto/verify-payment.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { OrderStatus } from 'src/common/declare/enum';
 import { ConfigService } from "@nestjs/config";
 import { UserHelper } from './helper/user.helperts';
@@ -16,6 +16,7 @@ import { Name } from 'src/common/message/name';
 import { CommonHelper } from './helper/coomon.helper';
 import { Schema } from 'mongoose';
 import { CartsService } from '../carts/carts.service';
+import { UrlHelper } from 'src/common/helper/url.helper';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller()
@@ -27,7 +28,8 @@ export class OrdersTransactionsController {
     private readonly configService: ConfigService,
     private readonly userHelper: UserHelper,
     private readonly commonHelper: CommonHelper,
-    private readonly cartService: CartsService
+    private readonly cartService: CartsService,
+    private readonly urlHelper: UrlHelper
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -88,7 +90,10 @@ export class OrdersTransactionsController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/order')
-  async userOrder(@User() user: AuthUserInfo) {
-    return await this.ordersService.findUserOrders(user);
+  async userOrder(@User() user: AuthUserInfo, @Req() request: Request) {
+    const userOrder = await this.ordersService.findUserOrders(user);
+    const hostAddress = this.urlHelper.getHostAddress(request);
+    this.urlHelper.bindHostCartOrder(userOrder, hostAddress);
+    return userOrder;
   }
 }

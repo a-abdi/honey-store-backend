@@ -1,4 +1,7 @@
 import { Request } from "express";
+import { Schema } from "mongoose";
+import { CartDocument } from "src/app/carts/entities/cart.entity";
+import { OrderTransactionDocument } from "src/app/orders-payments/entities/order-transaction.entity";
 import { Product } from "src/app/products/entities/product.entity";
 
 export class UrlHelper {
@@ -8,6 +11,10 @@ export class UrlHelper {
 
     getHostAddress(request: Request) {
         return `${request.protocol}://${request.get('host')}`;
+    }
+
+    bindHostCartOrder(orders: (OrderTransactionDocument & {_id: Schema.Types.ObjectId} )[], hostAddress: string) {
+        return orders.map(order => order.cart.map( cart => cart.imageSrc =  `${hostAddress}/${cart.imageSrc}`));
     }
 
     bindHostUrlToProduct(product: Product, request: Request) {

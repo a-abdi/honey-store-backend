@@ -12,6 +12,7 @@ import { TransactionHelper } from './helper/transaction.helper';
 import { UsersModule } from '../users/users.module';
 import { UserHelper } from './helper/user.helperts';
 import { CommonHelper } from './helper/coomon.helper';
+import { UrlHelper } from 'src/common/helper/url.helper';
 
 @Module({
   controllers: [OrdersTransactionsController],
@@ -22,6 +23,7 @@ import { CommonHelper } from './helper/coomon.helper';
     TransactionHelper,
     UserHelper,
     CommonHelper,
+    UrlHelper
   ],
   imports: [
     CartsModule,
