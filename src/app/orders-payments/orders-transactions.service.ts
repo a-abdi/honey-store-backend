@@ -14,10 +14,10 @@ export class OrdersTransactionsService {
         return await this.orderTransactionModel.create(orderTransaction);
     }
 
-    async updateOrder(_id: Schema.Types.ObjectId, orderTransactionData: any) {
+    async updateOrder(orderId: string, orderTransactionData: any) {
         return await this.orderTransactionModel
         .findOneAndUpdate(
-            { _id }, 
+            { orderId }, 
             {
                 $set: orderTransactionData 
             },

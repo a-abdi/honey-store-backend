@@ -10,7 +10,7 @@ import { OrdersTransactionsService } from "../orders-transactions.service";
 import { ConfigService } from "@nestjs/config";
 import { CartsService } from "src/app/carts/carts.service";
 import { CartHelper } from "./cart.helper";
-import { createRandomCode } from "src/common/helper";
+import { v4 as uuid } from 'uuid';
 import { Message } from "src/common/message";
 import { VerifyPaymentDto } from "../dto/verify-payment.dto";
 import { OrderStatus } from "src/common/declare/enum";
@@ -27,7 +27,7 @@ export class TransactionHelper {
 
     async createTransaction(user: AuthUserInfo, order: OrderTransaction & Document<any, any, any> & {
         _id: Types.ObjectId;
-    }) {
+    }, orderId: string) {
         const url = this.configService.get<string>('CREATE_TRANSACTION_URL');
         const headers = {
             'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export class TransactionHelper {
             'X-SANDBOX': this.configService.get<boolean>('X_SANDBOX'),
         };
         const data = {
-            'order_id': order.id,
+            'order_id': orderId,
             'amount': order.amount,
             'phone': user.phoneNumber,
             'callback': this.configService.get<string>('TRANSACTION_CALLBACK'),
@@ -52,7 +52,7 @@ export class TransactionHelper {
         );
     };
 
-    async verifyPaymentHelper(orderId: Schema.Types.ObjectId, id: string) {
+    async verifyPaymentHelper(orderId: string, id: string) {
         const url = this.configService.get<string>('VERIFY_PAYMENT_URL');
         const headers = {
             'Content-Type': 'application/json',
@@ -74,7 +74,7 @@ export class TransactionHelper {
         );
     };
 
-    async uniqueTransaction(id: string, trackId: number, orderId: Schema.Types.ObjectId) {
+    async uniqueTransaction(id: string, trackId: number, orderId: string) {
         const queryFilter = {
             $or: [
                 {
@@ -83,7 +83,7 @@ export class TransactionHelper {
                             "transaction.id": id
                         },
                         {
-                            _id: { $ne: orderId }
+                            orderId: { $ne: orderId }
                         }
                     ]
                 },
@@ -115,7 +115,7 @@ export class TransactionHelper {
             amount: this.cartHelper.getAmount(userCart),
             cart: this.cartHelper.getCartProduct(userCart),
             user: user.userId,
-            code: createRandomCode(),
+            orderId: uuid(),
         } : null;
         return { userCart, transactionData };
     }

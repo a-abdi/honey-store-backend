@@ -8,7 +8,7 @@ export class CreateCommentDto {
     @IsString({message: Message.MUST_BE_STRING(Name.TITLE)})
     title: string;
 
-    @IsNotEmpty()
+    @IsNotEmpty({message: Message.NOT_BE_EMPTY(Name.TEXT)})
     @IsString({message: Message.MUST_BE_STRING(Name.TEXT)})
     text: string;
 

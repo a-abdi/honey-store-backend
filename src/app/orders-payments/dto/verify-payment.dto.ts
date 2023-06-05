@@ -16,7 +16,7 @@ export class VerifyPaymentDto {
 
     @IsString()
     @IsOptional()
-    order_id: Schema.Types.ObjectId;
+    order_id: string;
 
     @IsString()
     @IsOptional()

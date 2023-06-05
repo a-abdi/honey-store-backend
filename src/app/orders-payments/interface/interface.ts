@@ -7,7 +7,7 @@ export interface OrderTransactionInterface {
     user: Schema.Types.ObjectId | User;
     cart: CartProductInterface[];
     amount: number;
-    code: string;
+    orderId: string;
     status?: OrderStatus;
     transaction?: TransactionInterface;
 }

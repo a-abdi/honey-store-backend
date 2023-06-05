@@ -47,9 +47,9 @@ export class OrdersTransactionsController {
     }
     await this.productHelper.decreaseProductQuantity(userCart);
     const order = await this.ordersService.createOrder(transactionData);
-    const { id, link } = await this.transactionHelper.createTransaction(user, order);
+    const { id, link } = await this.transactionHelper.createTransaction(user, order, transactionData.orderId);
     const transaction = { id, link };
-    await this.ordersService.updateOrder(order.id, { transaction } );
+    await this.ordersService.updateOrder(transactionData.orderId, { transaction } );
     return { transactionLink: link }
   };
 
@@ -59,7 +59,7 @@ export class OrdersTransactionsController {
       const result = await this.transactionHelper.uniqueTransaction(verifyPaymentDto.id, verifyPaymentDto.track_id, verifyPaymentDto.order_id);
       const transaction = this.transactionHelper.getVerifyPaymentDto(verifyPaymentDto, result.error);
       const orderTransaction = await this.ordersService.updateOrder(verifyPaymentDto.order_id, transaction);
-      this.cartService.remove(orderTransaction.user as Schema.Types.ObjectId);
+      this.cartService.remove(orderTransaction?.user as Schema.Types.ObjectId);
       if (!result.isUnique || orderTransaction?.amount != verifyPaymentDto?.amount) {
         await this.ordersService.updateOrder(verifyPaymentDto.order_id, { status: OrderStatus.Cancel });
         return res.redirect(this.configService.get("FAILD_PAYMENT_FRONT_URL"));

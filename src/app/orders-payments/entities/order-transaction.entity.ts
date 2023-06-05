@@ -18,8 +18,8 @@ export class OrderTransaction {
     @Prop({required: true})
     amount: number;
     
-    @Prop({required: true})
-    code: string;
+    @Prop({required: true, unique: true, select: false})
+    orderId: string;
     
     @Prop({ type: Number, enum: OrderStatus, default: 0})
     status: OrderStatus;
