@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { CartsService } from "src/app/carts/carts.service";
 import { Cart } from "src/app/carts/entities/cart.entity";
 import { Product } from "src/app/products/entities/product.entity";
-import { AuthUserInfo } from "src/interface/auth-user-info";
 import { CartProductInterface } from "../interface/interface";
 
 @Injectable()

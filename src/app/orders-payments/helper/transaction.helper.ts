@@ -3,9 +3,9 @@ import { AuthUserInfo } from "src/interface/auth-user-info";
 import { OrderTransaction } from "../entities/order-transaction.entity";
 import { HttpService } from "@nestjs/axios";
 import { catchError, firstValueFrom, map } from "rxjs";
-import { Document, Schema, Types } from "mongoose";
+import { Document, Types } from "mongoose";
 import { AxiosError } from "axios";
-import { CreateTransactionInterFace, OrderTransactionInterface } from "../interface/interface";
+import { CartProductInterface, CreateTransactionInterFace, OrderTransactionInterface } from "../interface/interface";
 import { OrdersTransactionsService } from "../orders-transactions.service";
 import { ConfigService } from "@nestjs/config";
 import { CartsService } from "src/app/carts/carts.service";
@@ -14,6 +14,7 @@ import { v4 as uuid } from 'uuid';
 import { Message } from "src/common/message";
 import { VerifyPaymentDto } from "../dto/verify-payment.dto";
 import { OrderStatus } from "src/common/declare/enum";
+import { ProductHelper } from "./product.helper";
 
 @Injectable()
 export class TransactionHelper {
@@ -22,7 +23,8 @@ export class TransactionHelper {
         private readonly ordersTransactionsService: OrdersTransactionsService,
         private readonly configService: ConfigService,
         private readonly cartService: CartsService,
-        private readonly cartHelper: CartHelper
+        private readonly cartHelper: CartHelper,
+        private readonly productHelper: ProductHelper
     ) { }
 
     async createTransaction(user: AuthUserInfo, order: OrderTransaction & Document<any, any, any> & {
@@ -43,16 +45,16 @@ export class TransactionHelper {
 
         return await firstValueFrom(
             this.httpService.post<CreateTransactionInterFace>(url, data, { headers }).pipe(map((res) => res.data)).pipe(
-                catchError((error: AxiosError) => {
+                catchError(async (error: AxiosError) => {
+                    this.productHelper.increaseProductQuantity(order.cart);
                     this.ordersTransactionsService.updateOrder(order.id, { "transaction.error": error.response.data });
                     throw new InternalServerErrorException(Message.ERROR_OCCURRED());
-
                 }),
             ),
         );
     };
 
-    async verifyPaymentHelper(orderId: string, id: string) {
+    async verifyPaymentHelper(orderId: string, id: string, carts: CartProductInterface[]) {
         const url = this.configService.get<string>('VERIFY_PAYMENT_URL');
         const headers = {
             'Content-Type': 'application/json',
@@ -66,7 +68,8 @@ export class TransactionHelper {
 
         return await firstValueFrom(
             this.httpService.post(url, data, { headers }).pipe(
-                catchError((error: AxiosError) => {
+                catchError(async (error: AxiosError) => {
+                    await this.productHelper.increaseProductQuantity(carts);
                     this.ordersTransactionsService.updateOrder(orderId, { "transaction.error": error.response.data });
                     throw new InternalServerErrorException(Message.ERROR_OCCURRED());
                 }),
