@@ -46,4 +46,8 @@ export class OrdersTransactionsService {
             }
         ).exec();
     };
+
+    async findByOrderStatus(status: number){
+        return await this.orderTransactionModel.find({status}).exec();
+    }
 }

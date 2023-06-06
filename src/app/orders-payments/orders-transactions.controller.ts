@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { OrdersTransactionsService } from './orders-transactions.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from 'src/common/decorators/user.decorator';
@@ -8,8 +8,8 @@ import { TransactionHelper } from './helper/transaction.helper';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { Message } from 'src/common/message';
 import { VerifyPaymentDto } from './dto/verify-payment.dto';
-import { Request, Response } from 'express';
-import { OrderStatus } from 'src/common/declare/enum';
+import { Request, Response, query } from 'express';
+import { OrderStatus, Role } from 'src/common/declare/enum';
 import { ConfigService } from "@nestjs/config";
 import { UserHelper } from './helper/user.helperts';
 import { Name } from 'src/common/message/name';
@@ -17,6 +17,9 @@ import { CommonHelper } from './helper/coomon.helper';
 import { Schema } from 'mongoose';
 import { CartsService } from '../carts/carts.service';
 import { UrlHelper } from 'src/common/helper/url.helper';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
+import { QueryDto } from './dto/query.dto';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller()
@@ -60,7 +63,7 @@ export class OrdersTransactionsController {
       const transaction = this.transactionHelper.getVerifyPaymentDto(verifyPaymentDto, result.error);
       const orderTransaction = await this.ordersService.updateOrder(verifyPaymentDto.order_id, transaction);
       this.cartService.remove(orderTransaction?.user as Schema.Types.ObjectId);
-      if (!result.isUnique || orderTransaction?.amount != verifyPaymentDto?.amount) {
+      if (!result.isUnique || ( orderTransaction?.amount * 10 ) != verifyPaymentDto?.amount) {
         await this.productHelper.increaseProductQuantity(orderTransaction.cart);
         await this.ordersService.updateOrder(verifyPaymentDto.order_id, { status: OrderStatus.Cancel });
         return res.redirect(this.configService.get("FAILD_PAYMENT_FRONT_URL"));
@@ -96,11 +99,18 @@ export class OrdersTransactionsController {
   };
 
   @UseGuards(JwtAuthGuard)
-  @Get('/order')
+  @Get('user/orders')
   async userOrder(@User() user: AuthUserInfo, @Req() request: Request) {
     const userOrder = await this.ordersService.findUserOrders(user);
     const hostAddress = this.urlHelper.getHostAddress(request);
     this.urlHelper.bindHostCartOrder(userOrder, hostAddress);
     return userOrder;
+  }
+
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('orders')
+  async order(@Query() { status }: QueryDto) {
+    return this.ordersService.findByOrderStatus(status);
   }
 }

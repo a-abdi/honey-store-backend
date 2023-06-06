@@ -38,7 +38,7 @@ export class TransactionHelper {
         };
         const data = {
             'order_id': orderId,
-            'amount': order.amount,
+            'amount': order.amount * 10,
             'phone': user.phoneNumber,
             'callback': this.configService.get<string>('TRANSACTION_CALLBACK'),
         };

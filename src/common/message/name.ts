@@ -40,4 +40,5 @@ export const Name = {
     TEXT: "متن",
     SCORE: "امتیاز",
     CART: "سبد خرید",
+    STATUS: "وضعیت",
 }
