@@ -69,5 +69,5 @@ export const grabObjectInArrayOfObject = <T, K extends keyof T> ( arrayOfObject:
 };
 
 export const createRandomCode = () => {
-  return (Math.random() + 1).toString(36).substring(2);
+  return (Math.random() + 1).toString(36).substring(5);
 }

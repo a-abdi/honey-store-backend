@@ -23,7 +23,8 @@ export class CartHelper {
     for (const cart of carts.products) {
       const product = cart.product as Product;
       const cartProduct: CartProductInterface = {
-          productId: product._id,
+          product: product._id,
+          code: product.code,
           name: product.name,
           price: product.price,
           discount: product.discount,

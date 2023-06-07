@@ -5,10 +5,13 @@ import { Product } from "src/app/products/entities/product.entity";
 @Schema({ _id: false })
 export class CartProduct {
     @Prop({type: MongooseSchema.Types.ObjectId, ref: 'Product'})
-    productId: MongooseSchema.Types.ObjectId | Product;
+    product: MongooseSchema.Types.ObjectId | Product;
     
     @Prop()
     name: string;
+
+    @Prop()
+    code: string;
     
     @Prop()
     imageSrc: string;

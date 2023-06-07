@@ -29,8 +29,9 @@ export interface TransactionInterface {
 }
 
 export interface CartProductInterface {
-    productId: Schema.Types.ObjectId | Product;
+    product: Schema.Types.ObjectId | Product;
     name: string;
+    code: string;
     imageSrc: string;
     price: number;
     discount: number;

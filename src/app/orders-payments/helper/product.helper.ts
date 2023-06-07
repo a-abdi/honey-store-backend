@@ -28,7 +28,7 @@ export class ProductHelper {
     async increaseProductQuantity(carts: Partial<CartProductInterface>[]) {
         if (carts) {
             for (const cart of carts) {
-                await this.productService.update(cart.productId as Schema.Types.ObjectId,{$inc: {quantity: cart.quantity}})
+                await this.productService.update(cart.product as Schema.Types.ObjectId,{$inc: {quantity: cart.quantity}})
             }
         }
     }

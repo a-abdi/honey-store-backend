@@ -54,12 +54,6 @@ export class OrdersTransactionsService {
     }
 
     async findOneById(_id: Schema.Types.ObjectId){
-        return await this.orderTransactionModel.find({_id}).populate({
-            path: 'cart',
-            populate: {
-                path: 'productId',
-                model: 'Product'
-            }
-        }).exec();
+        return await this.orderTransactionModel.findOne({_id}).exec();
     }
 }
