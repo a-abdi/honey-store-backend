@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Param, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Patch, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { OrdersTransactionsService } from './orders-transactions.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from 'src/common/decorators/user.decorator';
@@ -21,6 +21,7 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { QueryDto } from './dto/query.dto';
 import { MongoIdParams } from 'src/common/helper';
+import { StatusUpdateDto } from './dto/status-update.dto';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller()
@@ -120,5 +121,12 @@ export class OrdersTransactionsController {
   @Get('orders/:_id')
   async findOne(@Param() { _id }: MongoIdParams) {
     return this.ordersService.findOneById(_id);
+  }
+
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Patch('orders/:_id')
+  async updateStatus(@Param() { _id }: MongoIdParams, @Body() statusUpdateDto: StatusUpdateDto) {
+    return this.ordersService.updateStatus(_id, statusUpdateDto);
   }
 }

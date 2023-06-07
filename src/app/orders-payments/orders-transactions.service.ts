@@ -5,6 +5,7 @@ import { OrderTransaction, OrderTransactionDocument } from './entities/order-tra
 import { Model, Schema } from 'mongoose';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { OrderStatus } from 'src/common/declare/enum';
+import { StatusUpdateDto } from './dto/status-update.dto';
 
 @Injectable()
 export class OrdersTransactionsService {
@@ -55,5 +56,9 @@ export class OrdersTransactionsService {
 
     async findOneById(_id: Schema.Types.ObjectId){
         return await this.orderTransactionModel.findOne({_id}).exec();
+    }
+
+    async updateStatus(_id: Schema.Types.ObjectId, statusUpdateDto: StatusUpdateDto){
+        return await this.orderTransactionModel.findOneAndUpdate({_id}, statusUpdateDto).exec();
     }
 }
