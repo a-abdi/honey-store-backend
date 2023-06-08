@@ -15,7 +15,7 @@ export class CategoriesService {
     return await this.categoryModel.create(createCategoryDto);
   }
 
-  async findAll() {
+  async findAll(query = {}) {
     return await this.categoryModel.find().populate('properties').exec();
   }
 

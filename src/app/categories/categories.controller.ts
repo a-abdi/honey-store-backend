@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
 import { RolesGuard } from 'src/app/auth/roles.guard';
 import { Role } from 'src/common/declare/enum';
 import { Roles } from 'src/common/decorators/roles.decorator';
@@ -9,6 +9,7 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { Message } from 'src/common/message';
+import { CategoryQueryDto } from './dto/category-query.dto';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('categories')
@@ -22,11 +23,9 @@ export class CategoriesController {
     return await this.categoriesService.create(createCategoryDto);
   }
 
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
-  async findAll() {
-    return await this.categoriesService.findAll();
+  async findAll(@Query() query: CategoryQueryDto) {
+    return await this.categoriesService.findAll(query);
   }
   
   @Roles(Role.Admin)
