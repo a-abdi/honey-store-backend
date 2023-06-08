@@ -4,6 +4,7 @@ import mongoose, { Model, Schema } from 'mongoose';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Product, ProductDocument } from './entities/product.entity';
+import { ProductQueryDto } from './dto/product-query.dto';
 
 @Injectable()
 export class ProductsService {
@@ -26,8 +27,8 @@ export class ProductsService {
     });
   }
 
-  async findAll(): Promise<Product[]> {
-    return await this.productModel.find().populate('category').exec();
+  async findAll(query: ProductQueryDto): Promise<Product[]> {
+    return await this.productModel.find(query).populate('category').exec();
   }
 
   async findOne(_id: Schema.Types.ObjectId): Promise<Product> {

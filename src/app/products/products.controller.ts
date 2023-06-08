@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ParseFilePipe, UseGuards, UploadedFiles, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ParseFilePipe, UseGuards, UploadedFiles, Req, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -17,6 +17,7 @@ import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { ImageHelper } from './helper/image.helper';
 import { UrlHelper } from 'src/common/helper/url.helper';
 import { Request } from 'express';
+import { ProductQueryDto } from './dto/product-query.dto';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('products')
@@ -66,8 +67,8 @@ export class ProductsController {
   }
 
   @Get()
-  async findAll(@Req() request: Request) {
-    const result = await this.productsService.findAll();
+  async findAll(@Req() request: Request, @Query() query: ProductQueryDto) {
+    const result = await this.productsService.findAll(query);
     result.map(product => {
       this.urlHelper.bindHostUrlToProduct(product, request);
     });
