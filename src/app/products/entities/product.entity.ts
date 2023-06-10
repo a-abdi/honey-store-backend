@@ -41,7 +41,7 @@ export class Product {
   @Prop({type: [ CustomPropertySchema ] })
   customProperty: CustomPropertyEntity[];
 
-  @Prop()
+  @Prop({default: false})
   deletedAt: boolean
 }
 

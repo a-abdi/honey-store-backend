@@ -141,7 +141,7 @@ export class ProductsController {
 
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Patch(':_id/safe')
+  @Patch(':_id/safe-delete')
   async safeRemove(@Param() { _id }: MongoIdParams, @Req() request: Request) {
     await this.cartService.removeFromAllUsersCart(_id);
     const product = await this.productsService.update(_id, { deletedAt: true });
@@ -152,8 +152,7 @@ export class ProductsController {
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(':_id/restore')
-  async restoreRemove(@Param() { _id}: MongoIdParams, @Req() request: Request) {
-    await this.cartService.removeFromAllUsersCart(_id);
+  async restore(@Param() { _id}: MongoIdParams, @Req() request: Request) {
     const product = await this.productsService.update(_id, { deletedAt: false });
     this.urlHelper.bindHostUrlToProduct(product, request);
     return product;
