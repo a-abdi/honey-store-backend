@@ -30,7 +30,6 @@ import 'dotenv/config';
     CartsModule,
     CategoriesModule,
     UsersModule,
-    CartsModule,
     OrdersTransactionsModule,
     PropertyModule,
     CommentModule,

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ParseFilePipe, UseGuards, UploadedFiles, Req, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ParseFilePipe, UseGuards, UploadedFiles, Req, Query, ForbiddenException } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -18,6 +18,9 @@ import { ImageHelper } from './helper/image.helper';
 import { UrlHelper } from 'src/common/helper/url.helper';
 import { Request } from 'express';
 import { ProductQueryDto } from './dto/product-query.dto';
+import { Name } from 'src/common/message/name';
+import { CartsService } from '../carts/carts.service';
+import { OrdersTransactionsService } from '../orders-payments/orders-transactions.service';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('products')
@@ -26,7 +29,9 @@ export class ProductsController {
     private readonly productsService: ProductsService,
     private readonly imageHelper: ImageHelper,
     private readonly urlHelper: UrlHelper,
-    ) {}
+    private readonly ordersTransactionsService: OrdersTransactionsService,
+    private readonly cartService: CartsService,
+  ) {}
 
   @UseInterceptors(BindProductCode)
   @Roles(Role.Admin)
@@ -123,8 +128,33 @@ export class ProductsController {
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':_id')
-  async remove(@Param() params: MongoIdParams, @Req() request: Request) {
-    const product = await this.productsService.remove(params._id);
+  async remove(@Param() { _id }: MongoIdParams, @Req() request: Request) {
+    const product = await this.ordersTransactionsService.findOne({"cart.product": _id});
+    if (product) {
+      throw new ForbiddenException(Message.PRODUCT_EXIST_IN(Name.ORDER));
+    }
+    await this.cartService.removeFromAllUsersCart(_id);
+    const productDeleted = await this.productsService.remove(_id);
+    this.urlHelper.bindHostUrlToProduct(productDeleted, request);
+    return 'product';
+  }
+
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Patch(':_id/safe')
+  async safeRemove(@Param() { _id }: MongoIdParams, @Req() request: Request) {
+    await this.cartService.removeFromAllUsersCart(_id);
+    const product = await this.productsService.update(_id, { deletedAt: true });
+    this.urlHelper.bindHostUrlToProduct(product, request);
+    return product;
+  }
+
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Patch(':_id/restore')
+  async restoreRemove(@Param() { _id}: MongoIdParams, @Req() request: Request) {
+    await this.cartService.removeFromAllUsersCart(_id);
+    const product = await this.productsService.update(_id, { deletedAt: false });
     this.urlHelper.bindHostUrlToProduct(product, request);
     return product;
   }

@@ -58,4 +58,12 @@ export class CartsService {
   async remove(userId: Schema.Types.ObjectId, opt = {}) {
     return await this.cartsModel.findOneAndRemove({user: userId}, opt);
   }
+
+  async removeFromAllUsersCart(productId: Schema.Types.ObjectId, opt: QueryOptions = {}) {
+    return await this.cartsModel.updateMany(
+      {},
+      { $pull: { products: { product: productId } } },
+      opt
+    )
+  }
 }

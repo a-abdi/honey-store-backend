@@ -40,6 +40,9 @@ export class Product {
 
   @Prop({type: [ CustomPropertySchema ] })
   customProperty: CustomPropertyEntity[];
+
+  @Prop()
+  deletedAt: boolean
 }
 
 export type ProductDocument = Product & Document;

@@ -95,7 +95,7 @@ export class TransactionHelper {
                 }
             ]
         }
-        const order = await this.ordersTransactionsService.find(queryFilter);
+        const order = await this.ordersTransactionsService.findOne(queryFilter);
         if (order) {
             const result = {
                 isUnique: false,

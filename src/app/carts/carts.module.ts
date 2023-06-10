@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { CartsService } from './carts.service';
 import { CartsController } from './carts.controller';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -11,7 +11,7 @@ import { UrlHelper } from 'src/common/helper/url.helper';
   providers: [CartsService, UrlHelper],
   imports: [
     MongooseModule.forFeature([{name: Cart.name, schema: CartSchema}]),
-    ProductsModule,
+    forwardRef(() => ProductsModule),
   ],
   exports: [CartsService]
 })

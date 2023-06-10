@@ -26,7 +26,7 @@ export class OrdersTransactionsService {
         ).exec();
     };
 
-    async find(orderTransactionFilter: any) {
+    async findOne(orderTransactionFilter: any) {
         return await this.orderTransactionModel.findOne(orderTransactionFilter).exec();
     };
 

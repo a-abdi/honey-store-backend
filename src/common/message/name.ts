@@ -41,4 +41,5 @@ export const Name = {
     SCORE: "امتیاز",
     CART: "سبد خرید",
     STATUS: "وضعیت",
+    ORDER: "سفارش",
 }
