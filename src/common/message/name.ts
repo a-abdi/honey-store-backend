@@ -42,4 +42,6 @@ export const Name = {
     CART: "سبد خرید",
     STATUS: "وضعیت",
     ORDER: "سفارش",
+    SORT: "مرتب سازی",
+    DELETED_AT: "حذف",
 }

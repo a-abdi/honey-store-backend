@@ -1,10 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { Schema } from "mongoose";
-import { UserDocument } from "src/app/users/entities/user.entity";
+import { User } from "src/app/users/entities/user.entity";
 
 @Injectable()
 export class NameHelper {
-    userFullName(user: UserDocument & {_id: Schema.Types.ObjectId}) {
+    userFullName(user: User) {
         if (user.firstName && user.lastName) {
             return `${user.firstName} ${user.lastName}`;
         }

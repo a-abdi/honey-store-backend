@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model, Schema } from 'mongoose';
+import mongoose, { Model, QueryOptions, Schema } from 'mongoose';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Product, ProductDocument } from './entities/product.entity';
@@ -27,8 +27,8 @@ export class ProductsService {
     });
   }
 
-  async findAll(query: ProductQueryDto): Promise<Product[]> {
-    return await this.productModel.find(query).populate('category').exec();
+  async findAll(query: ProductQueryDto, opt: QueryOptions = {}): Promise<Product[]> {
+    return await this.productModel.find(query, {}, opt).populate('category').exec();
   }
 
   async findOne(_id: Schema.Types.ObjectId): Promise<Product> {

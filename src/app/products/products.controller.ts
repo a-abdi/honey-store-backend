@@ -21,6 +21,8 @@ import { ProductQueryDto } from './dto/product-query.dto';
 import { Name } from 'src/common/message/name';
 import { CartsService } from '../carts/carts.service';
 import { OrdersTransactionsService } from '../orders-payments/orders-transactions.service';
+import { SortHelper } from 'src/common/helper/sort.helper';
+import { QueryOptions } from 'mongoose';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('products')
@@ -31,6 +33,7 @@ export class ProductsController {
     private readonly urlHelper: UrlHelper,
     private readonly ordersTransactionsService: OrdersTransactionsService,
     private readonly cartService: CartsService,
+    private readonly sortHelper: SortHelper,
   ) {}
 
   @UseInterceptors(BindProductCode)
@@ -73,7 +76,8 @@ export class ProductsController {
 
   @Get()
   async findAll(@Req() request: Request, @Query() query: ProductQueryDto) {
-    const result = await this.productsService.findAll(query);
+    const opt = this.sortHelper.getValue(query.sort);
+    const result = (await this.productsService.findAll(query, opt ));
     result.map(product => {
       this.urlHelper.bindHostUrlToProduct(product, request);
     });
