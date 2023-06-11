@@ -5,10 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Cart, CartSchema } from './entities/cart.entity';
 import { ProductsModule } from '../products/products.module';
 import { UrlHelper } from 'src/common/helper/url.helper';
+import { ProductHelper } from './helper/product.helper';
 
 @Module({
   controllers: [CartsController],
-  providers: [CartsService, UrlHelper],
+  providers: [CartsService, UrlHelper, ProductHelper],
   imports: [
     MongooseModule.forFeature([{name: Cart.name, schema: CartSchema}]),
     forwardRef(() => ProductsModule),

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, BadRequestException } from '@nestjs/common';
 import { MongoIdParams, breakArrayOfObjectToOneArray, grabObjectInArrayOfObject } from 'src/common/helper';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CartsService } from './carts.service';
@@ -12,6 +12,8 @@ import { ProductsService } from '../products/products.service';
 import { Product } from '../products/entities/product.entity';
 import { Request } from 'express';
 import { UrlHelper } from 'src/common/helper/url.helper';
+import { ProductHelper } from './helper/product.helper';
+import { Name } from 'src/common/message/name';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('carts')
@@ -20,6 +22,7 @@ export class CartsController {
     private readonly cartsService: CartsService,
     private readonly productService: ProductsService,
     private readonly urlHelper: UrlHelper,
+    private readonly productHelper: ProductHelper
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -42,7 +45,8 @@ export class CartsController {
     // get product id list
     const productsId = breakArrayOfObjectToOneArray(products, "_id");
     // find product in product id list
-    const productList = await this.productService.productList(productsId);
+    let productList = await this.productService.productList(productsId);
+    productList = this.productHelper.getProductNotDeleted(productList);
     for (const newCartProduct of products) {
       // get product wich find from product for use max count
       const product = grabObjectInArrayOfObject(productList, "_id", newCartProduct._id);
