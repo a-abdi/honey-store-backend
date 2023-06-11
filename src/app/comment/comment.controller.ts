@@ -6,9 +6,7 @@ import { MongoIdParams } from 'src/common/helper';
 import { User } from 'src/common/decorators/user.decorator';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { UsersService } from '../users/users.service';
-import { UserComment } from './entities/user-comment.entity';
 import { OrdersTransactionsService } from '../orders-payments/orders-transactions.service';
-import { AdminUpdateCommentDto } from './dto/admin-update-comment.dto';
 import { OrderStatus, Role } from 'src/common/declare/enum';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -30,8 +28,7 @@ export class CommentController {
   @Roles(Role.User)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post(':productId/comment')
-  async create(@Param() params: MongoIdParams, @User() user: AuthUserInfo, @Body() createCommentDto: CreateCommentDto) {
-    const { productId } = params;
+  async create(@Param() { productId }: MongoIdParams, @User() user: AuthUserInfo, @Body() createCommentDto: CreateCommentDto) {
     const comment = await this.commentService.userFindOne(productId, user);
     if (!comment) {
       const userData = await this.userService.findOne(user.userId);
@@ -42,7 +39,7 @@ export class CommentController {
         fullName: this.nameHelper.userFullName(userData),
         buyer: orderData ? true : false
       };
-      this.commentService.create(params.productId, createCommentDto, userCommentData);
+      this.commentService.create(productId, createCommentDto, userCommentData);
     }
   }
 
@@ -53,7 +50,7 @@ export class CommentController {
 
   @Roles(Role.User)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Get(':productId/comment/:commentId')
+  @Get(':productId/user/comment')
   async findOne(@Param() params: MongoIdParams, @User() user: AuthUserInfo) {
     return await this.commentService.userFindOne(params.productId, user);
   }
@@ -82,8 +79,8 @@ export class CommentController {
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(':productId/comment/:commentId/admin')
-  async adminVerify(@Body() adminUpdateCommentDto: AdminUpdateCommentDto) {
-    return await this.commentService.adminVerify(adminUpdateCommentDto.commentIdList);
+  async adminVerify(@Param() params: MongoIdParams) {
+    return await this.commentService.adminVerify(params.commentId);
   }
 
   @Roles(Role.Admin)

@@ -16,17 +16,19 @@ export class CommentService {
   }
 
   async findAll(product: Schema.Types.ObjectId) {
-    return await this.commentModel.find({$and: [{product}, {verify: true}] }).exec();
+    return await this.commentModel.find({$and: [{ product }, { verify: true }] }).exec();
   }
 
   async userFindOne(productId: Schema.Types.ObjectId, user: AuthUserInfo) {
     return await this.commentModel.findOne(
       {
         $and: [
-          {product: productId}, 
-          {"user.id": user.userId},
-          {verify: false}
-        ] }).exec();
+          { product: productId }, 
+          { "user.id": user.userId },
+          { verify: false }
+        ] 
+      }
+    ).exec();
   }
 
   async userUpdate(user: AuthUserInfo, commentId: Schema.Types.ObjectId, updateCommentDto: UpdateCommentDto, opt = {}) {
@@ -37,7 +39,10 @@ export class CommentService {
           {"user.id": user.userId},
           {verify: false}
         ] 
-      }, updateCommentDto, opt).exec();
+      },
+      updateCommentDto, 
+      opt
+    ).exec();
   }
 
   async remove(commentId: Schema.Types.ObjectId, user: AuthUserInfo) {
@@ -48,18 +53,19 @@ export class CommentService {
           {"user.id": user.userId},
           {verify: false}
         ] 
-      }).exec();
+      }
+    ).exec();
   }
 
-  async adminRemove(commentIdList: Schema.Types.ObjectId) {
-    return await this.commentModel.findOneAndRemove({_id: commentIdList }).exec();
+  async adminRemove(commentId: Schema.Types.ObjectId) {
+    return await this.commentModel.deleteOne({ _id: commentId }).exec();
   }
 
-  async adminVerify(commentIdList: Schema.Types.ObjectId[], opt = {}) {
-    return await this.commentModel.updateMany({_id: { $in: commentIdList } }, {verify: true}, opt).exec();
+  async adminVerify(commentId: Schema.Types.ObjectId, opt = {}) {
+    return await this.commentModel.updateOne({ _id: commentId }, { verify: true }, opt).exec();
   }
 
   async adminGetNotVerify() {
-    return await this.commentModel.find({ verify: false }).populate('product').exec();
+    return await this.commentModel.find({ verify: false }).lean().populate('product', ['name', 'code']).exec();
   }
 }
