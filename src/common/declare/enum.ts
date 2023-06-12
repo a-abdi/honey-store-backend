@@ -11,3 +11,8 @@ export enum OrderStatus {
     Return,
     Delivered,
 }
+
+export enum Sort {
+    Des = -1,
+    Asc = 1,
+}

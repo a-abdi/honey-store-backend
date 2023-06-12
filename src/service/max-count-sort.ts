@@ -2,7 +2,7 @@ import { ValidatorConstraint, ValidatorConstraintInterface } from 'class-validat
 import { Injectable } from '@nestjs/common';
 import { Message } from 'src/common/message';
 import { Name } from 'src/common/message/name';
-import { SortHelper } from 'src/common/helper/sort.helper';
+import { SortHelper } from 'src/app/products/helper/sort.helper';
 
 @ValidatorConstraint({ name: 'IsPhoneAlreadyExist', async: true })
 @Injectable()

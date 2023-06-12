@@ -4,7 +4,7 @@ import { OrderTransactionInterface } from './interface/interface';
 import { OrderTransaction, OrderTransactionDocument } from './entities/order-transaction.entity';
 import { Model, Schema } from 'mongoose';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
-import { OrderStatus } from 'src/common/declare/enum';
+import { OrderStatus, Sort } from 'src/common/declare/enum';
 import { StatusUpdateDto } from './dto/status-update.dto';
 
 @Injectable()
@@ -60,5 +60,45 @@ export class OrdersTransactionsService {
 
     async updateStatus(_id: Schema.Types.ObjectId, statusUpdateDto: StatusUpdateDto){
         return await this.orderTransactionModel.findOneAndUpdate({_id}, statusUpdateDto).exec();
+    }
+
+    async findStatusOrder(sort: Sort, filter: any = { "product.deletedAt": false }, status: number = 5) {
+        return await this.orderTransactionModel.aggregate([
+            {
+                $match: {
+                    status: 5
+                }
+            },
+            {
+                $project: {
+                    "cart": 1
+                }
+            },
+            {
+                $unwind: "$cart"
+            },
+            {
+                $group: {
+                    _id: "$cart.product",
+                    totalByeProduct: { $sum: "$cart.quantity" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "product"
+                }
+            },
+            {
+                $match: filter
+            },
+            {
+                $sort: {
+                    totalByeProduct: sort
+                }
+            },
+        ]).exec();
     }
 }

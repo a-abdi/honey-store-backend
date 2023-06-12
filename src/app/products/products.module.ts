@@ -8,7 +8,7 @@ import { ImageHelper } from './helper/image.helper';
 import { UrlHelper } from 'src/common/helper/url.helper';
 import { OrdersTransactionsModule } from '../orders-payments/orders-transactions.module';
 import { CartsModule } from '../carts/carts.module';
-import { SortHelper } from 'src/common/helper/sort.helper';
+import { SortHelper } from 'src/app/products/helper/sort.helper';
 import { MaxCountSort } from 'src/service/max-count-sort';
 
 @Module({

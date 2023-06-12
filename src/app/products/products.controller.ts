@@ -21,8 +21,8 @@ import { ProductQueryDto } from './dto/product-query.dto';
 import { Name } from 'src/common/message/name';
 import { CartsService } from '../carts/carts.service';
 import { OrdersTransactionsService } from '../orders-payments/orders-transactions.service';
-import { SortHelper } from 'src/common/helper/sort.helper';
-import { QueryOptions } from 'mongoose';
+import { SortHelper } from 'src/app/products/helper/sort.helper';
+import { Product } from './entities/product.entity';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('products')
@@ -76,12 +76,16 @@ export class ProductsController {
 
   @Get()
   async findAll(@Req() request: Request, @Query() query: ProductQueryDto) {
-    const opt = this.sortHelper.getValue(query.sort);
-    const result = (await this.productsService.findAll(query, opt ));
-    result.map(product => {
+    let products: Product[] = []; 
+    if (query.sort) {
+      products = await this.sortHelper.findBySortAndFilter(query, query.sort);
+    } else {
+      products = await this.productsService.findAll(query);
+    }
+    products.map(product => {
       this.urlHelper.bindHostUrlToProduct(product, request);
     });
-    return result;
+    return products;
   }
 
   @Get(':_id')
