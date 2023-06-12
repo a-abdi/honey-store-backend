@@ -4,6 +4,7 @@ import { OrdersTransactionsService } from "src/app/orders-payments/orders-transa
 import { ProductQueryDto } from "../dto/product-query.dto";
 import { Sort } from "src/common/declare/enum";
 import { filter } from "rxjs";
+import { Schema } from "mongoose";
 
 @Injectable()
 export class SortHelper {
@@ -30,10 +31,15 @@ export class SortHelper {
         }
         if (sortIndex = 7) {
             const { category, deletedAt } = query;
-            let filter = {};
-            category && (filter = { "product.category": category });
-            typeof deletedAt !== 'undefined' ? filter = { "product.deletedAt": deletedAt } : filter = { "product.deletedAt": false };
-            return (await this.ordersTransactionsService.findStatusOrder(Sort.Des, filter)).map(value => value.product[0]);
+            console.log(category);
+            
+            let queryFilter: {
+                "product.category"?: Schema.Types.ObjectId,
+                "product.deletedAt"?: boolean
+            } = {};
+            category && (queryFilter["product.category"] = category );
+            typeof deletedAt !== 'undefined' ? queryFilter["product.deletedAt"] = deletedAt  : queryFilter["product.deletedAt"] = false ;
+            return (await this.ordersTransactionsService.findStatusOrder(Sort.Des, queryFilter)).map(value => value.product[0]);
         }
     }
 

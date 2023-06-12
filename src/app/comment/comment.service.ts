@@ -68,4 +68,23 @@ export class CommentService {
   async adminGetNotVerify() {
     return await this.commentModel.find({ verify: false }).lean().populate('product', ['name', 'code']).exec();
   }
+
+  async getProductsScor(productIdList: Schema.Types.ObjectId[]) {
+    return await this.commentModel.aggregate([
+      {
+        $match: {
+          verify: true,
+          product: { $in: productIdList }
+        }
+      },
+      {
+        $group: {
+          _id: "$product",
+          productScore: {
+            $avg: "$score"
+          }
+        }
+      }
+    ]);
+  }
 }

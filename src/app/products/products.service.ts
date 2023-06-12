@@ -28,7 +28,7 @@ export class ProductsService {
   }
 
   async findAll(query: ProductQueryDto, opt: QueryOptions = {}): Promise<Product[]> {
-    return await this.productModel.find(query, {}, opt).populate('category').exec();
+    return await this.productModel.find(query, {}, opt).populate('category').lean().exec();
   }
 
   async findOne(_id: Schema.Types.ObjectId): Promise<Product> {
