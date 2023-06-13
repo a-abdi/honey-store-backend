@@ -62,11 +62,11 @@ export class OrdersTransactionsService {
         return await this.orderTransactionModel.findOneAndUpdate({_id}, statusUpdateDto).exec();
     }
 
-    async findStatusOrder(sort: Sort, filter: any = { "product.deletedAt": false }, status: number = 5) {
+    async findStatusOrder(sort: Sort, filter: any[], status: number = 5) {
         return await this.orderTransactionModel.aggregate([
             {
                 $match: {
-                    status: 5
+                    status: status
                 }
             },
             {
@@ -92,7 +92,7 @@ export class OrdersTransactionsService {
                 }
             },
             {
-                $match: filter
+                $match: { $or: filter }
             },
             {
                 $sort: {

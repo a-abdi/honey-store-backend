@@ -31,14 +31,12 @@ export class SortHelper {
         }
         if (sortIndex = 7) {
             const { category, deletedAt } = query;
-            console.log(category);
-            
             let queryFilter: {
                 "product.category"?: Schema.Types.ObjectId,
                 "product.deletedAt"?: boolean
-            } = {};
-            category && (queryFilter["product.category"] = category );
-            typeof deletedAt !== 'undefined' ? queryFilter["product.deletedAt"] = deletedAt  : queryFilter["product.deletedAt"] = false ;
+            }[] = [];
+            category && (queryFilter.push( { "product.category": category }));
+            typeof deletedAt !== 'undefined' ? queryFilter.push( { "product.deletedAt": deletedAt }): queryFilter.push( { "product.deletedAt": false });
             return (await this.ordersTransactionsService.findStatusOrder(Sort.Des, queryFilter)).map(value => value.product[0]);
         }
     }
