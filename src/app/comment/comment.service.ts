@@ -9,24 +9,49 @@ import { UserComment } from './entities/user-comment.entity';
 
 @Injectable()
 export class CommentService {
-  constructor(@InjectModel(Comment.name) private readonly commentModel: Model<CommentDocument>) {}
-  
+  constructor(@InjectModel(Comment.name) private readonly commentModel: Model<CommentDocument>) { }
+
   async create(product: Schema.Types.ObjectId, createCommentDto: CreateCommentDto, userComment: UserComment) {
-    return await this.commentModel.create({product, ...createCommentDto, user: userComment});
+    return await this.commentModel.create({ product, ...createCommentDto, user: userComment });
   }
 
   async findAll(product: Schema.Types.ObjectId) {
-    return await this.commentModel.find({$and: [{ product }, { verify: true }] }).exec();
+    return await this.commentModel.aggregate([
+      {
+        $match: {
+          $and: [
+            {
+              verify: true
+            },
+            {
+              $expr: { $eq: ['$product', { $toObjectId: product }] }
+            }
+          ]
+        }
+      },
+      {
+        $group: {
+          _id: "$product",
+          comments: { $push: "$$ROOT" },
+          scoreAverage: {
+            $avg: "$score"
+          },
+          totalCount: {
+            $sum: 1
+          }
+        }
+      }
+    ]);
   }
 
   async userFindOne(productId: Schema.Types.ObjectId, user: AuthUserInfo) {
     return await this.commentModel.findOne(
       {
         $and: [
-          { product: productId }, 
+          { product: productId },
           { "user.id": user.userId },
           { verify: false }
-        ] 
+        ]
       }
     ).exec();
   }
@@ -35,12 +60,12 @@ export class CommentService {
     return await this.commentModel.findOneAndUpdate(
       {
         $and: [
-          {_id: commentId},
-          {"user.id": user.userId},
-          {verify: false}
-        ] 
+          { _id: commentId },
+          { "user.id": user.userId },
+          { verify: false }
+        ]
       },
-      updateCommentDto, 
+      updateCommentDto,
       opt
     ).exec();
   }
@@ -49,10 +74,10 @@ export class CommentService {
     return await this.commentModel.findOneAndRemove(
       {
         $and: [
-          {_id: commentId},
-          {"user.id": user.userId},
-          {verify: false}
-        ] 
+          { _id: commentId },
+          { "user.id": user.userId },
+          { verify: false }
+        ]
       }
     ).exec();
   }
