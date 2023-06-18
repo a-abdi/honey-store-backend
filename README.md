@@ -1,6 +1,3 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
 
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
@@ -22,52 +19,75 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
-```
+## Requirements 
+  Mongodb 4.6
 
 ## Running the app
 
 ```bash
-# development
-$ npm run start
+# run sample docker-compose
+services:
+  mongo:
+    container_name: mongo
+    image: mongo:4.4.6
+    network_mode: "host"
+    ports:
+      - 27017:21017
+    restart: always
 
-# watch mode
-$ npm run start:dev
+  backend:
+    container_name: backend
+    image: aliabdi709/honey-backend:0.0.1
+    network_mode: "host"
+    env_file: .env
+    ports:
+      - 3000:3000
+    restart: always
 
-# production mode
-$ npm run start:prod
 ```
 
-## Test
+## env file value
 
 ```bash
-# unit tests
-$ npm run test
+  # admin jwt secret example
+  ADMIN_JWT_SECRET=4dBnSKvg7xPi76piJp9Bq2cTbJKLhLg7J
 
-# e2e tests
-$ npm run test:e2e
+  # user jwt secret example
+  USER_JWT_SECRET=UxP6piJJhshh
 
-# test coverage
-$ npm run test:cov
+  # jwt secret example
+  JWT_SECRET=UxPi7@J7ohoM
+
+  # admin token expire time example
+  ADMIN_TOKEN_EXPIRE_TIME=365d
+
+  # user token expire time example
+  USER_TOKEN_EXPIRE_TIME=36d
+
+  # link transaction site for payment
+  CREATE_TRANSACTION_URL=https://example.com
+
+  # if x sandbax is 1, all transaction is test.
+  X_SANDBOX=1
+
+  # api key for create transaction
+  X_API_KEY=your api key(example xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxx)
+
+  # callback your sit for verify payment
+  TRANSACTION_CALLBACK=http://serverAddress/xxxxx/xxxx
+
+  # verify payment 
+  VERIFY_PAYMENT_URL=https://api.idpay.ir/v1.1/payment/verify
+
+  # if transaction is success user redirect below address
+  VERIFY_ORDER_FRONT_URL=http://frontAddress/profile/orders/current
+
+  # if transaction verify is faild user redirect below address
+  FAILD_VERIFY_DB_FRONT_URL=http://frontAddress/profile/orders/canceled
+
+  # if transaction is faild user redirect below address
+  FAILD_PAYMENT_FRONT_URL=http://localhost:5173/profile/orders/canceled
+
+  # mongodb connection config
+  DATABASE_URL=mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[defaultauthdb][?options]]
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
