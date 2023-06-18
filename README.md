@@ -1,5 +1,5 @@
 # honey-backend
-Simple store site created with Nodejs, Mongodb.
+ store site created with Nodejs, Mongodb.
 
 ## Table of contents
 * [General info](#general-info)
@@ -27,6 +27,5 @@ Project is created with:
 To run this project, run docker-compose:
 
 ```
-$ cd ../honey-market
 $ docker-compose up -d
 ```
