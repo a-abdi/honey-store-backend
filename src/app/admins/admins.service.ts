@@ -15,6 +15,10 @@ export class AdminsService {
     return await this.adminModel.create(createAdminDto);
   }
 
+  async createSeed(adminData: {phoneNumber: string, password: string}): Promise<AdminDocument> {
+    return await this.adminModel.create(adminData);
+  }
+
   async findAll() {
     return await this.adminModel.find().exec();
   }

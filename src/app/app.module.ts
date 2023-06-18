@@ -15,6 +15,7 @@ import { OrdersTransactionsModule } from './orders-payments/orders-transactions.
 import { PropertyModule } from './property/property.module';
 import { CommentModule } from './comment/comment.module';
 import 'dotenv/config';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import 'dotenv/config';
       provide: APP_INTERCEPTOR,
       useClass: TransformResponse,
     },
+    AppService
   ],
 })
 export class AppModule {}
