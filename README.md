@@ -14,9 +14,9 @@ for more information about frontend.see [Honey Fronted](https://github.com/a-abd
 	
 ## Technologies
 Project is created with:
-* NodejS version: v16.18.0
-* NestJS version: 9.1.5
-* MongoDB version: 4.4.6
+* NodejS 
+* NestJS
+* MongoDB
 * TypeScript
 * RestApi
 * Docker
@@ -24,8 +24,9 @@ Project is created with:
 * Possport
 	
 ## Setup
-To run this project, run docker-compose:
+To run this project, first cusomize .env, then run docker-compose:
 
 ```
+$ cp .env-example .env
 $ docker-compose up -d
 ```
