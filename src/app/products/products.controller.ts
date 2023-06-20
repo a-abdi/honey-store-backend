@@ -144,7 +144,7 @@ export class ProductsController {
     await this.cartService.removeFromAllUsersCart(_id);
     const productDeleted = await this.productsService.remove(_id);
     this.urlHelper.bindHostUrlToProduct(productDeleted, request);
-    return 'product';
+    return productDeleted;
   }
 
   @Roles(Role.Admin)

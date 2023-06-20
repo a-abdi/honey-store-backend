@@ -32,7 +32,7 @@ export class AdminsService {
   }
 
   async update(_id: Schema.Types.ObjectId, updateAdminDto: UpdateAdminDto) {
-    return await this.adminModel.updateOne({_id}, updateAdminDto, {new: true});
+    return await this.adminModel.findOneAndUpdate({_id}, updateAdminDto, {new: true});
   }
 
   async remove(_id: Schema.Types.ObjectId) {
