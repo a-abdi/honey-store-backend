@@ -1,17 +1,17 @@
 ADMIN_JWT_SECRET=4dBxtE0UxPi76piJ
 USER_JWT_SECRET=UxPi7bJKLhLg7xPi76piJ
 JWT_SECRET=UxPi7g7xPi76piJ
-ADMIN_TOKEN_EXPIRE_TIME=365d
-USER_TOKEN_EXPIRE_TIME=36d
+ADMIN_TOKEN_EXPIRE_TIME=2d
+USER_TOKEN_EXPIRE_TIME=10d
 
-CREATE_TRANSACTION_URL=https://example.come
+CREATE_TRANSACTION_URL=https://api.idpay.ir/v1.1/payment
 X_SANDBOX=1
 X_API_KEY=xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx
 TRANSACTION_CALLBACK=http://serverAddress/payment/verify
-VERIFY_PAYMENT_URL=https://example.com
+VERIFY_PAYMENT_URL=https://api.idpay.ir/v1.1/payment/verify
 VERIFY_ORDER_FRONT_URL=http://frontAddress/profile/orders/current
 FAILD_VERIFY_DB_FRONT_URL=http://frontAddress/profile/orders/canceled
 FAILD_PAYMENT_FRONT_URL=http://frontAddress/profile/orders/canceled
 
-DATABASE_URL=mongodb://[username:password@]host1[:port1][,...hostN[:portN]][/[defaultauthdb][?options]]
+DATABASE_URL=mongodb://localhost:27017/honey-store-backend?readPreference=primary&directConnection=true
 
