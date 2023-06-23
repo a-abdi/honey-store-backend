@@ -38,3 +38,5 @@ upload/*
 .env
 verify-payment/*
 .vscode
+.docker-data
+.honey-upload
