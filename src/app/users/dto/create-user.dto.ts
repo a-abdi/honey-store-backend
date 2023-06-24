@@ -14,7 +14,7 @@ export class CreateUserDto {
 
     @IsString({message: Message.MUST_BE_STRING(Name.PASSWORD)})
     @MinLength(8, {message: Message.MINIMUM_STRING(Name.PASSWORD, 8)})
-    @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {message: Message.WEAK(Name.PASSWORD)})
+    // @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {message: Message.WEAK(Name.PASSWORD)})
     password: string;
 
     @Match('password', {message: Message.NOT_MATCH()})

@@ -44,5 +44,5 @@ export const Name = {
     ORDER: "سفارش",
     SORT: "مرتب سازی",
     DELETED_AT: "حذف",
-    USER_OR_PASS: "نام کاربری یا پسورد",
+    USER_OR_PASS: "شماره تلفن یا پسورد",
 }

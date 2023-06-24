@@ -16,7 +16,7 @@ import { PropertyModule } from './property/property.module';
 import { CommentModule } from './comment/comment.module';
 import 'dotenv/config';
 import { AppService } from './app.service';
-import { HttpExceptionFilter } from 'src/common/exceptio-filter/base-exception.filter';
+import { HttpExceptionFilter } from 'src/common/exceptio-filter/http-exception.filter';
 
 @Module({
   imports: [
