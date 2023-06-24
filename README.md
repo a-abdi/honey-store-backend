@@ -8,19 +8,18 @@
 
 ## General info
 The site sells products related to beekeeping.
-this repository developed backend api. 
+
+#### Demo: [http://5.75.202.22:4173/](http://5.75.202.22:4173/)
+
+#### Frontend Repo: [https://github.com/a-abdi/honey-store-frontend/](https://github.com/a-abdi/honey-store-frontend/)
 
 ###### Admin User: 09394552776
 ###### Admin Password: !QAZ1qaz
 #### Admin Link: [http://5.75.202.22:4173/admin/login](http://5.75.202.22:4173/admin/login)
 
-#### Demo: [http://5.75.202.22:4173/](http://5.75.202.22:4173/)
-
 #### Swagger Demo: [http://5.75.202.22:2000/docs/]( http://5.75.202.22:2000/docs/)
 
-#### Frontend Repo: [Honey Store Fronted](https://github.com/a-abdi/honey-store-frontend/)
-
-#### Swagger Repo [Honey Store Swagger](https://github.com/a-abdi/honey-swagger)
+#### Swagger Repo [https://github.com/a-abdi/honey-swagger](https://github.com/a-abdi/honey-swagger)
 	
 ## Technologies
 * NodejS 
@@ -34,8 +33,8 @@ this repository developed backend api.
 	
 ## Setup
 ### To run this project:
-#### First, configure .env file, and then choose one of the three options below to run the projec.
-* run with docker-compose develop version
+#### First, configure .env file, and then choose one of the three options below to run the project.
+* run with docker-compose in develop version
 ```
 $ docker-compose -f docker-compose-develop.yaml up --build -d
 ```
