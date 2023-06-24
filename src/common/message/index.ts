@@ -22,4 +22,6 @@ export const Message = {
     AMOUNTIS_LESS_1000: () => `مبلغ کمتر از 1000 است`,
     NOT_ENOUGH_PRODUCT: (name: string) => `محصول ${name} به این تعداد درخواستی موجود نمی باشد. سبد خریدتان را ویرایش کنید`,
     PRODUCT_EXIST_IN: (name: string) => `محصول در ${name} کاربران وجود دارد. نمی توانید حذف کنید.`,
+    UNAUTHORIZED: () => `دسترسی غیر مجاز`,
+    FORBIDDEN_RESOURCE: () => `شما به این بخش دسترسی ندارید`,
 }
