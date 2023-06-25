@@ -6,7 +6,7 @@ services:
     image: mongo:4.4.6
     network_mode: "host"
     volumes:
-      - .docker-data/mongo:/data/db
+      - mongo-data:/data/db
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     environment:
         MONGO_INITDB_ROOT_USERNAME: admin
@@ -20,7 +20,11 @@ services:
     network_mode: "host"
     env_file: .env
     volumes:
-      - .honey-upload:/usr/src/app/upload
+      - honey-upload:/usr/src/app/upload
     restart: always
 
-  
+volumes:
+  mongo-data:
+    external: false
+  honey-upload:
+    external: false

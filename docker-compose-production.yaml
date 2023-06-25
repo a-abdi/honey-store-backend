@@ -5,15 +5,26 @@ services:
     container_name: mongo
     image: mongo:4.4.6
     network_mode: "host"
-    ports:
-      - 27017:21017
+    volumes:
+      - mongo-data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    environment:
+        MONGO_INITDB_ROOT_USERNAME: admin
+        MONGO_INITDB_ROOT_PASSWORD: password
+        MONGO_INITDB_DATABASE: honey-store-backend
     restart: always
 
   backend:
     container_name: honey-store-backend-production
-    image: aliabdi709/honey-backend:0.0.2
+    image: aliabdi709/honey-backend:0.0.3
     network_mode: "host"
     env_file: .env
-    ports:
-      - 3000:3000
+    volumes:
+      - honey-upload:/usr/src/app/upload
     restart: always
+
+volumes:
+  mongo-data:
+    external: false
+  honey-upload:
+    external: false
