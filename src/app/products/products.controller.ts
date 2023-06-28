@@ -23,6 +23,7 @@ import { CartsService } from '../carts/carts.service';
 import { OrdersTransactionsService } from '../orders-payments/orders-transactions.service';
 import { SortHelper } from 'src/app/products/helper/sort.helper';
 import { Product } from './entities/product.entity';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('products')
@@ -75,8 +76,10 @@ export class ProductsController {
   }
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(0)
   async findAll(@Req() request: Request, @Query() query: ProductQueryDto) {
-    let products: Product[] = []; 
+    let products: Product[] = [];
     if (query.sort) {
       products = await this.sortHelper.findBySortAndFilter(query, query.sort);
     } else {

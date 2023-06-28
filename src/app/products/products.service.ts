@@ -1,15 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model, QueryOptions, Schema } from 'mongoose';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Product, ProductDocument } from './entities/product.entity';
 import { ProductQueryDto } from './dto/product-query.dto';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class ProductsService {
   constructor(
-    @InjectModel(Product.name) private readonly productModel: Model<ProductDocument>
+    @InjectModel(Product.name) private readonly productModel: Model<ProductDocument>,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache
     ) 
   {}
   
@@ -19,6 +22,7 @@ export class ProductsService {
     additionalsImageSrc: string[], 
     user: AuthUserInfo
   ): Promise<Product> {
+    this.cacheManager.reset();
     return await this.productModel.create({
       ...createProductDto,
       productImagesSrc,
@@ -40,10 +44,12 @@ export class ProductsService {
   }
 
   async update(_id: Schema.Types.ObjectId, updateData: any, session: mongoose.ClientSession | null = null): Promise<Product> {
+    this.cacheManager.reset();
     return await this.productModel.findOneAndUpdate( {_id}, updateData, {new: true}).session(session).exec();
   }
 
   async remove(_id: Schema.Types.ObjectId): Promise<Product> {
+    this.cacheManager.reset();
     return await this.productModel.findOneAndRemove({_id}).exec();
   }
 }

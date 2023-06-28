@@ -17,6 +17,7 @@ import { CommentModule } from './comment/comment.module';
 import 'dotenv/config';
 import { AppService } from './app.service';
 import { HttpExceptionFilter } from 'src/common/exceptio-filter/http-exception.filter';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -24,6 +25,9 @@ import { HttpExceptionFilter } from 'src/common/exceptio-filter/http-exception.f
     ConfigModule.forRoot({
       isGlobal: true,
       load: [config]
+    }),
+    CacheModule.register({
+      isGlobal: true,
     }),
     ProductsModule, 
     AdminsModule, 
