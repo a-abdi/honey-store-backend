@@ -10,7 +10,7 @@ export class CategoryFakerService implements OnApplicationBootstrap {
     private readonly logger = new Logger(CategoryFakerService.name);
 
     async onApplicationBootstrap(): Promise<any> {
-        if (process.env.CREATE_FAKE_DATA) {
+        if (process.env.CREATE_FAKE_DATA === '1') {
             const category = await this.categoryService.findAll();
             if (category.length > 0) {
                 this.logger.warn('con not create fake data for category because category data allready exist');

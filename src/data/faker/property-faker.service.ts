@@ -11,7 +11,7 @@ export class PropertyFakerService implements OnApplicationBootstrap {
     private readonly logger = new Logger(PropertyFakerService.name);
 
     async onApplicationBootstrap(): Promise<any> {
-        if (process.env.CREATE_FAKE_DATA) {
+        if (process.env.CREATE_FAKE_DATA === '1') {
             const property = await this.propertyService.findAll();
             if (property.length > 0) {
                 this.logger.warn('con not create fake data for propery because property data allready exist');

@@ -18,7 +18,7 @@ export class ProductFakerService implements OnApplicationBootstrap {
     private readonly logger = new Logger(ProductFakerService.name);
 
     async onApplicationBootstrap(): Promise<any> {
-        if (process.env.CREATE_FAKE_DATA) {
+        if (process.env.CREATE_FAKE_DATA === '1') {
             const products = await this.productservice.findAll({});
             if (products.length > 0) {
                 this.logger.warn('con not create fake data for products because products data allready exist');
@@ -49,7 +49,7 @@ export class ProductFakerService implements OnApplicationBootstrap {
                                 false,
                                 false,
                             ]
-                        ),
+                        ), 
                         admin: faker.helpers.arrayElement(admins),
                         customProperty: [
                             await this.getCustomProperty(),
