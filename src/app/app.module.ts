@@ -18,6 +18,7 @@ import 'dotenv/config';
 import { AppService } from './app.service';
 import { HttpExceptionFilter } from 'src/common/exceptio-filter/http-exception.filter';
 import { CacheModule } from '@nestjs/cache-manager';
+import { SeederModule } from 'src/data/seeder/seeder.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { CacheModule } from '@nestjs/cache-manager';
     OrdersTransactionsModule,
     PropertyModule,
     CommentModule,
+    SeederModule,
   ],
   controllers: [],
   providers: [
@@ -50,7 +52,6 @@ import { CacheModule } from '@nestjs/cache-manager';
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
     },
-    AppService
   ],
 })
 export class AppModule {}
