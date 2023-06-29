@@ -15,10 +15,10 @@ import { OrdersTransactionsModule } from './orders-payments/orders-transactions.
 import { PropertyModule } from './property/property.module';
 import { CommentModule } from './comment/comment.module';
 import 'dotenv/config';
-import { AppService } from './app.service';
 import { HttpExceptionFilter } from 'src/common/exceptio-filter/http-exception.filter';
 import { CacheModule } from '@nestjs/cache-manager';
 import { SeederModule } from 'src/data/seeder/seeder.module';
+import { FakerModule } from 'src/data/faker/faker.module';
 
 @Module({
   imports: [
@@ -41,6 +41,7 @@ import { SeederModule } from 'src/data/seeder/seeder.module';
     PropertyModule,
     CommentModule,
     SeederModule,
+    FakerModule,
   ],
   controllers: [],
   providers: [

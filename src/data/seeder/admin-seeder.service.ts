@@ -8,7 +8,7 @@ export class AdminSeederService implements OnApplicationBootstrap {
 
     async onApplicationBootstrap(): Promise<any> {
         const adminData = {
-            phoneNumber: '+989394552776',
+            phoneNumber: process.env.ADMIN_PhONE_NUMBER,
             password: '!QAZ1qaz' 
         };
         const admin = await this.adminsService.findByPhone(adminData.phoneNumber);

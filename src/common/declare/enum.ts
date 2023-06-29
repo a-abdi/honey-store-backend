@@ -3,6 +3,12 @@ export enum Role {
     Admin = 'admin',
 }
 
+export enum ProperyType {
+    File = 'file',
+    Text = 'text',
+    Number = 'number'
+}
+
 export enum OrderStatus {
     WatingPay,
     Payment,

@@ -17,10 +17,10 @@ export class CreatePropertyDto {
     @IsArray({message: Message.MUST_BE_ARRAY(Name.UNIT)})
     @IsString({message: Message.MUST_BE_STRING(Name.UNIT), each: true})
     @IsOptional()
-    unit: string[];
+    unit?: string[];
 
     @IsArray({message: Message.MUST_BE_ARRAY(Name.CATEGORY)})
     @IsMongoId({message: Message.INCORRECT(Name.CATEGORY), each: true})
     @IsOptional()
-    category: Schema.Types.ObjectId[];
+    category?: Schema.Types.ObjectId[];
 }

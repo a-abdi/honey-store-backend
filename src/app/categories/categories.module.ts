@@ -10,6 +10,9 @@ import { CategoryNameUnique } from './service/category-name-unique';
   providers: [CategoriesService, CategoryNameUnique],
   imports: [
     MongooseModule.forFeature([{name: Category.name, schema: CategorySchema}])
+  ],
+  exports: [
+    CategoriesService
   ]
 })
 export class CategoriesModule {}

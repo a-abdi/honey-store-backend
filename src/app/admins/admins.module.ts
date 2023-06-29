@@ -5,7 +5,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Admin, AdminMiddleware, AdminSchema } from './entities/admin.entity';
 import { IsPhoneAlreadyExist } from './service/is-phone-already-exist';
 
-@Global()
 @Module({
   controllers: [AdminsController],
   providers: [AdminsService, IsPhoneAlreadyExist],

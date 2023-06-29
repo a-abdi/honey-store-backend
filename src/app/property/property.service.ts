@@ -30,4 +30,8 @@ export class PropertyService {
   async remove(_id: Schema.Types.ObjectId) {
     return this.propertyModel.findByIdAndRemove({ _id }).exec();
   }
+
+  async insertMany(createPropertyDto: CreatePropertyDto[]): Promise<Property[]> {
+    return this.propertyModel.insertMany(createPropertyDto);
+  }
 }

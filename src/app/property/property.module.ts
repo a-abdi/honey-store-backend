@@ -10,6 +10,9 @@ import { CheckLabelExist } from './service/check-label-exist';
   providers: [PropertyService, CheckLabelExist],
   imports: [
     MongooseModule.forFeature([{ name: Property.name, schema: PropertySchema }])
+  ],
+  exports: [
+    PropertyService
   ]
 })
 export class PropertyModule {}
