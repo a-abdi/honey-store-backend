@@ -7,5 +7,5 @@ import { Name } from "src/common/message/name";
 export class ProductQueryDto extends QueryDto {
   @IsOptional()
   @IsMongoId({message: Message.INCORRECT(Name.ID)})
-  category: Schema.Types.ObjectId;
+  category?: Schema.Types.ObjectId;
 }

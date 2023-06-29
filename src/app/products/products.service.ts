@@ -52,4 +52,8 @@ export class ProductsService {
     this.cacheManager.reset();
     return await this.productModel.findOneAndRemove({_id}).exec();
   }
+
+  async insertMany(products: Omit<Product, '_id'>[]): Promise<Product[]> {
+    return await this.productModel.insertMany(products);
+  }
 }

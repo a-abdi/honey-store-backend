@@ -1,6 +1,5 @@
 import { Request } from "express";
 import { Schema } from "mongoose";
-import { CartDocument } from "src/app/carts/entities/cart.entity";
 import { OrderTransactionDocument } from "src/app/orders-payments/entities/order-transaction.entity";
 import { Product } from "src/app/products/entities/product.entity";
 

@@ -32,6 +32,6 @@ export class PropertyService {
   }
 
   async insertMany(createPropertyDto: CreatePropertyDto[]): Promise<Property[]> {
-    return this.propertyModel.insertMany(createPropertyDto);
+    return await this.propertyModel.insertMany(createPropertyDto);
   }
 }
