@@ -13,10 +13,10 @@ export class CreateCategoryDto {
 
     @IsString({ message: Message.MUST_BE_STRING(Name.DESCRIPTION) })
     @IsOptional()
-    description: string;
+    description?: string;
 
     @IsArray({ message: Message.MUST_BE_ARRAY(Name.PROPERTIES) })
     @IsMongoId({message: Message.INCORRECT(Name.PROPERTIES), each: true})
     @IsOptional()
-    properties: Schema.Types.ObjectId[];
+    properties?: Schema.Types.ObjectId[];
 }

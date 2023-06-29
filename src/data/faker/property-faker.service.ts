@@ -2,7 +2,6 @@ import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { PropertyService } from "src/app/property/property.service";
 import 'dotenv/config';
 import { fakerFA as faker } from '@faker-js/faker';
-
 import { CreatePropertyDto } from "src/app/property/dto/create-property.dto";
 import { ProperyType } from "src/common/declare/enum";
 

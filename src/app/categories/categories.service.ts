@@ -34,4 +34,8 @@ export class CategoriesService {
   async remove(_id: Schema.Types.ObjectId) {
     return await this.categoryModel.deleteOne({_id}).exec();
   }
+
+  async insertMany(createCategoryDto: CreateCategoryDto[]): Promise<Category[]> {
+    return this.categoryModel.insertMany(createCategoryDto);
+  }
 }
