@@ -8,7 +8,7 @@ import { CustomPropertyEntity, CustomPropertySchema } from './custom-property.en
 export class Product {
   _id: MongooseSchema.Types.ObjectId;
 
-  @Prop({ required: true })
+  @Prop({ required: true, index: true })
   name: string;
 
   @Prop({ required: true })

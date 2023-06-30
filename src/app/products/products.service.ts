@@ -56,4 +56,8 @@ export class ProductsService {
   async insertMany(products: Omit<Product, '_id'>[]): Promise<Product[]> {
     return await this.productModel.insertMany(products);
   }
+
+  async search(query: any): Promise<Product[]> {
+    return await this.productModel.find({name: { $regex: query, $options: 'i' }});
+  }
 }
