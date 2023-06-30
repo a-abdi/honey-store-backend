@@ -19,6 +19,7 @@ import { HttpExceptionFilter } from 'src/common/exceptio-filter/http-exception.f
 import { CacheModule } from '@nestjs/cache-manager';
 import { SeederModule } from 'src/data/seeder/seeder.module';
 import { FakerModule } from 'src/data/faker/faker.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { FakerModule } from 'src/data/faker/faker.module';
     CommentModule,
     SeederModule,
     FakerModule,
+    SearchModule,
   ],
   controllers: [],
   providers: [
