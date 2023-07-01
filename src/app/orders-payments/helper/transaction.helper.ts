@@ -42,12 +42,12 @@ export class TransactionHelper {
             'phone': user.phoneNumber,
             'callback': this.configService.get<string>('TRANSACTION_CALLBACK'),
         };
-
+        
         return await firstValueFrom(
             this.httpService.post<CreateTransactionInterFace>(url, data, { headers }).pipe(map((res) => res.data)).pipe(
                 catchError(async (error: AxiosError) => {
                     this.productHelper.increaseProductQuantity(order.cart);
-                    this.ordersTransactionsService.updateOrder(order.id, { "transaction.error": error.response.data });
+                    this.ordersTransactionsService.updateOrder(orderId, { "transaction.error": error.response?.data || error.message });
                     throw new InternalServerErrorException(Message.ERROR_OCCURRED());
                 }),
             ),
@@ -70,7 +70,7 @@ export class TransactionHelper {
             this.httpService.post(url, data, { headers }).pipe(
                 catchError(async (error: AxiosError) => {
                     await this.productHelper.increaseProductQuantity(carts);
-                    this.ordersTransactionsService.updateOrder(orderId, { "transaction.error": error.response.data });
+                    this.ordersTransactionsService.updateOrder(orderId, { "transaction.error": error.response?.data || error.message });
                     throw new InternalServerErrorException(Message.ERROR_OCCURRED());
                 }),
             ),
