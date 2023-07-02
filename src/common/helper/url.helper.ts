@@ -17,7 +17,7 @@ export class UrlHelper {
     }
 
     bindHostUrlToProduct(product: Product, request: Request) {
-        if (product) {
+        if (product && process.env.CREATE_FAKE_DATA == '0') {
             const hostAddress = `${request.protocol}://${request.get('host')}`;
             product.additionalsImageSrc = this.bindHostArrayUrl(
                 product?.additionalsImageSrc, 

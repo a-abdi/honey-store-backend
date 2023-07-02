@@ -3,7 +3,6 @@ import { ProductsService } from "../products.service";
 import { OrdersTransactionsService } from "src/app/orders-payments/orders-transactions.service";
 import { ProductQueryDto } from "../dto/product-query.dto";
 import { Sort } from "src/common/declare/enum";
-import { filter } from "rxjs";
 import { Schema } from "mongoose";
 
 @Injectable()
@@ -26,7 +25,6 @@ export class SortHelper {
     async findBySortAndFilter(query: ProductQueryDto, sortIndex: number) {
         if (sortIndex < 7) {
             const opt = { sort: this.sortValue[sortIndex] };
-            !query.deletedAt && (query.deletedAt = false);
             return await this.productsService.findAll(query, opt);
         }
         if (sortIndex = 7) {

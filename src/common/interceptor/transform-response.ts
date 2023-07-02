@@ -15,8 +15,8 @@ export class TransformResponse<T> implements NestInterceptor<T, Response<T>> {
     ]);
     return next.handle().pipe(map(response => ({ 
       message,
-      data: response?.result || response,
-      metaData: response?.meta
+      data: response?.data || response,
+      metaData: response?.metaData
     })));
   }
 }

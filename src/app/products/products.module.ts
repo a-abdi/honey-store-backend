@@ -10,10 +10,18 @@ import { OrdersTransactionsModule } from '../orders-payments/orders-transactions
 import { CartsModule } from '../carts/carts.module';
 import { SortHelper } from 'src/app/products/helper/sort.helper';
 import { MaxCountSort } from 'src/service/max-count-sort';
+import { ProductMetaDataHelper } from './helper/product-metadata.helper';
 
 @Module({
   controllers: [ProductsController],
-  providers: [ProductsService, ImageHelper, UrlHelper, SortHelper, MaxCountSort],
+  providers: [
+    ProductsService,
+    ImageHelper, 
+    UrlHelper, 
+    SortHelper, 
+    MaxCountSort, 
+    ProductMetaDataHelper
+  ],
   imports: [
     forwardRef(() => OrdersTransactionsModule),
     forwardRef(() => CartsModule),
@@ -24,6 +32,7 @@ import { MaxCountSort } from 'src/service/max-count-sort';
   ],
   exports: [
     ProductsService,
+    ProductMetaDataHelper
   ]
 })
 export class ProductsModule {}

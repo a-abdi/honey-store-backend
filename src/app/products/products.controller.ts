@@ -92,8 +92,8 @@ export class ProductsController {
   }
 
   @Get(':_id')
-  async findOne(@Param() params: MongoIdParams, @Req() request: Request) {
-    const product = await this.productsService.findOne(params._id);
+  async findOne(@Param() { _id }: MongoIdParams, @Req() request: Request) {
+    const product = await this.productsService.findOne({_id});
     this.urlHelper.bindHostUrlToProduct(product, request);
     return product;
   }

@@ -45,4 +45,6 @@ export const Name = {
     SORT: "مرتب سازی",
     DELETED_AT: "حذف",
     USER_OR_PASS: "شماره تلفن یا پسورد",
+    PAGE_NUMBER: "شماره صفحه",
+    PAGE_COUNT: "تعداد صفحه",
 }

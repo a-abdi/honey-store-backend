@@ -31,12 +31,12 @@ export class ProductsService {
     });
   }
 
-  async findAll(query: ProductQueryDto, opt: QueryOptions = {}): Promise<Product[]> {
-    return await this.productModel.find(query, {}, opt).populate('category').lean().exec();
+  async findAll(query: any = {}, opt: QueryOptions = {}): Promise<Product[]> {
+    return await this.productModel.find(query, {}, opt).lean().exec();
   }
 
-  async findOne(_id: Schema.Types.ObjectId): Promise<Product> {
-    return this.productModel.findOne({_id}).populate('category').exec();
+  async findOne(q: any = {}): Promise<Product> {
+    return this.productModel.findOne(q).lean().exec();
   }
 
   async productList(ids: Schema.Types.ObjectId[]): Promise<Product[]> {
@@ -55,9 +55,5 @@ export class ProductsService {
 
   async insertMany(products: Omit<Product, '_id'>[]): Promise<Product[]> {
     return await this.productModel.insertMany(products);
-  }
-
-  async search(query: any): Promise<Product[]> {
-    return await this.productModel.find({name: { $regex: query, $options: 'i' }});
   }
 }

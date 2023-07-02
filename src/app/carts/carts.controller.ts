@@ -67,12 +67,12 @@ export class CartsController {
 
   @UseGuards(JwtAuthGuard)
   @Patch('products/:_id')
-  async update(@Param() params: MongoIdParams, @Body() updateCartDto: UpdateCartDto, @User() user: AuthUserInfo) {
-    const product = await this.productService.findOne(params._id);
+  async update(@Param() { _id }: MongoIdParams, @Body() updateCartDto: UpdateCartDto, @User() user: AuthUserInfo) {
+    const product = await this.productService.findOne({ _id });
     if(product?.quantity < updateCartDto?.product?.quantity) {
       updateCartDto.product.quantity = product.quantity;
     }
-    return this.cartsService.update(params._id, updateCartDto, user);
+    return this.cartsService.update(_id, updateCartDto, user);
   }
 
   @UseGuards(JwtAuthGuard)
