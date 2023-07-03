@@ -1,5 +1,5 @@
 import { Controller, Get, Query, Req } from '@nestjs/common';
-import { SearchDto } from './dto/product-query.dto';
+import { SearchDto } from './dto/search-query.dto';
 import { ProductsService } from '../products/products.service';
 import { UrlHelper } from 'src/common/helper/url.helper';
 import { Request } from 'express';
