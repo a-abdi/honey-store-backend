@@ -11,7 +11,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule as UserAuthModule } from './auth/users/auth-user.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformResponse } from '../common/interceptor/transform-response';
-import { OrdersTransactionsModule } from './orders-payments/orders-transactions.module';
+import { OrdersTransactionsModule } from './orders/orders-transactions.module';
 import { PropertyModule } from './property/property.module';
 import { CommentModule } from './comment/comment.module';
 import 'dotenv/config';

@@ -1,6 +1,6 @@
 import { Request } from "express";
 import { Schema } from "mongoose";
-import { OrderTransactionDocument } from "src/app/orders-payments/entities/order-transaction.entity";
+import { OrderTransactionDocument } from "src/app/orders/entities/order-transaction.entity";
 import { Product } from "src/app/products/entities/product.entity";
 
 export class UrlHelper {

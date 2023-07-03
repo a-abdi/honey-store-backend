@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { ProductsService } from "../products.service";
-import { OrdersTransactionsService } from "src/app/orders-payments/orders-transactions.service";
+import { OrdersTransactionsService } from "src/app/orders/orders-transactions.service";
 import { ProductQueryDto } from "../dto/product-query.dto";
 import { Sort } from "src/common/declare/enum";
 import { Schema } from "mongoose";

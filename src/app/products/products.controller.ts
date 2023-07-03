@@ -20,7 +20,7 @@ import { Request } from 'express';
 import { ProductQueryDto } from './dto/product-query.dto';
 import { Name } from 'src/common/message/name';
 import { CartsService } from '../carts/carts.service';
-import { OrdersTransactionsService } from '../orders-payments/orders-transactions.service';
+import { OrdersTransactionsService } from '../orders/orders-transactions.service';
 import { SortHelper } from 'src/app/products/helper/sort.helper';
 import { Product } from './entities/product.entity';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';

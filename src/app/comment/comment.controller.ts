@@ -6,7 +6,7 @@ import { MongoIdParams } from 'src/common/helper';
 import { User } from 'src/common/decorators/user.decorator';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { UsersService } from '../users/users.service';
-import { OrdersTransactionsService } from '../orders-payments/orders-transactions.service';
+import { OrdersTransactionsService } from '../orders/orders-transactions.service';
 import { OrderStatus, Role } from 'src/common/declare/enum';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
