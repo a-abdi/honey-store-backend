@@ -19,7 +19,7 @@ import { CartsService } from '../carts/carts.service';
 import { UrlHelper } from 'src/common/helper/url.helper';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
-import { QueryDto } from './dto/query.dto';
+import { OrderQueryDto } from './dto/order-query.dto';
 import { MongoIdParams } from 'src/common/helper';
 import { StatusUpdateDto } from './dto/status-update.dto';
 
@@ -112,8 +112,8 @@ export class OrdersTransactionsController {
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('orders')
-  async findALL(@Query() { status }: QueryDto) {
-    return this.ordersService.findByOrderStatus(status);
+  async findALL(@Query() query: OrderQueryDto) {
+    return this.ordersService.findAll(query);
   }
 
   @Roles(Role.Admin)

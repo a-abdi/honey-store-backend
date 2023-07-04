@@ -12,7 +12,6 @@ import { ProductsService } from '../products/products.service';
 import { Product } from '../products/entities/product.entity';
 import { Request } from 'express';
 import { UrlHelper } from 'src/common/helper/url.helper';
-import { ProductHelper } from './helper/product.helper';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('carts')
@@ -21,7 +20,6 @@ export class CartsController {
     private readonly cartsService: CartsService,
     private readonly productService: ProductsService,
     private readonly urlHelper: UrlHelper,
-    private readonly productHelper: ProductHelper
   ) {}
 
   @UseGuards(JwtAuthGuard)

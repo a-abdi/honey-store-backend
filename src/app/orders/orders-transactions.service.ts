@@ -48,10 +48,14 @@ export class OrdersTransactionsService {
         ).exec();
     };
 
-    async findByOrderStatus(status: number){
-        return await this.orderTransactionModel.find({status}).select([
+    async findAll(filter: any){
+        return await this.orderTransactionModel.find(filter).select([
             'orderId', 'cart', 'amount', 'status', 'transaction', 'createdAt'
         ]).populate('user').exec();
+    }
+
+    async report(filter: any){
+        return await this.orderTransactionModel.aggregate(filter);
     }
 
     async findOneById(_id: Schema.Types.ObjectId){

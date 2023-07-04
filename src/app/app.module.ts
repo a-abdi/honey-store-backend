@@ -20,6 +20,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { SeederModule } from 'src/data/seeder/seeder.module';
 import { FakerModule } from 'src/data/faker/faker.module';
 import { SearchModule } from './search/search.module';
+import { ChartModule } from './chart/chart.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { SearchModule } from './search/search.module';
     SeederModule,
     FakerModule,
     SearchModule,
+    ChartModule,
   ],
   controllers: [],
   providers: [

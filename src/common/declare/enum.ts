@@ -22,3 +22,10 @@ export enum Sort {
     Des = -1,
     Asc = 1,
 }
+
+export enum DayOf {
+    Null,
+    Week,
+    Month,
+    Year
+}
