@@ -23,4 +23,8 @@ export class CreatePropertyDto {
     @IsMongoId({message: Message.INCORRECT(Name.CATEGORY), each: true})
     @IsOptional()
     category?: Schema.Types.ObjectId[];
+
+    @IsString({message: Message.MUST_BE_STRING(Name.DESCRIPTION)})
+    @IsOptional()
+    description?: string;
 }

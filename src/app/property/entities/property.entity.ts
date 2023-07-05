@@ -17,6 +17,9 @@ export class Property {
 
     @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Category' }] })
     category: Category[];
+
+    @Prop()
+    description: string;
 }
 
 export type ProppertyDocument = Property & Document;
