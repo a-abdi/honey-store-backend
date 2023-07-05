@@ -66,4 +66,34 @@ export class QueryHelper {
         }
         return filter;
     };
+
+    getStatusCount(query: ChartQueryDto) {
+        let filter: any = [
+            {
+                $match: {
+                    $and: [
+                        {
+                            $expr: { $lt: ['$createdAt', query.eDate]}
+                        },
+                        {
+                            $expr: { $gte: ['$createdAt', query.sDate]}
+                        }
+                    ]
+                }
+            },    
+            {
+                $group: {
+                    _id: "$status",
+                    totalAmount: { $sum: "$amount" },
+                    count: { $sum: 1 }
+                }
+            },
+            {
+                $sort: {
+                    createdAt: -1
+                }
+            }
+        ];
+        return filter;
+    }
 }

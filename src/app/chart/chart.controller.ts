@@ -21,4 +21,12 @@ export class ChartController {
         const queryFilter = this.queryHelper.getReportDateFilter(query);
         return this.ordersService.report(queryFilter);
     }
+
+    @Roles(Role.Admin)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Get('order/status')
+    async stattusCount(@Query() query: ChartQueryDto) {
+        const queryFilter = this.queryHelper.getStatusCount(query);
+        return this.ordersService.report(queryFilter);
+    }
 }
