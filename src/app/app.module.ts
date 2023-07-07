@@ -17,10 +17,10 @@ import { CommentModule } from './comment/comment.module';
 import 'dotenv/config';
 import { HttpExceptionFilter } from 'src/common/exceptio-filter/http-exception.filter';
 import { CacheModule } from '@nestjs/cache-manager';
-import { SeederModule } from 'src/data/seeder/seeder.module';
-import { FakerModule } from 'src/data/faker/faker.module';
+import { FakerModule } from 'src/app/faker/faker.module';
 import { SearchModule } from './search/search.module';
 import { ChartModule } from './chart/chart.module';
+import { SeederModule } from './seeder/seeder.module';
 
 @Module({
   imports: [
