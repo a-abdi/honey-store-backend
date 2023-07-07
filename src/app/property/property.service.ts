@@ -19,6 +19,34 @@ export class PropertyService {
     return this.propertyModel.find({}).exec();
   }
 
+  async findList(labelList: string[]) {
+    return this.propertyModel.aggregate([
+      {
+        $match: {
+          $and: [
+            {
+              label: {
+                $in: labelList
+              }
+            },
+            {
+              description: {
+                $ne: null
+              }
+            }
+          ]
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          label: 1,
+          description: 1
+        }
+      }
+    ])
+  };
+
   async findOne(propertyFilter: any) {
     return await this.propertyModel.findOne(propertyFilter).exec();
 };

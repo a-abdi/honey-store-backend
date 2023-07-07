@@ -24,6 +24,7 @@ import { OrdersTransactionsService } from '../orders/orders-transactions.service
 import { SortHelper } from 'src/app/products/helper/sort.helper';
 import { Product } from './entities/product.entity';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import { ProductMetaDataHelper } from './helper/product-metadata.helper';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('products')
@@ -35,6 +36,7 @@ export class ProductsController {
     private readonly ordersTransactionsService: OrdersTransactionsService,
     private readonly cartService: CartsService,
     private readonly sortHelper: SortHelper,
+    private readonly productMetaDataHelper: ProductMetaDataHelper,
   ) {}
 
   @UseInterceptors(BindProductCode)
@@ -85,10 +87,16 @@ export class ProductsController {
     } else {
       products = await this.productsService.findAll(query);
     }
+    const descriptions = await this.productMetaDataHelper.propertyDescriptions(products);
     products.map(product => {
       this.urlHelper.bindHostUrlToProduct(product, request);
     });
-    return products;
+    return {
+      data: products,
+      metaData: {
+        descriptions
+      }
+    };
   }
 
   @Get(':_id')

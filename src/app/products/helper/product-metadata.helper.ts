@@ -1,10 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { Product } from "../entities/product.entity";
 import { ProductsService } from "../products.service";
+import { PropertyService } from "src/app/property/property.service";
 
 @Injectable()
 export class ProductMetaDataHelper {
-    constructor(private readonly productService: ProductsService){}
+    constructor(
+        private readonly productService: ProductsService,
+        private readonly propertyService: PropertyService,
+    ){}
 
     async previousPage(products: Product[], query: any) {
         if (products) {
@@ -28,5 +32,16 @@ export class ProductMetaDataHelper {
             }
             return;
         }
+    }
+
+    async propertyDescriptions(products: Product[]) {
+        const properyLabel = products.map(
+            product => product?.customProperty?.map(
+              property => property?.label
+            )
+        ).flat();
+    
+        const unitPropertyLable = [...new Set(properyLabel)];
+        return await this.propertyService.findList(unitPropertyLable);
     }
 }

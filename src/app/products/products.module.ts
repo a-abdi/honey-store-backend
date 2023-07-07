@@ -11,6 +11,7 @@ import { CartsModule } from '../carts/carts.module';
 import { SortHelper } from 'src/app/products/helper/sort.helper';
 import { MaxCountSort } from 'src/service/max-count-sort';
 import { ProductMetaDataHelper } from './helper/product-metadata.helper';
+import { PropertyModule } from '../property/property.module';
 
 @Module({
   controllers: [ProductsController],
@@ -25,6 +26,7 @@ import { ProductMetaDataHelper } from './helper/product-metadata.helper';
   imports: [
     forwardRef(() => OrdersTransactionsModule),
     forwardRef(() => CartsModule),
+    PropertyModule,
     MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
     MulterModule.register({
       dest: './upload',
