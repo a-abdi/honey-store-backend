@@ -87,21 +87,15 @@ export class ProductsController {
     } else {
       products = await this.productsService.findAll(query);
     }
-    const descriptions = await this.productMetaDataHelper.propertyDescriptions(products);
     products.map(product => {
       this.urlHelper.bindHostUrlToProduct(product, request);
     });
-    return {
-      data: products,
-      metaData: {
-        descriptions
-      }
-    };
+    return products;
   }
 
   @Get(':_id')
   async findOne(@Param() { _id }: MongoIdParams, @Req() request: Request) {
-    const product = await this.productsService.findOne({_id});
+    const product = (await this.productsService.findOneWithProperty(_id))[0];
     this.urlHelper.bindHostUrlToProduct(product, request);
     return product;
   }
