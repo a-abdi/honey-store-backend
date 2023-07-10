@@ -1,6 +1,5 @@
 import { Transform } from "class-transformer";
 import { IsBoolean, IsMongoId, IsNumber, IsOptional, Max, Min, Validate } from "class-validator";
-import { MaxCountSort } from "src/service/max-count-sort";
 import { Message } from "../message";
 import { Name } from "../message/name";
 import { Schema } from "mongoose";
@@ -12,7 +11,7 @@ export class QueryDto {
     deletedAt?: boolean = false;
 
     @IsOptional()
-    @Validate(MaxCountSort)
+    @Max(100,{message: Message.INCORRECT(Name.SORT)})
     @Min(0, {message: Message.INCORRECT(Name.SORT)})
     @IsNumber({}, {message: Message.INCORRECT(Name.SORT)})
     @Transform(({ value }) => Number(value))

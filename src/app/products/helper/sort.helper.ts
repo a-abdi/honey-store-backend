@@ -19,7 +19,8 @@ export class SortHelper {
         { price: -1 },
         { score: -1 },
         { discount: -1 },
-        { mostPurchased: Sort.Des }
+        { mostPurchased: Sort.Des },
+        { _id: -1 }
     ];
 
     async findBySortAndFilter(query: ProductQueryDto, sortIndex: number) {

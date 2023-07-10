@@ -6,3 +6,8 @@ export interface AuthUserInfo {
     phoneNumber: string;
     roles: Role[];
 }
+
+export interface ResponseMetaDate {
+    previousPage?: Schema.Types.ObjectId;
+    nextPage?: Schema.Types.ObjectId;
+}

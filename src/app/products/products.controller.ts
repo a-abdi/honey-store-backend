@@ -13,7 +13,7 @@ import { Message } from 'src/common/message';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { BindProductCode } from 'src/common/interceptor/bind-product-code';
 import { User } from 'src/common/decorators/user.decorator';
-import { AuthUserInfo } from 'src/interface/auth-user-info';
+import { AuthUserInfo, ResponseMetaDate } from 'src/interface/auth-user-info';
 import { ImageHelper } from './helper/image.helper';
 import { UrlHelper } from 'src/common/helper/url.helper';
 import { Request } from 'express';
@@ -22,7 +22,6 @@ import { Name } from 'src/common/message/name';
 import { CartsService } from '../carts/carts.service';
 import { OrdersTransactionsService } from '../orders/orders-transactions.service';
 import { SortHelper } from 'src/app/products/helper/sort.helper';
-import { Product } from './entities/product.entity';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { ProductMetaDataHelper } from './helper/product-metadata.helper';
 
@@ -80,17 +79,28 @@ export class ProductsController {
   @Get()
   @UseInterceptors(CacheInterceptor)
   @CacheTTL(0)
-  async findAll(@Req() request: Request, @Query() query: ProductQueryDto) {
-    let products: Product[] = [];
-    if (query.sort) {
-      products = await this.sortHelper.findBySortAndFilter(query, query.sort);
-    } else {
-      products = await this.productsService.findAll(query);
-    }
+  async findAll(@Req() request: Request, @Query() queryDto: ProductQueryDto) {
+    const { deletedAt, previousPage, nextPage, limit} = queryDto;
+    const query: any = { deletedAt };
+    const sort = { _id: -1 };
+    previousPage && (query._id = { $gt: previousPage });
+    previousPage && (sort._id = 1); 
+    nextPage && (query._id = { $lt: nextPage });
+    const products = await this.productsService.findAll(query, { limit: 15, sort });
+    previousPage && products.reverse();
+    const metaData: ResponseMetaDate = {};
+    [ metaData.previousPage, metaData.nextPage ] = await Promise.all([
+      this.productMetaDataHelper.previousPage(products, query),
+      this.productMetaDataHelper.nextPage(products, query)
+    ]);
+    
     products.map(product => {
       this.urlHelper.bindHostUrlToProduct(product, request);
     });
-    return products;
+    return {
+      data: products,
+      metaData
+    };
   }
 
   @Get(':_id')
