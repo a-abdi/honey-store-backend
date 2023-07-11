@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsBoolean, IsMongoId, IsNumber, IsOptional, Max, Min, Validate } from "class-validator";
+import { IsBoolean, IsMongoId, IsNumber, IsOptional, IsString, Max, Min, Validate } from "class-validator";
 import { Message } from "../message";
 import { Name } from "../message/name";
 import { Schema } from "mongoose";
@@ -25,12 +25,12 @@ export class QueryDto {
     page?: number = 1;
 
     @IsOptional()
-    @IsMongoId({message: Message.INCORRECT(Name.ID)})
-    previousPage: Schema.Types.ObjectId;
+    @IsString()
+    previousPage?: string;
 
     @IsOptional()
-    @IsMongoId({message: Message.INCORRECT(Name.ID)})
-    nextPage: Schema.Types.ObjectId;
+    @IsString()
+    nextPage?: string;
   
     @IsOptional()
     @IsNumber({}, {message: Message.INCORRECT(Name.PAGE_COUNT)})

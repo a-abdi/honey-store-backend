@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ParseFilePipe, UseGuards, UploadedFiles, Req, Query, ForbiddenException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ParseFilePipe, UseGuards, UploadedFiles, Req, Query, ForbiddenException, Inject } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -21,9 +21,11 @@ import { ProductQueryDto } from './dto/product-query.dto';
 import { Name } from 'src/common/message/name';
 import { CartsService } from '../carts/carts.service';
 import { OrdersTransactionsService } from '../orders/orders-transactions.service';
-import { SortHelper } from 'src/app/products/helper/sort.helper';
+// import { SortHelper } from 'src/app/products/helper/sort.helper';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { ProductMetaDataHelper } from './helper/product-metadata.helper';
+import { QueryHelper } from './helper/query.helper';
+import { SORT_QUERY, SortQuery } from 'src/common/declare/sort-query';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('products')
@@ -34,8 +36,9 @@ export class ProductsController {
     private readonly urlHelper: UrlHelper,
     private readonly ordersTransactionsService: OrdersTransactionsService,
     private readonly cartService: CartsService,
-    private readonly sortHelper: SortHelper,
+    private readonly queryHelper: QueryHelper,
     private readonly productMetaDataHelper: ProductMetaDataHelper,
+    @Inject('SORT_QUERY') private readonly sortQuery: SortQuery,
   ) {}
 
   @UseInterceptors(BindProductCode)
@@ -80,20 +83,21 @@ export class ProductsController {
   @UseInterceptors(CacheInterceptor)
   @CacheTTL(0)
   async findAll(@Req() request: Request, @Query() queryDto: ProductQueryDto) {
-    const { deletedAt, previousPage, nextPage, limit} = queryDto;
-    const query: any = { deletedAt };
-    const sort = { _id: -1 };
-    previousPage && (query._id = { $gt: previousPage });
-    previousPage && (sort._id = 1); 
-    nextPage && (query._id = { $lt: nextPage });
-    const products = await this.productsService.findAll(query, { limit: 15, sort });
-    previousPage && products.reverse();
+    const { previousPage, sort } = queryDto;
+    const query = this.queryHelper.build(queryDto);
+    const queryOpt = this.queryHelper.option(queryDto);
+    const products = await this.productsService.findAll(query);
+    previousPage && products.reverse(); 
+    const nextPageQuery = this.queryHelper.nextPage(products, queryDto); 
+    queryOpt.limit = 1;
+    const previousPageQuery = this.queryHelper.previousPage(products, queryDto); 
     const metaData: ResponseMetaDate = {};
-    [ metaData.previousPage, metaData.nextPage ] = await Promise.all([
-      this.productMetaDataHelper.previousPage(products, query),
-      this.productMetaDataHelper.nextPage(products, query)
+    const [ productNext, productPrevious ] = await Promise.all([
+      this.productsService.findAll(nextPageQuery, queryOpt),
+      this.productsService.findAll(previousPageQuery, queryOpt),
     ]);
-    
+    productNext[0] && (metaData.nextPage = productNext[0]._id + '_' + productNext[0][this.sortQuery[sort].key]);
+    productPrevious[0] && (metaData.nextPage = productNext[0]._id + '_' + productPrevious[0][this.sortQuery[sort].key]);
     products.map(product => {
       this.urlHelper.bindHostUrlToProduct(product, request);
     });

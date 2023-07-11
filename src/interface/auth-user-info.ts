@@ -8,6 +8,6 @@ export interface AuthUserInfo {
 }
 
 export interface ResponseMetaDate {
-    previousPage?: Schema.Types.ObjectId;
-    nextPage?: Schema.Types.ObjectId;
+    previousPage?: string;
+    nextPage?: string;
 }

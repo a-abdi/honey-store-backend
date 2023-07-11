@@ -12,6 +12,8 @@ import { SortHelper } from 'src/app/products/helper/sort.helper';
 import { MaxCountSort } from 'src/service/max-count-sort';
 import { ProductMetaDataHelper } from './helper/product-metadata.helper';
 import { PropertyModule } from '../property/property.module';
+import { QueryHelper } from './helper/query.helper';
+import { SORT_QUERY } from 'src/common/declare/sort-query';
 
 @Module({
   controllers: [ProductsController],
@@ -20,8 +22,13 @@ import { PropertyModule } from '../property/property.module';
     ImageHelper, 
     UrlHelper, 
     SortHelper, 
+    QueryHelper,
     MaxCountSort, 
-    ProductMetaDataHelper
+    ProductMetaDataHelper,
+    {
+      provide: 'SORT_QUERY',
+      useValue: SORT_QUERY,
+    },
   ],
   imports: [
     forwardRef(() => OrdersTransactionsModule),
