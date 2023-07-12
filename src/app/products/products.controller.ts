@@ -86,18 +86,18 @@ export class ProductsController {
     const { previousPage, sort } = queryDto;
     const query = this.queryHelper.build(queryDto);
     const queryOpt = this.queryHelper.option(queryDto);
-    const products = await this.productsService.findAll(query);
+    const products = await this.productsService.findAll(query, queryOpt);
     previousPage && products.reverse(); 
-    const nextPageQuery = this.queryHelper.nextPage(products, queryDto); 
+    const { nextPageQuery, nextId } = this.queryHelper.nextPage(products, queryDto); 
+    const { previousPageQuery, previousId } = this.queryHelper.previousPage(products, queryDto);
     queryOpt.limit = 1;
-    const previousPageQuery = this.queryHelper.previousPage(products, queryDto); 
     const metaData: ResponseMetaDate = {};
     const [ productNext, productPrevious ] = await Promise.all([
       this.productsService.findAll(nextPageQuery, queryOpt),
       this.productsService.findAll(previousPageQuery, queryOpt),
     ]);
-    productNext[0] && (metaData.nextPage = productNext[0]._id + '_' + productNext[0][this.sortQuery[sort].key]);
-    productPrevious[0] && (metaData.nextPage = productNext[0]._id + '_' + productPrevious[0][this.sortQuery[sort].key]);
+    productNext[0] && (metaData.nextPage = `${nextId}_${products[products.length - 1][this.sortQuery[sort].key]}`);
+    productPrevious[0] && (metaData.previousPage = `${previousId}_${products[0][this.sortQuery[sort].key]}`);
     products.map(product => {
       this.urlHelper.bindHostUrlToProduct(product, request);
     });
