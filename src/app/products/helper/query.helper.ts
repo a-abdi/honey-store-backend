@@ -16,8 +16,8 @@ export class QueryHelper {
 
     filter(queryDto: ProductQueryDto) {
         const { deletedAt, previousPage, nextPage, category, sort } = queryDto;
-        const query: any = { deletedAt };
-        category && (query.category = category );
+        const filter: any = { deletedAt };
+        category && (filter.category = category );
         const cursorField = this.sortQuery[sort].key;
         let operator = (this.sortQuery[sort].type === Sort.Des) ? '$lt' : '$gt';
         let cursor = nextPage;
@@ -31,9 +31,9 @@ export class QueryHelper {
               cursorParam = Number(cursorParam);
             }
             if (cursorField === '_id') {
-                query._id = { $expr: { [operator]: ["$_id", { $toObjectId: cursorId }] } }
+                filter.$expr = { [operator]: ["$_id", { $toObjectId: cursorId }] }
             } else {
-                query.$or = [
+                filter.$or = [
                     { [cursorField]: { [operator]: cursorParam } },
                     {
                         [cursorField]: cursorParam,
@@ -42,7 +42,7 @@ export class QueryHelper {
                 ]
             }
         } 
-        return query;
+        return filter;
     }
 
     option(queryDto: ProductQueryDto) {
@@ -62,7 +62,7 @@ export class QueryHelper {
         const cursorParam = products[0][cursorField];
         let previousId = cursorParam;
         if (cursorField === '_id') {
-            previousPageQuery._id = { $expr: { [operator]: ["$_id", { $toObjectId: cursorParam }] } }
+            previousPageQuery.$expr = { [operator]: ["$_id", { $toObjectId: cursorParam }] }
         } else {
             previousId = products[0]._id
             previousPageQuery.$or = [
@@ -84,7 +84,7 @@ export class QueryHelper {
         const cursorParam = products[products.length - 1][cursorField];
         let nextId = cursorParam;
         if (cursorField === '_id') {
-            nextPageQuery._id = { $expr: { [operator]: ["$_id", { $toObjectId: cursorParam }] } }
+            nextPageQuery.$expr = { [operator]: ["$_id", { $toObjectId: cursorParam }] }
         } else {
             nextId = products[products.length - 1]._id;
             nextPageQuery.$or = [
@@ -102,12 +102,16 @@ export class QueryHelper {
 
     async getData(sort :number, filter: any, queryOpt: QueryOptions) {
         switch (sort) {
+            case 0: 
+            case 1: 
+                return await this.productsService.sortByTotalId(filter, queryOpt);
+
             case 2: 
             case 3: 
                 return await this.productsService.sortByTotalPrice(filter, queryOpt);
                 
             default:
-                break;
+                return [];
         }
     }
 }

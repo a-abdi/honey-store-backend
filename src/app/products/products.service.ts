@@ -87,6 +87,20 @@ export class ProductsService {
     return await this.productModel.insertMany(products);
   }
 
+  async sortByTotalId(filter: any, queryOpt: QueryOptions) {
+    return await this.productModel.aggregate([
+      {
+        $match: filter
+      },
+      {
+        $sort: queryOpt.sort
+      },
+      {
+        $limit: queryOpt.limit
+      }
+    ]);
+  }
+
   async sortByTotalPrice(filter: any, queryOpt: QueryOptions) {
     return await this.productModel.aggregate([
       {

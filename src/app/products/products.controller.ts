@@ -88,10 +88,15 @@ export class ProductsController {
     const queryOpt = this.queryHelper.option(queryDto);
     const products = await this.queryHelper.getData(sort, filter, queryOpt);
     const metaData: ResponseMetaDate = {};
+    console.log(filter);
+    
     previousPage && products.reverse();
     if(products.length) {
       const { nextPageQuery, nextId } = this.queryHelper.nextPage(products, queryDto); 
       const { previousPageQuery, previousId } = this.queryHelper.previousPage(products, queryDto);
+      console.log(nextPageQuery);
+      console.log(previousPageQuery);
+      
       queryOpt.limit = 1;
       const [ productNext, productPrevious ] = await Promise.all([
         this.queryHelper.getData(sort, nextPageQuery, queryOpt),
