@@ -40,9 +40,9 @@ export class QueryHelper {
 
     option(queryDto: ProductQueryDto) {
         const { previousPage, limit, sort } = queryDto;
-        let queryOpt: QueryOptions = { limit: 2, sort: this.sortQuery[sort].value };
+        let queryOpt: QueryOptions = { limit, sort: this.sortQuery[sort].value };
         if (previousPage) {
-            queryOpt = { limit: 2, sort: this.sortQuery[sort].reverse };
+            queryOpt = { limit, sort: this.sortQuery[sort].reverse };
         }
         return queryOpt;
     } 
