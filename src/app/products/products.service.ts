@@ -86,4 +86,25 @@ export class ProductsService {
   async insertMany(products: Omit<Product, '_id'>[]): Promise<Product[]> {
     return await this.productModel.insertMany(products);
   }
+
+  async sortByTotalPrice(filter: any, queryOpt: QueryOptions) {
+    return await this.productModel.aggregate([
+      {
+        $addFields: {
+          totalPrice: {
+            $subtract: ["$price", "$discount"]
+          }
+        }
+      },
+      {
+        $match: filter
+      },
+      {
+        $sort: queryOpt.sort
+      },
+      {
+        $limit: queryOpt.limit
+      }
+    ]);
+  }
 }

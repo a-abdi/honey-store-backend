@@ -11,19 +11,21 @@ export const SORT_QUERY = [
         key: '_id',
         type: Sort.Asc,
         value: { _id: Sort.Asc },
-        reverse: { _id: Sort.Des }
+        reverse: { _id: Sort.Des },
+        keyType: 'number'
     },
     { 
-        key: 'price',
+        key: 'totalPrice',
         type: Sort.Asc,
-        value: { price: Sort.Asc, _id: Sort.Asc },
-        reverse: { price: Sort.Des, _id: Sort.Des } 
+        value: { totalPrice: Sort.Asc, _id: Sort.Asc },
+        reverse: { totalPrice: Sort.Des, _id: Sort.Des },
+        keyType: 'number'
     },
     { 
-        key: 'price',
+        key: 'totalPrice',
         type: Sort.Des,
-        value: { price: Sort.Des, _id: Sort.Des },
-        reverse: { price: Sort.Asc, _id: Sort.Asc },
+        value: { totalPrice: Sort.Des, _id: Sort.Des },
+        reverse: { totalPrice: Sort.Asc, _id: Sort.Asc },
     },
     { 
         key: 'discount',

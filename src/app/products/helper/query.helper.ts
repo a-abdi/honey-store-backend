@@ -5,12 +5,16 @@ import { QueryOptions } from "mongoose";
 import { Product } from "../entities/product.entity";
 import { QueryDto } from "src/common/dto/query.dto";
 import { SortQuery } from "src/common/declare/sort-query";
+import { ProductsService } from "../products.service";
 
 @Injectable()
 export class QueryHelper {
-    constructor(@Inject('SORT_QUERY') private readonly sortQuery: SortQuery) {}
+    constructor(
+        @Inject('SORT_QUERY') private readonly sortQuery: SortQuery,
+        private readonly productsService: ProductsService,
+    ) {}
 
-    build(queryDto: ProductQueryDto) {
+    filter(queryDto: ProductQueryDto) {
         const { deletedAt, previousPage, nextPage, category, sort } = queryDto;
         const query: any = { deletedAt };
         category && (query.category = category );
@@ -22,15 +26,18 @@ export class QueryHelper {
             cursor = previousPage;
         }   
         if (cursor) {
-            const [cursorId, cursorParam] = cursor.split('_');
+            let [cursorId, cursorParam] : string[] | number[] = cursor.split('_');
+            if (this.sortQuery[sort].keyType === 'number') {
+              cursorParam = Number(cursorParam);
+            }
             if (cursorField === '_id') {
-                query._id = { [operator]: cursorId }
+                query._id = { $expr: { [operator]: ["$_id", { $toObjectId: cursorId }] } }
             } else {
                 query.$or = [
                     { [cursorField]: { [operator]: cursorParam } },
                     {
                         [cursorField]: cursorParam,
-                        _id: { [operator]: cursorId }
+                        $expr: { [operator]: ["$_id", { $toObjectId: cursorId }] }
                     }
                 ]
             }
@@ -55,14 +62,14 @@ export class QueryHelper {
         const cursorParam = products[0][cursorField];
         let previousId = cursorParam;
         if (cursorField === '_id') {
-            previousPageQuery._id = { [operator]: cursorParam }
+            previousPageQuery._id = { $expr: { [operator]: ["$_id", { $toObjectId: cursorParam }] } }
         } else {
             previousId = products[0]._id
             previousPageQuery.$or = [
                 { [cursorField]: { [operator]: cursorParam } },
                 {
                     [cursorField]: cursorParam,
-                    _id: { [operator]: products[0]._id }
+                    $expr: { [operator]: ["$_id", { $toObjectId:  products[0]._id }] }
                 }
             ]
         }
@@ -77,17 +84,30 @@ export class QueryHelper {
         const cursorParam = products[products.length - 1][cursorField];
         let nextId = cursorParam;
         if (cursorField === '_id') {
-            nextPageQuery._id = { [operator]: cursorParam }
+            nextPageQuery._id = { $expr: { [operator]: ["$_id", { $toObjectId: cursorParam }] } }
         } else {
             nextId = products[products.length - 1]._id;
             nextPageQuery.$or = [
                 { [cursorField]: { [operator]: cursorParam } },
                 {
-                    [cursorField]: cursorParam,
-                    _id: { [operator]: products[products.length - 1]._id }
+                    $and: [
+                        {[cursorField]: cursorParam},
+                        {$expr: { [operator]: ["$_id", { $toObjectId: products[products.length - 1]._id }] }}
+                    ]
                 }
             ]
         }
         return { nextPageQuery, nextId };
+    }
+
+    async getData(sort :number, filter: any, queryOpt: QueryOptions) {
+        switch (sort) {
+            case 2: 
+            case 3: 
+                return await this.productsService.sortByTotalPrice(filter, queryOpt);
+                
+            default:
+                break;
+        }
     }
 }
