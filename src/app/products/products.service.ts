@@ -121,4 +121,25 @@ export class ProductsService {
       }
     ]);
   }
+
+  async sortByPercentDiscount(filter: any, queryOpt: QueryOptions) {
+    return await this.productModel.aggregate([
+      {
+        $addFields: {
+          percentDiscount: {
+            $round: [{ $multiply: [{ $divide: ["$discount", "$price"] }, 100] }, 1]
+          }
+        }
+      },
+      {
+        $match: filter
+      },
+      {
+        $sort: queryOpt.sort
+      },
+      {
+        $limit: queryOpt.limit
+      }
+    ]);
+  }
 }

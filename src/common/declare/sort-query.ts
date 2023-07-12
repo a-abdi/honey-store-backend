@@ -28,10 +28,10 @@ export const SORT_QUERY = [
         reverse: { totalPrice: Sort.Asc, _id: Sort.Asc },
     },
     { 
-        key: 'discount',
+        key: 'percentDiscount',
         type: Sort.Des,
-        value: { discount: Sort.Des, _id: Sort.Des },
-        reverse: { discount: Sort.Asc, _id: Sort.Asc },
+        value: { percentDiscount: Sort.Des, _id: Sort.Des },
+        reverse: { percentDiscount: Sort.Asc, _id: Sort.Asc },
     },
     { 
         key: 'mostPurchased',

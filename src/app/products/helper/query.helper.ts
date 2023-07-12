@@ -109,6 +109,9 @@ export class QueryHelper {
             case 2: 
             case 3: 
                 return await this.productsService.sortByTotalPrice(filter, queryOpt);
+
+            case 4: 
+                return await this.productsService.sortByPercentDiscount(filter, queryOpt);
                 
             default:
                 return [];
