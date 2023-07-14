@@ -3,7 +3,6 @@ import { ProductQueryDto } from "../dto/product-query.dto";
 import { Sort } from "src/common/declare/enum";
 import { QueryOptions } from "mongoose";
 import { Product } from "../entities/product.entity";
-import { QueryDto } from "src/common/dto/query.dto";
 import { SortQuery } from "src/common/declare/sort-query";
 import { ProductsService } from "../products.service";
 
@@ -16,8 +15,8 @@ export class QueryHelper {
 
     filter(queryDto: ProductQueryDto) {
         const { deletedAt, previousPage, nextPage, category, sort } = queryDto;
-        const filter: any = { deletedAt };
-        category && (filter.category = category );
+        const filter: any = {$and: [{ deletedAt }]};
+        category && filter.$and.push({ $expr: {$eq: ["$category", { $toObjectId: category }]} });
         const cursorField = this.sortQuery[sort].key;
         let operator = (this.sortQuery[sort].type === Sort.Des) ? '$lt' : '$gt';
         let cursor = nextPage;
@@ -31,7 +30,7 @@ export class QueryHelper {
               cursorParam = Number(cursorParam);
             }
             if (cursorField === '_id') {
-                filter.$expr = { [operator]: ["$_id", { $toObjectId: cursorId }] }
+                filter.$and.push({$expr: { [operator]: ["$_id", { $toObjectId: cursorId }]}})
             } else {
                 filter.$or = [
                     { [cursorField]: { [operator]: cursorParam } },
@@ -54,15 +53,16 @@ export class QueryHelper {
         return queryOpt;
     } 
 
-    previousPage(products: Product[], queryDto: QueryDto) {
-        const { sort, deletedAt } = queryDto;
+    previousPage(products: Product[], queryDto: ProductQueryDto) {
+        const { sort, deletedAt, category } = queryDto;
         const cursorField = this.sortQuery[sort].key;
-        const previousPageQuery: any = { deletedAt };
+        const previousPageQuery: any = { $and: [{ deletedAt }] };
+        category && previousPageQuery.$and.push({ $expr: {$eq: ["$category", { $toObjectId: category }]} });
         const operator = (this.sortQuery[sort].type === Sort.Des) ? '$gt' : '$lt';
         const cursorParam = products[0][cursorField];
         let previousId = cursorParam;
         if (cursorField === '_id') {
-            previousPageQuery.$expr = { [operator]: ["$_id", { $toObjectId: cursorParam }] }
+            previousPageQuery.$and.push({$expr: { [operator]: ["$_id", { $toObjectId: cursorParam }]}});
         } else {
             previousId = products[0]._id
             previousPageQuery.$or = [
@@ -76,15 +76,16 @@ export class QueryHelper {
         return { previousPageQuery, previousId };
     }
 
-    nextPage(products: Product[], queryDto: QueryDto) {
-        const { sort, deletedAt } = queryDto;
+    nextPage(products: Product[], queryDto: ProductQueryDto) {
+        const { sort, deletedAt, category } = queryDto;
         const cursorField = this.sortQuery[sort].key;
-        const nextPageQuery: any = { deletedAt };
+        const nextPageQuery: any = { $and: [{ deletedAt }] };
+        category && nextPageQuery.$and.push({ $expr: {$eq: ["$category", { $toObjectId: category }]} });
         const operator = (this.sortQuery[sort].type === Sort.Des) ? '$lt' : '$gt';
         const cursorParam = products[products.length - 1][cursorField];
         let nextId = cursorParam;
         if (cursorField === '_id') {
-            nextPageQuery.$expr = { [operator]: ["$_id", { $toObjectId: cursorParam }] }
+            nextPageQuery.$and.push({$expr: { [operator]: ["$_id", { $toObjectId: cursorParam }]}});
         } else {
             nextId = products[products.length - 1]._id;
             nextPageQuery.$or = [
@@ -104,7 +105,7 @@ export class QueryHelper {
         switch (sort) {
             case 0: 
             case 1: 
-                return await this.productsService.sortByTotalId(filter, queryOpt);
+                return await this.productsService.sortById(filter, queryOpt);
 
             case 2: 
             case 3: 
