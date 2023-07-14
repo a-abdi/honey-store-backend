@@ -4,10 +4,10 @@ import mongoose, { Model, QueryOptions, Schema } from 'mongoose';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Product, ProductDocument } from './entities/product.entity';
-import { ProductQueryDto } from './dto/product-query.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { PropertyResponse } from './interface/Property.interface';
+import { OrderStatus } from 'src/common/declare/enum';
 
 @Injectable()
 export class ProductsService {
@@ -129,6 +129,73 @@ export class ProductsService {
           percentDiscount: {
             $round: [{ $multiply: [{ $divide: ["$discount", "$price"] }, 100] }, 1]
           }
+        }
+      },
+      {
+        $match: filter
+      },
+      {
+        $sort: queryOpt.sort
+      },
+      {
+        $limit: queryOpt.limit
+      }
+    ]);
+  }
+
+  async sortByCountOrderStatus(filter: any, queryOpt: QueryOptions, status: OrderStatus = OrderStatus.Delivered) {
+    return await this.productModel.aggregate([
+      {
+        $lookup: {
+          from: "ordertransactions",
+          let: { productId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                status
+              }
+            },
+            {
+              $unwind: "$cart"
+            },
+            {
+              $group: {
+                _id: "$cart.product",
+                orderCount: { $sum: "$cart.quantity" },
+              }
+            },
+            {
+              $match: {
+                $expr: {
+                  $eq: ["$$productId", "$_id"]
+                }
+              }
+            },
+            {
+              $project: {
+                _id: 0,
+                orderCount: 1
+              }
+            }
+          ],
+          as: "order"
+        }
+      },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [{ $arrayElemAt: ["$order", 0] }, "$$ROOT"]
+          }
+        }
+      },
+      {
+        $project: {
+          order: 0
+        }
+      },
+      {
+        $addFields: {
+          orderCount: { $ifNull: [ "$orderCount", 0 ] }
         }
       },
       {

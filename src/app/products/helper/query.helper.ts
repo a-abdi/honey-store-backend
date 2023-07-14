@@ -112,7 +112,10 @@ export class QueryHelper {
 
             case 4: 
                 return await this.productsService.sortByPercentDiscount(filter, queryOpt);
-                
+            
+            case 5: 
+                return await this.productsService.sortByCountOrderStatus(filter, queryOpt);
+            
             default:
                 return [];
         }
