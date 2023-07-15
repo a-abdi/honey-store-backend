@@ -1,15 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, UseInterceptors, UploadedFile, ParseFilePipe } from '@nestjs/common';
 import { RolesGuard } from 'src/app/auth/roles.guard';
 import { Role } from 'src/common/declare/enum';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { MongoIdParams } from 'src/common/helper';
+import { MongoIdParams, fileStorage } from 'src/common/helper';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { Message } from 'src/common/message';
 import { CategoryQueryDto } from './dto/category-query.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { FileMaxSizeValidator } from 'src/service/file-max-size-validation';
+import { FileTypeValidator } from 'src/service/file-type-validation';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('categories')
@@ -19,7 +22,14 @@ export class CategoriesController {
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
-  async create(@Body() createCategoryDto: CreateCategoryDto) {
+  @UseInterceptors(FileInterceptor('file', { storage: fileStorage('upload/category') }))
+  async create(@Body() createCategoryDto: CreateCategoryDto, @UploadedFile(
+    new ParseFilePipe({
+      validators: [
+        new FileMaxSizeValidator({ maxSize: 50000 }),
+        new FileTypeValidator({ validType: ['jpg', 'png', 'jpeg'] }),
+      ],
+  })) file: Express.Multer.File) {
     return await this.categoriesService.create(createCategoryDto);
   }
 

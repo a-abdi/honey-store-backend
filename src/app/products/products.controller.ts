@@ -21,11 +21,10 @@ import { ProductQueryDto } from './dto/product-query.dto';
 import { Name } from 'src/common/message/name';
 import { CartsService } from '../carts/carts.service';
 import { OrdersTransactionsService } from '../orders/orders-transactions.service';
-// import { SortHelper } from 'src/app/products/helper/sort.helper';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { ProductMetaDataHelper } from './helper/product-metadata.helper';
 import { QueryHelper } from './helper/query.helper';
-import { SORT_QUERY, SortQuery } from 'src/common/declare/sort-query';
+import { SortQuery } from 'src/common/declare/sort-query';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('products')
@@ -80,8 +79,8 @@ export class ProductsController {
   }
 
   @Get()
-  // @UseInterceptors(CacheInterceptor)
-  // @CacheTTL(0)
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(0)
   async findAll(@Req() request: Request, @Query() queryDto: ProductQueryDto) {
     const { previousPage, sort } = queryDto;
     const filter = this.queryHelper.filter(queryDto);
