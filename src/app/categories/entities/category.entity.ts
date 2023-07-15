@@ -10,13 +10,13 @@ export class Category {
     name: string;
 
     @Prop()
-    description: string;
+    description?: string;
 
     @Prop()
     imageSrc: string;
 
     @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Property' }] })
-    properties: Property[];
+    properties?: Property[];
 }
 
 export type CategoryDocument = Category & Document;

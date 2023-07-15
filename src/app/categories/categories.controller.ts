@@ -14,15 +14,14 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { FileMaxSizeValidator } from 'src/service/file-max-size-validation';
 import { FileTypeValidator } from 'src/service/file-type-validation';
 import { Request } from 'express';
-import { UrlHelper } from 'src/common/helper/url.helper';
 import { HostAddress } from './helper/host-address';
+import { UpdateCategoryData } from './interface/category-data.interface';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('categories')
 export class CategoriesController {
   constructor(
     private readonly categoriesService: CategoriesService,
-    private readonly urlHelper: UrlHelper,
     private readonly hostAddress: HostAddress,
   ) {}
 
@@ -38,28 +37,48 @@ export class CategoriesController {
       ],
   })) file: Express.Multer.File,
   @Req() request: Request) {
-    const category = await this.categoriesService.create(createCategoryDto, file.path);
+    const category = await this.categoriesService.create({ ... createCategoryDto, imageSrc: file.path });
     this.hostAddress.bindToOne(request, category);
     return category;
   }
 
   @Get()
-  async findAll(@Query() query: CategoryQueryDto) {
-    return await this.categoriesService.findAll(query);
+  async findAll(@Query() query: CategoryQueryDto, @Req() request: Request) {
+    const categories = await this.categoriesService.findAll(query);
+    this.hostAddress.bindToMany(request, categories);
+    return categories;
   }
   
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':_id')
-  async findOne(@Param() params: MongoIdParams) {
-    return await this.categoriesService.findByID(params._id);
+  async findOne(@Param() params: MongoIdParams, @Req() request: Request) {
+    const category = await this.categoriesService.findByID(params._id);
+    this.hostAddress.bindToOne(request, category);
+    return category;
   }
   
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Patch(':_id')
-  async update(@Param() params: MongoIdParams, @Body() updateCategoryDto: UpdateCategoryDto) {
-    return await this.categoriesService.update(params._id, updateCategoryDto);
+  @UseInterceptors(FileInterceptor('file', { storage: fileStorage('upload/category') }))
+  async update(
+    @Param() params: MongoIdParams, 
+    @Body() updateCategoryDto: UpdateCategoryDto, 
+    @Req() request: Request,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new FileMaxSizeValidator({ maxSize: 50000 }),
+          new FileTypeValidator({ validType: ['jpg', 'png', 'jpeg'] }),
+        ],
+        fileIsRequired: false
+  })) file: Express.Multer.File) {
+    const updateData :UpdateCategoryData = { ...updateCategoryDto };
+    file?.path && (updateData.imageSrc =  file.path);
+    const category =  await this.categoriesService.update(params._id, updateData);
+    this.hostAddress.bindToOne(request, category);
+    return category;
   }
 
   @Roles(Role.Admin)

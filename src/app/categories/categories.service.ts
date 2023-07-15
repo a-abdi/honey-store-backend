@@ -4,6 +4,7 @@ import { Model, Schema } from 'mongoose';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { Category, CategoryDocument } from './entities/category.entity';
+import { CreateCategoryData, UpdateCategoryData } from './interface/category-data.interface';
 
 @Injectable()
 export class CategoriesService {
@@ -11,8 +12,8 @@ export class CategoriesService {
     Category.name) private readonly categoryModel: Model<CategoryDocument> 
   ) {}
 
-  async create(createCategoryDto: CreateCategoryDto, filePath: string) {
-    return await this.categoryModel.create({ ...createCategoryDto, imageSrc: filePath });
+  async create(createCategoryData: CreateCategoryData) {
+    return await this.categoryModel.create(createCategoryData);
   }
 
   async findAll(query = {}) {
@@ -27,8 +28,8 @@ export class CategoriesService {
     return await this.categoryModel.findOne({name}).exec();
   }
 
-  async update(_id: Schema.Types.ObjectId, updateCategoryDto: UpdateCategoryDto) {
-    return await this.categoryModel.findOneAndUpdate({_id}, updateCategoryDto, {new: true}).populate('properties').exec();
+  async update(_id: Schema.Types.ObjectId, updateData: UpdateCategoryData) {
+    return await this.categoryModel.findOneAndUpdate({_id}, updateData, {new: true}).populate('properties').exec();
   }
 
   async remove(_id: Schema.Types.ObjectId) {

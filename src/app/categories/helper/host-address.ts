@@ -7,4 +7,11 @@ export class HostAddress extends UrlHelper{
         const hostAddress = this.getHostAddress(request);
         category.imageSrc = `${hostAddress}/${category.imageSrc}`;
     }
+
+    bindToMany(request: Request, categories: Category[]) {
+        const hostAddress = this.getHostAddress(request);
+        categories.map(
+            category => category.imageSrc = `${hostAddress}/${category.imageSrc}`
+        );
+    }
 }
