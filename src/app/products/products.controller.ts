@@ -22,7 +22,6 @@ import { Name } from 'src/common/message/name';
 import { CartsService } from '../carts/carts.service';
 import { OrdersTransactionsService } from '../orders/orders-transactions.service';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
-import { ProductMetaDataHelper } from './helper/product-metadata.helper';
 import { QueryHelper } from './helper/query.helper';
 import { SortQuery } from 'src/common/declare/sort-query';
 
@@ -36,7 +35,6 @@ export class ProductsController {
     private readonly ordersTransactionsService: OrdersTransactionsService,
     private readonly cartService: CartsService,
     private readonly queryHelper: QueryHelper,
-    private readonly productMetaDataHelper: ProductMetaDataHelper,
     @Inject('SORT_QUERY') private readonly sortQuery: SortQuery,
   ) {}
 

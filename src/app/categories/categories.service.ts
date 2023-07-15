@@ -11,8 +11,8 @@ export class CategoriesService {
     Category.name) private readonly categoryModel: Model<CategoryDocument> 
   ) {}
 
-  async create(createCategoryDto: CreateCategoryDto) {
-    return await this.categoryModel.create(createCategoryDto);
+  async create(createCategoryDto: CreateCategoryDto, filePath: string) {
+    return await this.categoryModel.create({ ...createCategoryDto, imageSrc: filePath });
   }
 
   async findAll(query = {}) {

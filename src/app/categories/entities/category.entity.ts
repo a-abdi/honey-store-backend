@@ -12,6 +12,9 @@ export class Category {
     @Prop()
     description: string;
 
+    @Prop()
+    imageSrc: string;
+
     @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Property' }] })
     properties: Property[];
 }

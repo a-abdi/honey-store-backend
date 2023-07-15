@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, UseInterceptors, UploadedFile, ParseFilePipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, UseInterceptors, UploadedFile, ParseFilePipe, Req } from '@nestjs/common';
 import { RolesGuard } from 'src/app/auth/roles.guard';
 import { Role } from 'src/common/declare/enum';
 import { Roles } from 'src/common/decorators/roles.decorator';
@@ -13,11 +13,18 @@ import { CategoryQueryDto } from './dto/category-query.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileMaxSizeValidator } from 'src/service/file-max-size-validation';
 import { FileTypeValidator } from 'src/service/file-type-validation';
+import { Request } from 'express';
+import { UrlHelper } from 'src/common/helper/url.helper';
+import { HostAddress } from './helper/host-address';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('categories')
 export class CategoriesController {
-  constructor(private readonly categoriesService: CategoriesService) {}
+  constructor(
+    private readonly categoriesService: CategoriesService,
+    private readonly urlHelper: UrlHelper,
+    private readonly hostAddress: HostAddress,
+  ) {}
 
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -29,8 +36,11 @@ export class CategoriesController {
         new FileMaxSizeValidator({ maxSize: 50000 }),
         new FileTypeValidator({ validType: ['jpg', 'png', 'jpeg'] }),
       ],
-  })) file: Express.Multer.File) {
-    return await this.categoriesService.create(createCategoryDto);
+  })) file: Express.Multer.File,
+  @Req() request: Request) {
+    const category = await this.categoriesService.create(createCategoryDto, file.path);
+    this.hostAddress.bindToOne(request, category);
+    return category;
   }
 
   @Get()
