@@ -14,7 +14,7 @@ export class FileTypeValidator extends FileValidator{
     return this.validationOptions.validType.includes(fileExtention);
   }
 
-  buildErrorMessage(file: any): string {
+  buildErrorMessage(): string {
     return Message.INCORRECT_FORMAT(Name.FILE);
   }
 }

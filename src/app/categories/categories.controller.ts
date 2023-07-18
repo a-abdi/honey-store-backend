@@ -33,7 +33,7 @@ export class CategoriesController {
     new ParseFilePipe({
       validators: [
         new FileMaxSizeValidator({ maxSize: 50000 }),
-        new FileTypeValidator({ validType: ['jpg', 'png', 'jpeg'] }),
+        new FileTypeValidator({ validType: ['jpg', 'png', 'jpeg', 'webp'] }),
       ],
   })) file: Express.Multer.File,
   @Req() request: Request) {
@@ -70,7 +70,7 @@ export class CategoriesController {
       new ParseFilePipe({
         validators: [
           new FileMaxSizeValidator({ maxSize: 50000 }),
-          new FileTypeValidator({ validType: ['jpg', 'png', 'jpeg'] }),
+          new FileTypeValidator({ validType: ['jpg', 'png', 'jpeg', 'webp'] }),
         ],
         fileIsRequired: false
   })) file: Express.Multer.File) {

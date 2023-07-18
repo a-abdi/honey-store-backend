@@ -37,10 +37,10 @@ export class QueryDto {
     @Transform(
         ({ value }) => {
             const limit = Number(value);
-            if (limit < 20) { return 20; }
+            if (limit < 10) { return 10; }
             if (limit > 50) { return 50; }
             return limit;
         }
     )
-    limit?: number = 20;
+    limit?: number = 10;
 }
