@@ -32,7 +32,7 @@ export class CategoriesController {
   async create(@Body() createCategoryDto: CreateCategoryDto, @UploadedFile(
     new ParseFilePipe({
       validators: [
-        new FileMaxSizeValidator({ maxSize: 50000 }),
+        new FileMaxSizeValidator({ maxSize: 100000 }),
         new FileTypeValidator({ validType: ['jpg', 'png', 'jpeg', 'webp'] }),
       ],
   })) file: Express.Multer.File,
@@ -69,7 +69,7 @@ export class CategoriesController {
     @UploadedFile(
       new ParseFilePipe({
         validators: [
-          new FileMaxSizeValidator({ maxSize: 50000 }),
+          new FileMaxSizeValidator({ maxSize: 100000 }),
           new FileTypeValidator({ validType: ['jpg', 'png', 'jpeg', 'webp'] }),
         ],
         fileIsRequired: false
