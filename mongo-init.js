@@ -1,7 +1,7 @@
 db.createUser(
     {
         user: "honey",
-        pwd: "Gsj8Vhs185WW",
+        pwd: "recD5usp9DtHRWAcnw",
         roles: [
             {
                 role: "readWrite",

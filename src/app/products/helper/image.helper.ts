@@ -7,7 +7,7 @@ export class ImageHelper {
     injectAttachSrcToPropery(attachList: Express.Multer.File[], productDto: CreateProductDto | UpdateProductDto) {
         for (const attach of attachList) {
             const { size } = attach;
-            for (let index = 0; index < productDto?.customProperty.length; index++) {
+            for (let index = 0; index < productDto?.customProperty?.length; index++) {
                 productDto?.customProperty[index];
                 if (productDto?.customProperty[index]?.value == size) {
                     productDto.customProperty[index].value = attach.path
