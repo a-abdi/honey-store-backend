@@ -21,6 +21,7 @@ import { FakerModule } from 'src/app/faker/faker.module';
 import { SearchModule } from './search/search.module';
 import { ChartModule } from './chart/chart.module';
 import { SeederModule } from './seeder/seeder.module';
+import { MailingModule } from './mailing/mailing.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { SeederModule } from './seeder/seeder.module';
     FakerModule,
     SearchModule,
     ChartModule,
+    MailingModule,
   ],
   controllers: [],
   providers: [
