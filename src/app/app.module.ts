@@ -22,6 +22,8 @@ import { SearchModule } from './search/search.module';
 import { ChartModule } from './chart/chart.module';
 import { SeederModule } from './seeder/seeder.module';
 import { MailingModule } from './mailing/mailing.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
   imports: [
@@ -32,6 +34,17 @@ import { MailingModule } from './mailing/mailing.module';
     }),
     CacheModule.register({
       isGlobal: true,
+    }),
+    MailerModule.forRoot({
+      transport: 'smtps://user@domain.com:pass@smtp.domain.com',
+      template: {
+        dir: process.cwd() + '/templates/',
+        
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
     }),
     ProductsModule, 
     AdminsModule, 
