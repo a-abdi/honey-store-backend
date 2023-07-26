@@ -2,7 +2,6 @@ import { ISendMailOptions, MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Options } from 'nodemailer/lib/smtp-transport';
-import { google } from 'googleapis';
 
 @Injectable()
 export class MailingService {
@@ -11,42 +10,42 @@ export class MailingService {
         private readonly mailerService: MailerService,
     ) { }
 
-    private async setTransport() {
-        const OAuth2 = google.auth.OAuth2;
-        const oauth2Client = new OAuth2(
-            this.configService.get('CLIENT_ID'),
-            this.configService.get('CLIENT_SECRET'),
-            'https://developers.google.com/oauthplayground',
-        );
+    // private async setTransport() {
+    //     const OAuth2 = google.auth.OAuth2;
+    //     const oauth2Client = new OAuth2(
+    //         this.configService.get('CLIENT_ID'),
+    //         this.configService.get('CLIENT_SECRET'),
+    //         'https://developers.google.com/oauthplayground',
+    //     );
 
-        oauth2Client.setCredentials({
-            refresh_token: this.configService.get('REFRESH_TOKEN'),
-        });
+    //     oauth2Client.setCredentials({
+    //         refresh_token: this.configService.get('REFRESH_TOKEN'),
+    //     });
 
-        const accessToken: string = await new Promise((resolve, reject) => {
-            oauth2Client.getAccessToken((err, token) => {
-                if (err) {
-                    reject('Failed to create access token');
-                }
-                resolve(token);
-            });
-        });
+    //     const accessToken: string = await new Promise((resolve, reject) => {
+    //         oauth2Client.getAccessToken((err, token) => {
+    //             if (err) {
+    //                 reject('Failed to create access token');
+    //             }
+    //             resolve(token);
+    //         });
+    //     });
 
-        const config: Options = {
-            service: 'gmail',
-            auth: {
-                type: 'OAuth2',
-                user: this.configService.get('EMAIL'),
-                clientId: this.configService.get('CLIENT_ID'),
-                clientSecret: this.configService.get('CLIENT_SECRET'),
-                accessToken,
-            },
-        };
-        this.mailerService.addTransporter('gmail', config);
-    }
+    //     const config: Options = {
+    //         service: 'gmail',
+    //         auth: {
+    //             type: 'OAuth2',
+    //             user: this.configService.get('EMAIL'),
+    //             clientId: this.configService.get('CLIENT_ID'),
+    //             clientSecret: this.configService.get('CLIENT_SECRET'),
+    //             accessToken,
+    //         },
+    //     };
+    //     this.mailerService.addTransporter('gmail', config);
+    // }
 
     public async sendMail(iSendMailOptions: ISendMailOptions) {
-        await this.setTransport();
+        // await this.setTransport();
         await this.mailerService.sendMail(iSendMailOptions);
     }
 }
