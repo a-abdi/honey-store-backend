@@ -39,7 +39,7 @@ export class OrdersTransactionsService {
             {
                 $and: [
                     {user: user.userId},
-                    {"cart.productId": productId},
+                    {"cart.product": productId},
                     {
                         status: { $in: statusList }
                     }

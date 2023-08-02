@@ -24,6 +24,7 @@ import { SeederModule } from './seeder/seeder.module';
 import { MailingModule } from './mailing/mailing.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { SmsModule } from './sms/sms.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
     SearchModule,
     ChartModule,
     MailingModule,
+    SmsModule,
   ],
   controllers: [],
   providers: [
