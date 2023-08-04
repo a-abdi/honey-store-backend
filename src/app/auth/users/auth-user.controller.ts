@@ -11,4 +11,8 @@ export class UserAuthController {
   async login(@Request() req) {
     return this.authService.login( req.user );
   }
+
+  async loginWithVerifySms(user: any) {
+    
+  }
 }
