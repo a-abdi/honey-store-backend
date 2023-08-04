@@ -13,7 +13,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { Message } from 'src/common/message';
-import { NameHelper } from 'src/common/helper/name.helper';
+import { UserHelper } from 'src/common/helper/user.helper';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('product')
@@ -22,7 +22,7 @@ export class CommentController {
     private readonly commentService: CommentService,
     private readonly userService: UsersService,
     private readonly orderService: OrdersTransactionsService,
-    private readonly nameHelper: NameHelper,
+    private readonly userHelper: UserHelper,
   ) {}
 
   @Roles(Role.User)
@@ -36,7 +36,7 @@ export class CommentController {
       const orderData = await this.orderService.findByUserAndProduct(user, productId, statusList);
       const userCommentData = {
         id: user.userId,
-        fullName: this.nameHelper.userFullName(userData),
+        fullName: this.userHelper.FullName(userData),
         buyer: orderData ? true : false
       };
       this.commentService.create(productId, createCommentDto, userCommentData);

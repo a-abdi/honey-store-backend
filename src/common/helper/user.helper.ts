@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { User } from "src/app/users/entities/user.entity";
 
 @Injectable()
-export class NameHelper {
-    userFullName(user: User) {
+export class UserHelper {
+    FullName(user: User) {
         if (user.firstName && user.lastName) {
             return `${user.firstName} ${user.lastName}`;
         }

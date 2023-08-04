@@ -5,11 +5,11 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Comment, CommentSchema } from './entities/comment.entity';
 import { UsersModule } from '../users/users.module';
 import { OrdersTransactionsModule } from '../orders/orders-transactions.module';
-import { NameHelper } from 'src/common/helper/name.helper';
+import { UserHelper } from 'src/common/helper/user.helper';
 
 @Module({
   controllers: [CommentController],
-  providers: [CommentService, NameHelper],
+  providers: [CommentService, UserHelper],
   imports: [
     UsersModule,
     OrdersTransactionsModule,
