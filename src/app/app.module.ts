@@ -25,13 +25,17 @@ import { MailingModule } from './mailing/mailing.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { SmsModule } from './sms/sms.module';
+import redisConfig from 'src/config/redis.config';
 
 @Module({
   imports: [
     MongooseModule.forRoot(process.env.DATABASE_URL), 
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [config]
+      load: [
+        config,
+        redisConfig
+      ]
     }),
     CacheModule.register({
       isGlobal: true,
