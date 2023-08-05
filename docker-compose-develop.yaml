@@ -13,7 +13,16 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: password
       MONGO_INITDB_DATABASE: honey-store-backend
     restart: always
-
+  
+  redis:
+    container_name: redis
+    image: 'redis:latest'
+    network_mode: "host"
+    volumes:
+      - redis-data:/data
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    restart: always
+    
   develop:
     build: .
     container_name: honey-store-backend-develop
@@ -27,4 +36,6 @@ volumes:
   mongo-data:
     external: false
   honey-upload:
+    external: false
+  redis-data:
     external: false
