@@ -1,3 +1,5 @@
 export default () => ({
-    url: process.env.REDIS_URL || "redis://:authpassword@127.0.0.1:6380",
+    url: `redis://:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}` 
+    || 
+    "redis://:authpassword@127.0.0.1:6380",
 });
