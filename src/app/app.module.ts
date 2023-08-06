@@ -25,6 +25,7 @@ import { MailingModule } from './mailing/mailing.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { SmsModule } from './sms/sms.module';
+import { RedisModule } from './redis/redis.module';
 import redisConfig from 'src/config/redis.config';
 
 @Module({
@@ -67,6 +68,7 @@ import redisConfig from 'src/config/redis.config';
     ChartModule,
     MailingModule,
     SmsModule,
+    RedisModule,
   ],
   controllers: [],
   providers: [
