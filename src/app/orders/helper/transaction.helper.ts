@@ -42,7 +42,7 @@ export class TransactionHelper {
             'phone': user.phoneNumber,
             'callback': this.configService.get<string>('TRANSACTION_CALLBACK'),
         };
-        
+
         return await firstValueFrom(
             this.httpService.post<CreateTransactionInterFace>(url, data, { headers }).pipe(map((res) => res.data)).pipe(
                 catchError(async (error: AxiosError) => {
@@ -139,13 +139,13 @@ export class TransactionHelper {
     }
 
     getTransactionData(verifyPaymentData: any) {
-        return { 
+        return {
             status: OrderStatus.WatingPay,
             "transaction.status": verifyPaymentData?.status,
             "transaction.paymentTrackId": verifyPaymentData?.payment?.track_id,
             "transaction.paymentAmount": verifyPaymentData?.payment?.amount,
             "transaction.paymentDate": verifyPaymentData?.payment?.date,
             "transaction.verifyDate": verifyPaymentData?.verify?.date,
-          }
+        }
     }
 }

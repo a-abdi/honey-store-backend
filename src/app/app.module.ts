@@ -52,6 +52,7 @@ import redisConfig from 'src/config/redis.config';
         },
       },
     }),
+    RedisModule.forRoot({url: redisConfig().url}),
     ProductsModule, 
     AdminsModule, 
     AdminAuthModule,
@@ -68,7 +69,6 @@ import redisConfig from 'src/config/redis.config';
     ChartModule,
     MailingModule,
     SmsModule,
-    RedisModule,
   ],
   controllers: [],
   providers: [
