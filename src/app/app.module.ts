@@ -25,8 +25,8 @@ import { MailingModule } from './mailing/mailing.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { SmsModule } from './sms/sms.module';
-import { RedisModule } from './redis/redis.module';
 import redisConfig from 'src/config/redis.config';
+import smsConfig from 'src/config/sms.config';
 
 @Module({
   imports: [
@@ -35,7 +35,8 @@ import redisConfig from 'src/config/redis.config';
       isGlobal: true,
       load: [
         config,
-        redisConfig
+        redisConfig,
+        smsConfig
       ]
     }),
     CacheModule.register({
@@ -52,7 +53,6 @@ import redisConfig from 'src/config/redis.config';
         },
       },
     }),
-    RedisModule.forRoot({url: redisConfig().url}),
     ProductsModule, 
     AdminsModule, 
     AdminAuthModule,

@@ -3,6 +3,7 @@ import { UsersService } from '../../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { standardPhonNumber } from 'src/common/helper';
+import { AuthUserInterface } from './interface/user.interface';
 
 @Injectable()
 export class UserAuthService {
@@ -26,7 +27,7 @@ export class UserAuthService {
     return null;
   }
 
-  async login(user: any) {
+  async login(user: AuthUserInterface) {
     const payload = { 
       phoneNumber: user.phoneNumber, 
       sub: user._id.toString(),

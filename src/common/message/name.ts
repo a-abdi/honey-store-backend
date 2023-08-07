@@ -47,4 +47,5 @@ export const Name = {
     USER_OR_PASS: "شماره تلفن یا پسورد",
     PAGE_NUMBER: "شماره صفحه",
     PAGE_COUNT: "تعداد صفحه",
+    VERIFY_CODE: "کد تایید",
 }

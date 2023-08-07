@@ -1,10 +1,11 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { catchError, firstValueFrom, map } from 'rxjs';
 import { CreateTransactionInterFace } from '../orders/interface/interface';
 import { AxiosError } from 'axios';
 import { ParametersInterface } from './interface/parameter.interface';
+import { Message } from 'src/common/message';
 
 @Injectable()
 export class SmsService {
@@ -30,10 +31,7 @@ export class SmsService {
             this.httpService.post<CreateTransactionInterFace>(url, data, { headers }).pipe(map((res) => res.data)).pipe(
                 catchError(async (error: AxiosError) => {
                     console.log(error);
-                    
-                    // this.productHelper.increaseProductQuantity(order.cart);
-                    // this.ordersTransactionsService.updateOrder(orderId, { "transaction.error": error.response?.data || error.message });
-                    // throw new InternalServerErrorException(Message.ERROR_OCCURRED());
+                    throw new InternalServerErrorException(Message.ERROR_OCCURRED());
                 }),
             ),
         );
