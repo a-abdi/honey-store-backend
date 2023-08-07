@@ -1,4 +1,4 @@
-import { Controller, Request, Post, UseGuards, Body, ForbiddenException, UnauthorizedException } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Body, UnauthorizedException } from '@nestjs/common';
 import { LocalAuthGuard } from './user-local-auth.guard';
 import { UserAuthService } from './auth-user.service';
 import { RedisService } from 'src/app/redis/redis.service';

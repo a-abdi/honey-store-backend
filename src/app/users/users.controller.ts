@@ -1,6 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UnauthorizedException } from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Delete, UseGuards, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { Role } from '../../common/declare/enum';
@@ -23,13 +22,6 @@ export class UsersController {
     private readonly usersService: UsersService,
     private readonly password: Password,
   ) {}
-
-  @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
-    const newUser = (await this.usersService.create(createUserDto)).toObject();
-    delete newUser.password;
-    return newUser;
-  }
 
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
