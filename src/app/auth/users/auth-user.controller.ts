@@ -1,4 +1,4 @@
-import { Controller, Request, Post, UseGuards, Body, UnauthorizedException } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Body, UnauthorizedException, InternalServerErrorException } from '@nestjs/common';
 import { LocalAuthGuard } from './user-local-auth.guard';
 import { UserAuthService } from './auth-user.service';
 import { RedisService } from 'src/app/redis/redis.service';
@@ -34,12 +34,19 @@ export class UserAuthController {
     const maxCode = 1000000;
     const code = Math.floor(Math.random() * (maxCode - minCode) + minCode).toString();
     const templateId = this.configService.get('verifyCodeTemp');
-    this.smsService.sendVerifyCode(phoneNumber, [{ name: "Code", value: code }], templateId);
-    await this.redisService.set(`${phoneNumber}_verifyCode`, code, this.configService.get('verifyCodeExpire'));
-    return {
+    const user = await this.usersService.findByPhone(phoneNumber);
+    const response = {
       phoneNumber,
       smsTtl: this.configService.get('verifyCodeExpire'),
+      hasPass: user?.password ? true : false,
+    };
+    try {
+      this.smsService.sendVerifyCode(phoneNumber, [{ name: "Code", value: code }], templateId);
+      await this.redisService.set(`${phoneNumber}_verifyCode`, code, this.configService.get('verifyCodeExpire'));
+    } catch (error) {
+      throw new InternalServerErrorException(Message.ERROR_OCCURRED());
     }
+    return response;
   }
 
   @Post('login/verifycode')
