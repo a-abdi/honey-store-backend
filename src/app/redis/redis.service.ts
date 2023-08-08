@@ -20,4 +20,8 @@ export class RedisService {
     async delete(key: string): Promise<number> {
         return await this.redisClient.del(key);
     }
+
+    async getTtl(key: string): Promise<number> {
+        return await this.redisClient.ttl(key);
+    }
 }

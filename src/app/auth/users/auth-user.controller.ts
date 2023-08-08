@@ -30,21 +30,24 @@ export class UserAuthController {
 
   @Post('login/sendsms')
   async sendSms(@Body() { phoneNumber }: SendSmsDto) {
-    const minCode = 100000;
-    const maxCode = 1000000;
-    const code = Math.floor(Math.random() * (maxCode - minCode) + minCode).toString();
-    const templateId = this.configService.get('verifyCodeTemp');
     const user = await this.usersService.findByPhone(phoneNumber);
+    const ttl = await this.redisService.getTtl(`${phoneNumber}_verifyCode`);
     const response = {
       phoneNumber,
-      smsTtl: this.configService.get('verifyCodeExpire'),
-      hasPass: user?.password ? true : false,
+      smsTtl: ttl == -2 ? this.configService.get('verifyCodeExpire') : ttl,
+      hasPass: !!user?.password,
     };
-    try {
-      this.smsService.sendVerifyCode(phoneNumber, [{ name: "Code", value: code }], templateId);
-      await this.redisService.set(`${phoneNumber}_verifyCode`, code, this.configService.get('verifyCodeExpire'));
-    } catch (error) {
-      throw new InternalServerErrorException(Message.ERROR_OCCURRED());
+    if (ttl == -2) {
+      const minCode = 100000;
+      const maxCode = 1000000;
+      const code = Math.floor(Math.random() * (maxCode - minCode) + minCode).toString();
+      const templateId = this.configService.get('verifyCodeTemp');
+      try {
+        this.smsService.sendVerifyCode(phoneNumber, [{ name: "Code", value: code }], templateId);
+        await this.redisService.set(`${phoneNumber}_verifyCode`, code, this.configService.get('verifyCodeExpire'));
+      } catch (error) {
+        throw new InternalServerErrorException(Message.ERROR_OCCURRED());
+      }
     }
     return response;
   }
