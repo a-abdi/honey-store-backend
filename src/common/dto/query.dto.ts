@@ -1,8 +1,7 @@
 import { Transform } from "class-transformer";
-import { IsBoolean, IsMongoId, IsNumber, IsOptional, IsString, Max, Min, Validate } from "class-validator";
+import { IsBoolean, IsNumber, IsOptional, IsString, Max, Min } from "class-validator";
 import { Message } from "../message";
 import { Name } from "../message/name";
-import { Schema } from "mongoose";
 
 export class QueryDto {
     @IsOptional()

@@ -7,7 +7,6 @@ import { fileStorage } from 'src/common/helper';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { Role } from '../../common/declare/enum';
-import { MongoIdParams } from '../../common/helper';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Message } from 'src/common/message';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
@@ -24,6 +23,7 @@ import { OrdersTransactionsService } from '../orders/orders-transactions.service
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
 import { QueryHelper } from './helper/query.helper';
 import { SortQuery } from 'src/common/declare/sort-query';
+import { MongoIdParams } from 'src/common/dto/mongo-param.dto';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('products')

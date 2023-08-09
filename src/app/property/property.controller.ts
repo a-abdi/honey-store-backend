@@ -2,13 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { PropertyService } from './property.service';
 import { CreatePropertyDto } from './dto/create-property.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
-import { MongoIdParams } from 'src/common/helper';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { Message } from 'src/common/message';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/common/declare/enum';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
+import { MongoIdParams } from 'src/common/dto/mongo-param.dto';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('property')

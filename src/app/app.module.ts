@@ -30,7 +30,7 @@ import smsConfig from 'src/config/sms.config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.DATABASE_URL), 
+    MongooseModule.forRoot(process.env.MONGO_URI), 
     ConfigModule.forRoot({
       isGlobal: true,
       load: [

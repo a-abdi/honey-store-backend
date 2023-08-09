@@ -3,7 +3,7 @@ import { RolesGuard } from 'src/app/auth/roles.guard';
 import { Role } from 'src/common/declare/enum';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { MongoIdParams, fileStorage } from 'src/common/helper';
+import { fileStorage } from 'src/common/helper';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -16,6 +16,7 @@ import { FileTypeValidator } from 'src/service/file-type-validation';
 import { Request } from 'express';
 import { HostAddress } from './helper/host-address';
 import { UpdateCategoryData } from './interface/category-data.interface';
+import { MongoIdParams } from 'src/common/dto/mongo-param.dto';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('categories')

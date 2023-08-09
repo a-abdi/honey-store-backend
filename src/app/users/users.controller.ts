@@ -4,7 +4,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { Role } from '../../common/declare/enum';
 import { RolesGuard } from '../auth/roles.guard';
-import { MongoIdParams } from '../../common/helper';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Message } from 'src/common/message';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
@@ -14,6 +13,7 @@ import { Password } from './service/password';
 import { Name } from 'src/common/message/name';
 import { UpdatePasswordDto } from './dto/update-password';
 import * as bcrypt from 'bcrypt';
+import { MongoIdParams } from 'src/common/dto/mongo-param.dto';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('users')

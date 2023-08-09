@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { MongoIdParams } from 'src/common/helper';
 import { User } from 'src/common/decorators/user.decorator';
 import { AuthUserInfo } from 'src/interface/auth-user-info';
 import { UsersService } from '../users/users.service';
@@ -14,6 +13,7 @@ import { RolesGuard } from '../auth/roles.guard';
 import { ResponseMessage } from 'src/common/decorators/response-message.decorator';
 import { Message } from 'src/common/message';
 import { UserHelper } from 'src/common/helper/user.helper';
+import { MongoIdParams } from 'src/common/dto/mongo-param.dto';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller('product')

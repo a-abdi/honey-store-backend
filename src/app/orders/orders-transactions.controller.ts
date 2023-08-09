@@ -20,8 +20,8 @@ import { UrlHelper } from 'src/common/helper/url.helper';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { OrderQueryDto } from './dto/order-query.dto';
-import { MongoIdParams } from 'src/common/helper';
 import { StatusUpdateDto } from './dto/status-update.dto';
+import { MongoIdParams } from 'src/common/dto/mongo-param.dto';
 
 @ResponseMessage(Message.SUCCESS())
 @Controller()
