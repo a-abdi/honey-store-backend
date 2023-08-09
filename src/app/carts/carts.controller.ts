@@ -1,5 +1,4 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
-import { grabObjectInArrayOfObject } from 'src/common/helper';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CartsService } from './carts.service';
 import { CreateCartDto } from './dto/create-cart.dto';
@@ -44,10 +43,10 @@ export class CartsController {
     let productList = await this.productService.productList(productsId);
     productList = productList.filter(product => !product.deletedAt);
     for (const newCartProduct of products) {
-      const product = grabObjectInArrayOfObject(productList, "_id", newCartProduct._id);
+      const product = productList.find(product => product._id == newCartProduct._id);
       const maxQuantity = product?.quantity;
       const oldCartProducts = await this.cartsService.removeFromCart(newCartProduct._id, user);
-      const oldProduct = grabObjectInArrayOfObject(oldCartProducts?.products, "product", newCartProduct._id);
+      const oldProduct = oldCartProducts?.products?.find(product => product.product == newCartProduct._id);
       let newQuantity = newCartProduct?.quantity;
       if (oldProduct?.quantity) {
         newQuantity = oldProduct?.quantity + newCartProduct?.quantity;
